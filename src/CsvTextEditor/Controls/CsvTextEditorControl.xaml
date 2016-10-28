@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="CsvTextEditor.Controls.CsvTextEditorControl"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:local="clr-namespace:CsvTextEditor.Controls"
+                   xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+                   xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=System"
+                   xmlns:catel="http://catel.codeplex.com"
+                   mc:Ignorable="d"
+                   d:DesignHeight="300"
+                   d:DesignWidth="300">
+    <UserControl.Resources>
+        <componentModel:BackgroundWorker x:Key="backgroundWoker"
+                                         WorkerReportsProgress="True"
+                                         WorkerSupportsCancellation="True"
+                                         DoWork="BackgroundWorker_DoWork" />
+    </UserControl.Resources>
+
+    <Grid>
+        <avalonedit:TextEditor x:Name="TextEditor" />
+    </Grid>
+</UserControl>
