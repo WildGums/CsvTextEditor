@@ -127,7 +127,7 @@ namespace Orc.CsvTextEditor
 
             foreach (var line in columnWidthByLine)
             {
-                if (line.Length != accum.Length)
+                if (line.Length > accum.Length)
                 {
                     throw new ArgumentException("Records in CSV have to contain the same number of fields");
                 }
