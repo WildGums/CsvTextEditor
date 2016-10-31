@@ -7,7 +7,7 @@
 
 namespace Orc.CsvTextEditor
 {
-    using System.Windows.Media;
+    using System.Windows;
     using System.Windows.Media.TextFormatting;
     using ICSharpCode.AvalonEdit.Rendering;
 
@@ -23,9 +23,18 @@ namespace Orc.CsvTextEditor
         #region Methods
         public override TextRun CreateTextRun(int startVisualColumn, ITextRunConstructionContext context)
         {
-            TextRunProperties.SetBackgroundBrush(new SolidColorBrush(Colors.LightCyan));
+            if (!Equals(TextRunProperties.BackgroundBrush, SystemColors.ControlLightLightBrush))
+            {
+                TextRunProperties.SetBackgroundBrush(SystemColors.ControlLightLightBrush);
+            }
 
-            return new TextCharacters(" ", TextRunProperties);
+            var spaces = string.Empty;
+            for (var i = 0; i < VisualLength; i++)
+            {
+                spaces += ' ';  
+            }
+
+            return new TextCharacters(spaces, TextRunProperties);
         }
 
         public override bool IsWhitespace(int visualColumn)
