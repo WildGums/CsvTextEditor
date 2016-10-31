@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace CsvTextEditor.Controls
+namespace Orc.CsvTextEditor
 {
     using System;
     using System.ComponentModel;
@@ -62,17 +62,21 @@ namespace CsvTextEditor.Controls
                 return;
             }
 
-            var lines = Text?.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            UpdateTextEditor();
+        }
 
-            if (lines != null)
-            {
-                Initialize(lines);
-            }
-        }     
-
-        public void Initialize(string[] lines)
+        private void UpdateTextEditor()
         {
-            _textDocument.Changed -= OnDocumentChanging;
+            _textDocument.Changed -= OnDocumentChanged;
+
+            var text = Text;
+
+            if(ReferenceEquals(text, null))
+            {
+                return;
+            }
+
+            var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
             var columnWidthByLine =
                 lines
@@ -85,8 +89,9 @@ namespace CsvTextEditor.Controls
             _elementGenerator.Lines = columnWidthByLine;
             _elementGenerator.ColumnWidth = columnWidth;
 
-            TextEditor.Text = string.Join(Environment.NewLine, lines);
-            _textDocument.Changed += OnDocumentChanging;
+            TextEditor.Text = text;
+
+            _textDocument.Changed += OnDocumentChanged;
 
             LoadSyntaxHighlighting();
             AssignShortcutKeys();
@@ -99,7 +104,7 @@ namespace CsvTextEditor.Controls
 
         private void LoadSyntaxHighlighting()
         {
-            using (var s = typeof(CsvTextEditorControl).Assembly.GetManifestResourceStream("CsvTextEditor.Resources.Highlightings.CustomHighlighting.xshd"))
+            using (var s = typeof(CsvTextEditorControl).Assembly.GetManifestResourceStream("Orc.CsvTextEditor.Resources.Highlightings.CustomHighlighting.xshd"))
             {
                 if (s == null)
                 {
@@ -122,7 +127,7 @@ namespace CsvTextEditor.Controls
 
             foreach (var line in columnWidthByLine)
             {
-                if (line.Length > accum.Length)
+                if (line.Length != accum.Length)
                 {
                     throw new ArgumentException("Records in CSV have to contain the same number of fields");
                 }
@@ -139,7 +144,7 @@ namespace CsvTextEditor.Controls
         }
 
         private bool _isTextEditing;
-        private void OnDocumentChanging(object sender, DocumentChangeEventArgs e)
+        private void OnDocumentChanged(object sender, DocumentChangeEventArgs e)
         {
             var affectedLocation = _textDocument.GetLocation(e.Offset);
 

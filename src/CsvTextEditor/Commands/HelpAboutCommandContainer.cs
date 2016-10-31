@@ -10,12 +10,9 @@ namespace CsvTextEditor
     using System.Threading.Tasks;
     using Catel;
     using Catel.MVVM;
-    using Orc.ProjectManagement;
 
     public class HelpAboutCommandContainer : CommandContainerBase
     {
-        private readonly IProjectManager _projectManager;
-
         #region Constructors
         public HelpAboutCommandContainer(ICommandManager commandManager)
             : base(Commands.Help.About, commandManager)

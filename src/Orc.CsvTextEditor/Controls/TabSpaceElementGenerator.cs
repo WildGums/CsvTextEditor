@@ -1,52 +1,39 @@
-﻿using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Rendering;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="TabSpaceElementGenerator.cs" company="WildGums">
+//   Copyright (c) 2008 - 2016 WildGums. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 
-namespace CsvTextEditor.Controls
+
+namespace Orc.CsvTextEditor
 {
-    internal struct ColumnNumberWithOffset
-    {
-        public int ColumnNumber;
-        public int OffsetInLine;
-    }
-
-    internal class ColumnWidthCalculator
-    {
-        public ColumnNumberWithOffset GetColumn(int[][] lines, TextLocation location)
-        {
-            var currentLineIndex = location.Line - 1;
-            var currentColumnIndex = location.Column - 1;
-
-            var currentLine = lines[currentLineIndex];
-
-            var sum = 0;
-            var i = 0;
-            while (currentLine.Length > i && sum <= currentColumnIndex)
-            {
-                sum += currentLine[i];
-                i++;
-            }
-            i--;
-
-            return new ColumnNumberWithOffset {ColumnNumber = i, OffsetInLine = sum};
-        }
-    }
+    using ICSharpCode.AvalonEdit.Document;
+    using ICSharpCode.AvalonEdit.Rendering;
 
     internal class TabSpaceElementGenerator : VisualLineElementGenerator
     {
+        #region Fields
         private readonly ColumnWidthCalculator _columnWidthCalculator;
 
         private int _tabWidth;
         public int[] ColumnWidth;
         public int[][] Lines;
+        #endregion
 
+        #region Constructors
         public TabSpaceElementGenerator(ColumnWidthCalculator columnWidthCalculator)
         {
             _columnWidthCalculator = columnWidthCalculator;
         }
+        #endregion
 
+        #region Methods
         public override VisualLineElement ConstructElement(int offset)
         {
-            if (CurrentContext.VisualLine.LastDocumentLine.EndOffset == offset) return null;
+            if (CurrentContext.VisualLine.LastDocumentLine.EndOffset == offset)
+            {
+                return null;
+            }
 
             return new EmptyVisualLineElement(_tabWidth + 1, 1);
         }
@@ -54,7 +41,9 @@ namespace CsvTextEditor.Controls
         public override int GetFirstInterestedOffset(int startOffset)
         {
             if (Lines == null)
+            {
                 return startOffset;
+            }
 
             var location = CurrentContext.Document.GetLocation(startOffset);
 
@@ -67,15 +56,14 @@ namespace CsvTextEditor.Controls
                 {
                     return CurrentContext.VisualLine.LastDocumentLine.EndOffset;
                 }
-                else
+
+                columnNumberWithOffset = new ColumnNumberWithOffset
                 {
-                    columnNumberWithOffset = new ColumnNumberWithOffset
-                    {
-                        ColumnNumber = 0,
-                        OffsetInLine = Lines[locationLine][0]
-                    };
-                    locationLine++;
-                }
+                    ColumnNumber = 0,
+                    OffsetInLine = Lines[locationLine][0]
+                };
+
+                locationLine++;
             }
 
             _tabWidth = ColumnWidth[columnNumberWithOffset.ColumnNumber] -
@@ -83,5 +71,6 @@ namespace CsvTextEditor.Controls
 
             return CurrentContext.Document.GetOffset(new TextLocation(locationLine, columnNumberWithOffset.OffsetInLine));
         }
+        #endregion
     }
 }

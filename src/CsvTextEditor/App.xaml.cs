@@ -25,10 +25,7 @@ namespace CsvTextEditor
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
-        private readonly DateTime _start;
         private readonly Stopwatch _stopwatch;
-
-        private DateTime _end;
         #endregion
 
         #region Constructors
@@ -36,7 +33,6 @@ namespace CsvTextEditor
         {
             _stopwatch = new Stopwatch();
             _stopwatch.Start();
-            _start = DateTime.Now;
         }
         #endregion
 
@@ -52,7 +48,6 @@ namespace CsvTextEditor
             await shellService.CreateWithSplashAsync<ShellWindow>();
 
             Log.Info("Elapsed startup stopwatch time: {0}", _stopwatch.Elapsed);
-            Log.Info("Elapsed startup time: {0}", _end - _start);
         }
 
         protected override void OnExit(ExitEventArgs e)
