@@ -18,7 +18,6 @@ namespace Orc.CsvTextEditor
     using ICSharpCode.AvalonEdit.Editing;
     using ICSharpCode.AvalonEdit.Highlighting;
     using ICSharpCode.AvalonEdit.Highlighting.Xshd;
-    using ICSharpCode.AvalonEdit.Rendering;
 
     public partial class CsvTextEditorControl
     {
@@ -169,7 +168,7 @@ namespace Orc.CsvTextEditor
             }
             else
             {
-                var maxLength = columnWidthByLine.Select(x => x[myColumn]).Max();
+                var maxLength = columnWidthByLine.Where(x => x.Length > myColumn).Select(x => x[myColumn]).Max();
 
                 if (maxLength != columnWidth[myColumn])
                 {
@@ -204,7 +203,7 @@ namespace Orc.CsvTextEditor
             }
         }
 
-        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void OnBackgroundWorkerDoWork(object sender, DoWorkEventArgs e)
         {
             Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.SystemIdle, new Action(TextEditor.TextArea.TextView.Redraw));
         }

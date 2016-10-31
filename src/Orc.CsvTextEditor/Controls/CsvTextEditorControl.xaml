@@ -13,7 +13,7 @@
         <componentModel:BackgroundWorker x:Key="backgroundWoker"
                                          WorkerReportsProgress="True"
                                          WorkerSupportsCancellation="True"
-                                         DoWork="BackgroundWorker_DoWork" />
+                                         DoWork="OnBackgroundWorkerDoWork" />
     </UserControl.Resources>
 
     <Grid>
