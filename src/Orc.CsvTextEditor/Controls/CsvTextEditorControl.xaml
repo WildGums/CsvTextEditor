@@ -17,6 +17,8 @@
     </UserControl.Resources>
 
     <Grid>
-        <avalonedit:TextEditor x:Name="TextEditor" />
+        <avalonedit:TextEditor x:Name="TextEditor" 
+                               FontFamily="Consolas"
+                               FontSize="10pt"/>
     </Grid>
 </UserControl>
