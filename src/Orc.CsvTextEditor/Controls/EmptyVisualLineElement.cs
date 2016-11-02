@@ -29,10 +29,12 @@ namespace Orc.CsvTextEditor
             }
 
             var spaces = string.Empty;
-            for (var i = 0; i < VisualLength; i++)
+            for (var i = 0; i < VisualLength - 1; i++)
             {
                 spaces += ' ';  
             }
+
+            spaces += "|";
 
             return new TextCharacters(spaces, TextRunProperties);
         }
