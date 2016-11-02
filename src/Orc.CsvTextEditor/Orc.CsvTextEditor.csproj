@@ -69,6 +69,7 @@
     </Compile>
     <Compile Include="Controls\EmptyVisualLineElement.cs" />
     <Compile Include="Controls\TabSpaceElementGenerator.cs" />
+    <Compile Include="Helpers\CsvTextHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
