@@ -62,6 +62,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="Controls\ColumnNumberWithOffset.cs" />
     <Compile Include="Controls\ColumnWidthCalculator.cs" />
     <Compile Include="Controls\CsvTextEditorControl.xaml.cs">
@@ -69,7 +70,13 @@
     </Compile>
     <Compile Include="Controls\EmptyVisualLineElement.cs" />
     <Compile Include="Controls\TabSpaceElementGenerator.cs" />
-    <Compile Include="Helpers\CsvTextHelper.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Models\DocumentChangingContext.cs" />
+    <Compile Include="ModuleInitializer.cs" />
+    <Compile Include="Postprocessors\AddColumnPostprocessor.cs" />
+    <Compile Include="Postprocessors\Interfaces\IPostprocessor.cs" />
+    <Compile Include="Postprocessors\Interfaces\IPostprocessorProvider.cs" />
+    <Compile Include="Postprocessors\PostprocessorProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

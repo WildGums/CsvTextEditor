@@ -8,12 +8,13 @@
 namespace Orc.CsvTextEditor
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
     using System.Windows;
     using System.Windows.Input;
     using System.Xml;
-    using Helpers;
+    using Catel.IoC;
     using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Editing;
@@ -23,26 +24,15 @@ namespace Orc.CsvTextEditor
     public partial class CsvTextEditorControl
     {
         #region Fields
-        private const char CsvColumnDelimeter = ',';
-
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            "Text", typeof (string), typeof (CsvTextEditorControl), new PropertyMetadata(default(string), (s, e) => ((CsvTextEditorControl) s).OnTextChanged()));
-
         private readonly BackgroundWorker _backgroundWorker;
-
         private readonly ColumnWidthCalculator _columnWidthCalculator;
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly TextArea _textArea;
         private readonly TextDocument _textDocument;
-        private int _column;
-        private bool _isComma;
+        private readonly IPostprocessorProvider _postprocessorProvider;
 
         private bool _isTextEditing;
-
         private bool _isUpdating;
-        private int _lineIndex;
-
-        private int _offset;
         #endregion
 
         #region Constructors
@@ -57,18 +47,25 @@ namespace Orc.CsvTextEditor
 
             _textArea.TextView.ElementGenerators.Add(_elementGenerator);
 
-            _backgroundWorker = (BackgroundWorker) FindResource("backgroundWoker");
+            _backgroundWorker = new BackgroundWorker();
+            _backgroundWorker.DoWork += OnBackgroundWorkerDoWork;
+
+            var serviceLocator = this.GetServiceLocator();
+            _postprocessorProvider = serviceLocator.ResolveType<IPostprocessorProvider>();
+
+            serviceLocator.RegisterInstance(_elementGenerator, TextEditor);
         }
         #endregion
 
-        #region Properties
-        public bool UpdateAllLinesInBackground { get; set; }
-
+        #region Dependency properties
         public string Text
         {
             get { return (string) GetValue(TextProperty); }
             set { SetValue(TextProperty, value); }
         }
+
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+            "Text", typeof(string), typeof(CsvTextEditorControl), new PropertyMetadata(default(string), (s, e) => ((CsvTextEditorControl)s).OnTextChanged()));
         #endregion
 
         private void OnTextChanged()
@@ -83,7 +80,7 @@ namespace Orc.CsvTextEditor
 
         private void UpdateTextEditor()
         {
-            _textDocument.Changed -= OnDocumentChanged;
+            _textDocument.Changed -= OnTextDocumentChanged;
             _textDocument.UpdateFinished -= TextDocumentOnUpdateFinished;
             _textDocument.Changing -= TextDocumentOnChanging;
 
@@ -98,7 +95,7 @@ namespace Orc.CsvTextEditor
 
             var columnWidthByLine =
                 lines
-                    .Select(x => x.Split(','))
+                    .Select(x => x.Split(Symbols.Comma))
                     .Select(x => x.Select(y => y.Length + 1).ToArray())
                     .ToArray();
 
@@ -109,7 +106,7 @@ namespace Orc.CsvTextEditor
 
             TextEditor.Text = text;
 
-            _textDocument.Changed += OnDocumentChanged;
+            _textDocument.Changed += OnTextDocumentChanged;
             _textDocument.UpdateFinished += TextDocumentOnUpdateFinished;
             _textDocument.Changing += TextDocumentOnChanging;
 
@@ -117,26 +114,21 @@ namespace Orc.CsvTextEditor
             AssignShortcutKeys();
         }
 
+        private IPostprocessor _postprocessor;
+
         private void TextDocumentOnChanging(object sender, DocumentChangeEventArgs e)
         {
-            var insertedText = e.InsertedText.Text;
-            if (insertedText.Length != 1 || insertedText[0] != CsvColumnDelimeter)
+            var changeState = new DocumentChangingContext()
             {
-                return;
-            }
+                InsertedText = e.InsertedText.Text,
+                Offset = e.Offset,
+                ColumnWidthCalculator = _columnWidthCalculator,
+                ElementGenerator = _elementGenerator,
+                TextEditor = TextEditor,
+                OldText = Text
+            };
 
-            var affectedLocation = _textDocument.GetLocation(e.Offset);
-            var columnWidthByLine = _elementGenerator.Lines;
-            var columnNumberWithOffset = _columnWidthCalculator.GetColumn(columnWidthByLine, affectedLocation);
-
-            var myColumn = columnNumberWithOffset.ColumnNumber;
-
-            _lineIndex = affectedLocation.Line - 1;
-            _column = myColumn;
-            _offset = e.Offset;
-
-            _isComma = true;
-          
+            _postprocessor = _postprocessorProvider.GetPostprocessors(TextEditor.Text, changeState);         
         }
 
         private void SynchronizeDocumentText()
@@ -155,36 +147,28 @@ namespace Orc.CsvTextEditor
 
         private void TextDocumentOnUpdateFinished(object sender, EventArgs eventArgs)
         {
-            if (!_isComma || _isUpdating)
+            if (ReferenceEquals(_postprocessor, null) || _isUpdating)
             {
                 SynchronizeDocumentText();
                 return;
             }            
-            //TODO
-            var totalColumnCount = _elementGenerator.Lines[0].Length;
-            var lineCount = _textDocument.LineCount;
-            
+
             _isUpdating = true;
-            Text = CsvTextHelper.InsertColumn(Text, _column, lineCount, totalColumnCount, CsvColumnDelimeter);
+
+            // Note: important to remember this value, because can be changed
+            var postprocessor = _postprocessor;
+
+            postprocessor.Apply();
+
+            SynchronizeDocumentText();
+            UpdateTextEditor();
+
+            postprocessor.RestoreCaret();
+
             _isUpdating = false;
 
-            SetCaretToSpecificLineAndColumn(_lineIndex, _column);
-
-            _isUpdating = false;
-            _isComma = false;
-        }
-
-        private void SetCaretToSpecificLineAndColumn(int lineIndex, int columnIndex)
-        {
-            var textEditor = TextEditor;
-            var document = textEditor.Document;
-
-            var line = document.Lines[lineIndex];
-            var offset = line.Offset;
-            var columnOffset = _elementGenerator.Lines[lineIndex].Take(columnIndex + 1).Sum();
-
-            textEditor.CaretOffset = offset + columnOffset;
-        }
+            _postprocessor = null;
+        }        
 
         private void AssignShortcutKeys()
         {
@@ -234,7 +218,7 @@ namespace Orc.CsvTextEditor
             return accum.ToArray();
         }
 
-        private void OnDocumentChanged(object sender, DocumentChangeEventArgs e)
+        private void OnTextDocumentChanged(object sender, DocumentChangeEventArgs e)
         {
             var affectedLocation = _textDocument.GetLocation(e.Offset);
 
@@ -268,25 +252,11 @@ namespace Orc.CsvTextEditor
                     UpdateLines();
                 }
             }
-
-            //_isTextEditing = true;
-
-            //try
-            //{
-            //    Text = TextEditor.Text;
-            //}
-            //finally
-            //{
-            //    _isTextEditing = false;
-            //}
         }
 
         private void UpdateLines()
         {
-            if (!UpdateAllLinesInBackground)
-            {
-                _textArea.TextView.Redraw();
-            }
+            _textArea.TextView.Redraw();
 
             if (!_backgroundWorker.IsBusy)
             {

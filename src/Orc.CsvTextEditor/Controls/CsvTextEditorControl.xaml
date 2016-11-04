@@ -9,13 +9,6 @@
                    mc:Ignorable="d"
                    d:DesignHeight="300"
                    d:DesignWidth="300">
-    <UserControl.Resources>
-        <componentModel:BackgroundWorker x:Key="backgroundWoker"
-                                         WorkerReportsProgress="True"
-                                         WorkerSupportsCancellation="True"
-                                         DoWork="OnBackgroundWorkerDoWork" />
-    </UserControl.Resources>
-
     <Grid>
         <avalonedit:TextEditor x:Name="TextEditor" 
                                FontFamily="Consolas"
