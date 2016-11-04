@@ -7,16 +7,33 @@
 
 namespace Orc.CsvTextEditor
 {
+    using System;
+
     public static class StringExtensions
     {
         #region Methods
         public static string InsertCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount)
         {
-            var commaCounter = 0;
-
             var newCount = text.Length + linesCount;
             var textArray = new char[newCount];
             var indexer = 0;
+
+            if (column == columnsCount)
+            {
+                var newLineSymbvol = Environment.NewLine;
+                text = text.Replace(newLineSymbvol, Symbols.Comma + newLineSymbvol);
+                return text;
+            }
+
+            if (column == 0)
+            {
+                text = text.Insert(0, Symbols.Comma.ToString());
+
+                var newLineSymbvol = Environment.NewLine;
+                return text.Replace(newLineSymbvol, newLineSymbvol + Symbols.Comma);
+            }
+
+            var commaCounter = 1;
             foreach (var c in text)
             {
                 if (c == Symbols.Comma)
@@ -29,9 +46,9 @@ namespace Orc.CsvTextEditor
 
                     commaCounter++;
 
-                    if (commaCounter == columnsCount-1)
+                    if (commaCounter == columnsCount)
                     {
-                        commaCounter = 0;
+                        commaCounter = 1;
                     }
                 }
 
