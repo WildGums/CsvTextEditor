@@ -22,7 +22,9 @@ namespace Orc.CsvTextEditor
 
             if (string.Equals(insertedText, Environment.NewLine))
             {
-                return new AddLinePostprocessor(documentChangingContext);
+                return new AddLineWithTextTransferPostprocessor(documentChangingContext);
+                //Note: add this processor if you want to add new line without text transfer to another line
+                //new AddLinePostprocessor(documentChangingContext);
             }
 
             if (string.Equals(insertedText, Symbols.HorizontalTab.ToString()))

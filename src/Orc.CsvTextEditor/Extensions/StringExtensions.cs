@@ -60,6 +60,27 @@ namespace Orc.CsvTextEditor
             return new string(textArray);
         }
 
+        public static string InsertLineWithTextTransfer(this string text, int insertLineIndex, int offsetInLine, int columnCount)
+        {
+            var newLine = Environment.NewLine;
+            var newLineLenght = newLine.Length;
+
+            if (offsetInLine == 0 || insertLineIndex == 0)
+            {
+                return InsertLine(text, insertLineIndex, columnCount);
+            }
+
+            var previousLineOffset = text.IndexOfSpecificOccurance(newLine, insertLineIndex - 1) + newLineLenght;
+            var leftLineChunk = text.Substring(previousLineOffset, offsetInLine);
+            var splitColumnIndex = leftLineChunk.Count(x => x.Equals(Symbols.Comma));
+
+            var insetionText = $"{new string(Symbols.Comma, columnCount - splitColumnIndex - 1)}{newLine}{new string(Symbols.Comma, splitColumnIndex)}";
+
+            var insertPosition = previousLineOffset + offsetInLine;
+            text = text.Insert(insertPosition, insetionText);
+            return text;
+        }
+
         public static string InsertLine(this string text, int insertLineIndex, int columnsCount)
         {
             var newLine = Environment.NewLine;
@@ -67,7 +88,7 @@ namespace Orc.CsvTextEditor
 
             var insertLineText = $"{new string(Symbols.Comma, columnsCount - 1)}{newLine}";
             var insertionPosition = insertLineIndex != 0 ? text.IndexOfSpecificOccurance(newLine, insertLineIndex) + newLineLenght : 0;
-            
+
             return text.Insert(insertionPosition, insertLineText);
         }
 
