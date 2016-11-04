@@ -7,19 +7,33 @@
 
 namespace Orc.CsvTextEditor
 {
-    using System.Collections.Generic;
+    using System;
 
     internal class PostprocessorProvider : IPostprocessorProvider
     {
+        #region Methods
         public IPostprocessor GetPostprocessors(string text, DocumentChangingContext documentChangingContext)
         {
             var insertedText = documentChangingContext.InsertedText;
-            if (insertedText.Length != 1 || insertedText[0] != Symbols.Comma)
+            if (string.Equals(insertedText, Symbols.Comma.ToString()))
             {
-                return null;
-            }            
+                return new AddColumnPostprocessor(documentChangingContext);
+            }
 
-            return new AddColumnPostprocessor(documentChangingContext);
+            if (string.Equals(insertedText, Environment.NewLine))
+            {
+                return new AddLineWithTextTransferPostprocessor(documentChangingContext);
+                //Note: add this processor if you want to add new line without text transfer to another line
+                //new AddLinePostprocessor(documentChangingContext);
+            }
+
+            if (string.Equals(insertedText, Symbols.HorizontalTab.ToString()))
+            {
+                return new RestrictTabPostprocessor(documentChangingContext);
+            }
+
+            return null;
         }
+        #endregion
     }
 }

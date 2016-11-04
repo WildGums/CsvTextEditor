@@ -31,7 +31,8 @@ namespace Orc.CsvTextEditor
             var column = new ColumnNumberWithOffset
             {
                 ColumnNumber = i-1,
-                OffsetInLine = sum
+                OffsetInLine = sum,
+                Length = currentLine[i-1]
             };
 
             return column;

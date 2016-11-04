@@ -121,9 +121,7 @@ namespace Orc.CsvTextEditor
 
             var lines = text.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
 
-            var columnWidthByLine =
-                lines
-                    .Select(x => x.Split(Symbols.Comma))
+            var columnWidthByLine = lines.Select(x => x.Split(Symbols.Comma))
                     .Select(x => x.Select(y => y.Length + 1).ToArray())
                     .ToArray();
 

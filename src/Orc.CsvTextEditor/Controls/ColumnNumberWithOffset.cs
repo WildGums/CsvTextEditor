@@ -11,5 +11,6 @@ namespace Orc.CsvTextEditor
     {
         public int ColumnNumber;
         public int OffsetInLine;
+        public int Length;
     }
 }
