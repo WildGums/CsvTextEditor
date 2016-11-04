@@ -7,24 +7,21 @@
 
 namespace Orc.CsvTextEditor
 {
-    using System.Linq;
     using Catel;
     using ICSharpCode.AvalonEdit;
-    using ICSharpCode.AvalonEdit.Document;
 
     internal class AddColumnPostprocessor : IPostprocessor
     {
         #region Fields
+        private readonly int _columnIndex;
+        private readonly int _columnsCount;
         private readonly DocumentChangingContext _documentChangingContext;
         private readonly TabSpaceElementGenerator _elementGenerator;
-        private readonly TextDocument _textDocument;
-        private readonly TextEditor _textEditor;
-        private readonly int _columnsCount;
-        private readonly int _linesCount;
-        private readonly int _columnIndex;
         private readonly int _lineIndex;
+        private readonly int _linesCount;
         private readonly int _offset;
         private readonly bool _restoreText;
+        private readonly TextEditor _textEditor;
         #endregion
 
         #region Constructors
@@ -37,7 +34,7 @@ namespace Orc.CsvTextEditor
             _documentChangingContext = documentChangingContext;
 
             _textEditor = _documentChangingContext.TextEditor;
-            _textDocument = _textEditor.Document;
+            var textDocument = _textEditor.Document;
             _elementGenerator = _documentChangingContext.ElementGenerator;
 
             _columnsCount = _elementGenerator.Lines[0].Length;
@@ -45,7 +42,7 @@ namespace Orc.CsvTextEditor
 
             _offset = _documentChangingContext.Offset;
             var widthCalculator = _documentChangingContext.ColumnWidthCalculator;
-            var affectedLocation = _textDocument.GetLocation(_offset);
+            var affectedLocation = textDocument.GetLocation(_offset);
             var columnWidthByLine = _elementGenerator.Lines;
             var columnNumberWithOffset = widthCalculator.GetColumn(columnWidthByLine, affectedLocation);
 

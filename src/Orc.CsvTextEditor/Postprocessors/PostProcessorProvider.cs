@@ -25,6 +25,11 @@ namespace Orc.CsvTextEditor
                 return new AddLinePostprocessor(documentChangingContext);
             }
 
+            if (string.Equals(insertedText, Symbols.HorizontalTab.ToString()))
+            {
+                return new RestrictTabPostprocessor(documentChangingContext);
+            }
+
             return null;
         }
         #endregion

@@ -79,6 +79,7 @@
     <Compile Include="Postprocessors\Interfaces\IPostprocessor.cs" />
     <Compile Include="Postprocessors\Interfaces\IPostprocessorProvider.cs" />
     <Compile Include="Postprocessors\PostprocessorProvider.cs" />
+    <Compile Include="Postprocessors\RestrictTabPostprocessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

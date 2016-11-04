@@ -9,7 +9,6 @@ namespace Orc.CsvTextEditor
 {
     using Catel;
     using ICSharpCode.AvalonEdit;
-    using ICSharpCode.AvalonEdit.Document;
 
     internal class AddLinePostprocessor : IPostprocessor
     {
@@ -18,8 +17,6 @@ namespace Orc.CsvTextEditor
         private readonly DocumentChangingContext _documentChangingContext;
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly int _nextLineIndex;
-        private readonly int _offset;
-        private readonly TextDocument _textDocument;
         private readonly TextEditor _textEditor;
         #endregion
 
@@ -29,15 +26,14 @@ namespace Orc.CsvTextEditor
             Argument.IsNotNull(() => documentChangingContext);
 
             _documentChangingContext = documentChangingContext;
-
             _textEditor = _documentChangingContext.TextEditor;
-            _textDocument = _textEditor.Document;
-            _elementGenerator = _documentChangingContext.ElementGenerator;
 
+            _elementGenerator = _documentChangingContext.ElementGenerator;
             _columnsCount = _elementGenerator.Lines[0].Length;
 
-            _offset = _documentChangingContext.Offset;
-            var affectedLocation = _textDocument.GetLocation(_offset);
+            var offset = _documentChangingContext.Offset;
+            var textDocument = _textEditor.Document;
+            var affectedLocation = textDocument.GetLocation(offset);
 
             _nextLineIndex = affectedLocation.Line;
 
