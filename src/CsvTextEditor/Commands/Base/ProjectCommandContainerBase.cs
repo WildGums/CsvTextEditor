@@ -5,18 +5,19 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace CsvTextEditor.Base
+namespace CsvTextEditor
 {
     using System.Threading.Tasks;
     using Catel;
     using Catel.MVVM;
     using Catel.Threading;
+    using Models;
     using Orc.ProjectManagement;
 
     public abstract class ProjectCommandContainerBase : CommandContainerBase
     {
         #region Fields
-        private readonly ICommandManager _commandManager;
+        protected readonly ICommandManager _commandManager;
 
         protected readonly IProjectManager _projectManager;
         #endregion
@@ -37,9 +38,15 @@ namespace CsvTextEditor.Base
         #region Methods
         private Task OnProjectActivated(object sender, ProjectUpdatedEventArgs e)
         {
+            ProjectActivated((Project)e.OldProject, (Project)e.NewProject);
+
             _commandManager.InvalidateCommands();
 
             return TaskHelper.Completed;
+        }
+
+        protected virtual void ProjectActivated(Project oldProject, Project newProject)
+        {
         }
 
         protected override bool CanExecute(object parameter)

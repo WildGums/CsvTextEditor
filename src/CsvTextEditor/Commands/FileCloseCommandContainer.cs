@@ -8,7 +8,6 @@
 namespace CsvTextEditor
 {
     using System.Threading.Tasks;
-    using Base;
     using Catel.MVVM;
     using Orc.ProjectManagement;
 

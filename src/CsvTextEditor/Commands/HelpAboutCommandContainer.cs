@@ -8,7 +8,6 @@
 namespace CsvTextEditor
 {
     using System.Threading.Tasks;
-    using Catel;
     using Catel.MVVM;
 
     public class HelpAboutCommandContainer : CommandContainerBase
@@ -17,7 +16,6 @@ namespace CsvTextEditor
         public HelpAboutCommandContainer(ICommandManager commandManager)
             : base(Commands.Help.About, commandManager)
         {
-
         }
         #endregion
 

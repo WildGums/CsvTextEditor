@@ -9,6 +9,7 @@
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                    xmlns:orc="http://www.wildgums.net.au/orc"
                    xmlns:orchestra="https://github.com/orcomp/orchestra"
+                   xmlns:csvTextEditor="clr-namespace:CsvTextEditor"
                    mc:Ignorable="d"
                    d:DesignHeight="300"
                    d:DesignWidth="300">
@@ -33,7 +34,29 @@
         </fluent:Ribbon.Menu>
 
         <fluent:Ribbon.Tabs>
-            <fluent:RibbonTabItem Header="View" />
+            <fluent:RibbonTabItem Header="View">
+                <fluent:RibbonGroupBox Header="Edit">
+                    <fluent:Button Header="Copy"
+                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Copy}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.Copy}" />
+
+                    <fluent:Button Header="Cut"
+                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Cut}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.Cut}" />
+
+                    <fluent:Button Header="Paste"
+                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Paste}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.Paste}" />
+
+                    <fluent:Button Header="Undo"
+                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.MailReply}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.Undo}" />
+
+                    <fluent:Button Header="Redo"
+                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.MailForward}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.Redo}" />
+                </fluent:RibbonGroupBox>
+            </fluent:RibbonTabItem>
         </fluent:Ribbon.Tabs>
     </fluent:Ribbon>
 </catel:UserControl>

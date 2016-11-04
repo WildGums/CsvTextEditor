@@ -114,7 +114,13 @@
     <Compile Include="..\SolutionAssemblyInfo.cs">
       <Link>Properties\SolutionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Commands\Base\EditProjectCommandContainerBase.cs" />
     <Compile Include="Commands\Base\ProjectCommandContainerBase.cs" />
+    <Compile Include="Commands\EditCopyCommandContainer.cs" />
+    <Compile Include="Commands\EditCutCommandContainer.cs" />
+    <Compile Include="Commands\EditPasteCommandContainer.cs" />
+    <Compile Include="Commands\EditRedoCommandContainer.cs" />
+    <Compile Include="Commands\EditUndoCommandContainer.cs" />
     <Compile Include="Commands\HelpAboutCommandContainer.cs" />
     <Compile Include="Commands\FileCloseCommandContainer.cs" />
     <Compile Include="Commands\FileSaveAsCommandContainer.cs" />

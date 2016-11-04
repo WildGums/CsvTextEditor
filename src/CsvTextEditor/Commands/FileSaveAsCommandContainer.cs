@@ -8,7 +8,6 @@
 namespace CsvTextEditor
 {
     using System.Threading.Tasks;
-    using Base;
     using Catel;
     using Catel.MVVM;
     using Catel.Services;
@@ -17,7 +16,9 @@ namespace CsvTextEditor
 
     public class FileSaveAsCommandContainer : ProjectCommandContainerBase
     {
+        #region Fields
         private readonly ISaveFileService _saveFileService;
+        #endregion
 
         #region Constructors
         public FileSaveAsCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ISaveFileService saveFileService)

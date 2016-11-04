@@ -10,6 +10,7 @@
                    d:DesignHeight="300"
                    d:DesignWidth="300">
     <Grid >
-        <csvTextEditor:CsvTextEditorControl Text="{Binding Text, Mode=TwoWay}"/>
+        <csvTextEditor:CsvTextEditorControl Text="{Binding Text, Mode=TwoWay}"
+                                            Scope="{Binding Project, Mode=OneWay}"/>
     </Grid>
 </catel:UserControl>

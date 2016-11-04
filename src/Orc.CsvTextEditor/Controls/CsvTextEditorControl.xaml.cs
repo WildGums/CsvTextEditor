@@ -8,7 +8,6 @@
 namespace Orc.CsvTextEditor
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
     using System.Windows;
@@ -20,6 +19,7 @@ namespace Orc.CsvTextEditor
     using ICSharpCode.AvalonEdit.Editing;
     using ICSharpCode.AvalonEdit.Highlighting;
     using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+    using Services;
 
     public partial class CsvTextEditorControl
     {
@@ -30,7 +30,10 @@ namespace Orc.CsvTextEditor
         private readonly TextArea _textArea;
         private readonly TextDocument _textDocument;
         private readonly IPostprocessorProvider _postprocessorProvider;
+        private readonly IServiceLocator _serviceLocator;
+        private readonly ITypeFactory _typeFactory;
 
+        private ICsvTextEditorService _csvTextEditorService;
         private bool _isTextEditing;
         private bool _isUpdating;
         #endregion
@@ -50,11 +53,12 @@ namespace Orc.CsvTextEditor
             _backgroundWorker = new BackgroundWorker();
             _backgroundWorker.DoWork += OnBackgroundWorkerDoWork;
 
-            var serviceLocator = this.GetServiceLocator();
-            _postprocessorProvider = serviceLocator.ResolveType<IPostprocessorProvider>();
+            _serviceLocator = this.GetServiceLocator();
+            _postprocessorProvider = _serviceLocator.ResolveType<IPostprocessorProvider>();
+            _typeFactory = _serviceLocator.ResolveType<ITypeFactory>();
 
-            serviceLocator.RegisterInstance(_elementGenerator, TextEditor);
-        }
+            UpdateServiceRegistration();
+        }       
         #endregion
 
         #region Dependency properties
@@ -65,7 +69,16 @@ namespace Orc.CsvTextEditor
         }
 
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            "Text", typeof(string), typeof(CsvTextEditorControl), new PropertyMetadata(default(string), (s, e) => ((CsvTextEditorControl)s).OnTextChanged()));
+            "Text", typeof(string), typeof(CsvTextEditorControl), new PropertyMetadata(default(string), (s, e) => ((CsvTextEditorControl)s).OnTextChanged()));        
+
+        public object Scope
+        {
+            get { return (object) GetValue(ScopeProperty); }
+            set { SetValue(ScopeProperty, value); }
+        }
+
+        public static readonly DependencyProperty ScopeProperty = DependencyProperty.Register(
+            "Scope", typeof(object), typeof(CsvTextEditorControl), new PropertyMetadata(default(object), (s, e) => ((CsvTextEditorControl)s).OnScopeChanged()));
         #endregion
 
         private void OnTextChanged()
@@ -76,6 +89,21 @@ namespace Orc.CsvTextEditor
             }
 
             UpdateTextEditor();
+        }
+
+        private void OnScopeChanged()
+        {
+            UpdateServiceRegistration();
+        }
+
+        private void UpdateServiceRegistration()
+        {
+            if (_csvTextEditorService == null)
+            {
+                _csvTextEditorService = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorService>(TextEditor);
+            }
+
+            _serviceLocator.RegisterInstance(_csvTextEditorService, Scope);
         }
 
         private void UpdateTextEditor()
@@ -111,7 +139,6 @@ namespace Orc.CsvTextEditor
             _textDocument.Changing += TextDocumentOnChanging;
 
             LoadSyntaxHighlighting();
-            AssignShortcutKeys();
         }
 
         private IPostprocessor _postprocessor;
@@ -169,11 +196,6 @@ namespace Orc.CsvTextEditor
 
             _postprocessor = null;
         }        
-
-        private void AssignShortcutKeys()
-        {
-            AvalonEditCommands.DeleteLine.InputGestures.Add(new KeyGesture(Key.L, ModifierKeys.Control));
-        }
 
         private void LoadSyntaxHighlighting()
         {

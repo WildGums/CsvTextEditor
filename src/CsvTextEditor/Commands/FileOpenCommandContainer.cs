@@ -8,7 +8,6 @@
 namespace CsvTextEditor
 {
     using System.Threading.Tasks;
-    using Base;
     using Catel;
     using Catel.MVVM;
     using Catel.Services;
@@ -17,7 +16,9 @@ namespace CsvTextEditor
 
     public class FileOpenCommandContainer : ProjectCommandContainerBase
     {
+        #region Fields
         private readonly IOpenFileService _openFileService;
+        #endregion
 
         #region Constructors
         public FileOpenCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IOpenFileService openFileService)
@@ -30,6 +31,7 @@ namespace CsvTextEditor
         }
         #endregion
 
+        #region Methods
         protected override bool CanExecute(object parameter)
         {
             return true;
@@ -47,5 +49,6 @@ namespace CsvTextEditor
 
             return TaskHelper.Completed;
         }
+        #endregion
     }
 }

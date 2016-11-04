@@ -88,6 +88,14 @@ namespace CsvTextEditor.Services
             _commandManager.CreateCommandWithGesture(typeof(Commands.File), "Save");
             _commandManager.CreateCommandWithGesture(typeof(Commands.File), "SaveAs");
 
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Undo");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Redo");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Copy");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Paste");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Cut");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "DeleteLine");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "DuplicateLine");
+
             _commandManager.CreateCommandWithGesture(typeof(Commands.Help), "About");
         }
         #endregion
