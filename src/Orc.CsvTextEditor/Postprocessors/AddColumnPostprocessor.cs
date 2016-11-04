@@ -91,16 +91,7 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-            SetCaretToSpecificLineAndColumn(_lineIndex, _columnIndex);
-        }
-
-        private void SetCaretToSpecificLineAndColumn(int lineIndex, int columnIndex)
-        {
-            var line = _textDocument.Lines[lineIndex];
-            var offset = line.Offset;
-            var columnOffset = _elementGenerator.Lines[lineIndex].Take(columnIndex).Sum();
-
-            _textEditor.CaretOffset = offset + columnOffset;
+            _textEditor.SetCaretToSpecificLineAndColumn(_lineIndex, _columnIndex, _elementGenerator.Lines);
         }
         #endregion
     }
