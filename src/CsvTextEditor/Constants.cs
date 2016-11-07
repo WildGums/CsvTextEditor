@@ -36,19 +36,19 @@ namespace CsvTextEditor
         public static class Edit
         {
             public const string Undo = "Edit.Undo";
-            public static readonly InputGesture UndoInputGesture = new InputGesture(Key.Z, ModifierKeys.Control);
+            //public static readonly InputGesture UndoInputGesture = new InputGesture(Key.Z, ModifierKeys.Control);
 
             public const string Redo = "Edit.Redo";
-            public static readonly InputGesture RedoInputGesture = new InputGesture(Key.Y, ModifierKeys.Control);
+            //public static readonly InputGesture RedoInputGesture = new InputGesture(Key.Y, ModifierKeys.Control);
 
             public const string Copy = "Edit.Copy";
-            public static readonly InputGesture CopyInputGesture = new InputGesture(Key.C, ModifierKeys.Control);
+            //public static readonly InputGesture CopyInputGesture = new InputGesture(Key.C, ModifierKeys.Control);
 
             public const string Cut = "Edit.Cut";
-            public static readonly InputGesture CutInputGesture = new InputGesture(Key.X, ModifierKeys.Control);
+            //public static readonly InputGesture CutInputGesture = new InputGesture(Key.X, ModifierKeys.Control);
 
             public const string Paste = "Edit.Paste";
-            public static readonly InputGesture PasteInputGesture = new InputGesture(Key.V, ModifierKeys.Control);
+            //public static readonly InputGesture PasteInputGesture = new InputGesture(Key.V, ModifierKeys.Control);
 
             public const string DuplicateLine = "Edit.DuplicateLine";
             public static readonly InputGesture DuplicateLineInputGesture = new InputGesture(Key.D, ModifierKeys.Control);

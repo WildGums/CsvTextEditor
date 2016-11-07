@@ -8,6 +8,8 @@
 namespace Orc.CsvTextEditor.Services
 {
     using System;
+    using System.Windows;
+    using System.Windows.Input;
     using Catel;
     using Catel.MVVM;
     using ICSharpCode.AvalonEdit;
@@ -18,6 +20,10 @@ namespace Orc.CsvTextEditor.Services
         private readonly ICommandManager _commandManager;
         private readonly TextEditor _textEditor;
         #endregion
+
+        CommandBinding _undoBinding;
+        CommandBinding _redoBinding;
+
 
         #region Constructors
         public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager)
@@ -30,6 +36,9 @@ namespace Orc.CsvTextEditor.Services
 
             _textEditor.TextArea.SelectionChanged += OnTextAreaSelectionChanged;
             _textEditor.TextChanged += OnTextChanged;
+
+            AvalonEditCommands.DeleteLine.InputGestures.Add(new KeyGesture(Key.L, ModifierKeys.Control));
+        //    ApplicationCommands.Undo
         }
         #endregion
 
@@ -74,6 +83,27 @@ namespace Orc.CsvTextEditor.Services
         private void OnTextChanged(object sender, EventArgs e)
         {
             _commandManager.InvalidateCommands();
+
+            if (_undoBinding == null)
+            {
+                _undoBinding = new CommandBinding(
+                    ApplicationCommands.Undo, new ExecutedRoutedEventHandler(UndoExecuted), null);
+                _redoBinding = new CommandBinding(
+                    ApplicationCommands.Redo, new ExecutedRoutedEventHandler(RedoExecuted), null);
+
+                _textEditor.CommandBindings.Add(_undoBinding);
+                _textEditor.CommandBindings.Add(_redoBinding);
+            }
+        }
+
+        private void UndoExecuted(object sender, ExecutedRoutedEventArgs args)
+        {
+          //  ApplicationCommands.Undo.Execute(null, Application.Current.MainWindow);
+        }
+
+        private void RedoExecuted(object sender, ExecutedRoutedEventArgs args)
+        {
+       //    ApplicationCommands.Redo.Execute(null, Application.Current.MainWindow);
         }
         #endregion
     }
