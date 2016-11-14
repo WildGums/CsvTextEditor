@@ -7,27 +7,77 @@
 
 namespace Orc.CsvTextEditor
 {
+    using System;
+    using System.Linq;
+    using Catel;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Rendering;
 
     internal class TabSpaceElementGenerator : VisualLineElementGenerator
     {
+        private readonly TextView _textView;
+
         #region Fields
-        private readonly ColumnWidthCalculator _columnWidthCalculator;
-
+        private int[][] _lines;
         private int _tabWidth;
-        public int[] ColumnWidth;
-        public int[][] Lines;
         #endregion
 
-        #region Constructors
-        public TabSpaceElementGenerator(ColumnWidthCalculator columnWidthCalculator)
+        #region Properties
+        public int[][] Lines
         {
-            _columnWidthCalculator = columnWidthCalculator;
+            get { return _lines; }
+            set
+            {
+                if (Equals(value, _lines))
+                {
+                    return;
+                }
+
+                _lines = value;
+                ColumnWidth = CalculateColumnWidth(_lines);
+            }
         }
+
+        public int[] ColumnWidth { get; private set; }
+        public int ColumnCount => Lines[0].Length;
         #endregion
 
-        #region Methods
+        public TabSpaceElementGenerator(TextView textView)
+        {
+            Argument.IsNotNull(() => textView);
+
+            _textView = textView;
+        }
+
+        public bool RefreshLocation(TextLocation affectedLocation, int length)
+        {
+            var columnWidth = ColumnWidth;
+            var columnWidthByLine = Lines;
+
+            var columnNumberWithOffset = GetColumn(affectedLocation);
+
+            var affectedColumn = columnNumberWithOffset.ColumnNumber;
+            var affectedLine = affectedLocation.Line - 1;
+            var oldWidth = columnWidthByLine[affectedLine][affectedColumn];
+
+            var newWidth = oldWidth + length;
+            
+            columnWidthByLine[affectedLine][affectedColumn] = newWidth;
+
+            if (columnWidth[affectedColumn] >= newWidth)
+            {
+                return false;
+            }
+
+            if (length <= 0)
+            {
+                newWidth = columnWidthByLine.Where(x => x.Length > affectedColumn).Select(x => x[affectedColumn]).Max();
+            }
+            
+            columnWidth[affectedColumn] = newWidth;
+            return true;
+        }
+
         public override VisualLineElement ConstructElement(int offset)
         {
             if (CurrentContext.VisualLine.LastDocumentLine.EndOffset == offset)
@@ -47,7 +97,7 @@ namespace Orc.CsvTextEditor
 
             var location = CurrentContext.Document.GetLocation(startOffset);
 
-            var columnNumberWithOffset = _columnWidthCalculator.GetColumn(Lines, location);
+            var columnNumberWithOffset = GetColumn(location);
             var locationLine = location.Line;
 
             if (columnNumberWithOffset.ColumnNumber == ColumnWidth.Length - 1)
@@ -71,6 +121,60 @@ namespace Orc.CsvTextEditor
 
             return CurrentContext.Document.GetOffset(new TextLocation(locationLine, columnNumberWithOffset.OffsetInLine));
         }
-        #endregion
+
+        public ColumnNumberWithOffset GetColumn(TextLocation location)
+        {
+            var lines = Lines;
+
+            var currentLineIndex = location.Line - 1;
+            var currentColumnIndex = location.Column - 1;
+
+            var currentLine = lines[currentLineIndex];
+
+            var sum = 0;
+            var i = 0;
+
+            while (currentLine.Length > i && sum <= currentColumnIndex)
+            {
+                sum += currentLine[i];
+                i++;
+            }
+
+            var column = new ColumnNumberWithOffset
+            {
+                ColumnNumber = i - 1,
+                OffsetInLine = sum,
+                Length = currentLine[i - 1]
+            };
+
+            return column;
+        }
+
+        private int[] CalculateColumnWidth(int[][] columnWidthByLine)
+        {
+            if (columnWidthByLine.Length == 0)
+            {
+                return new int[0];
+            }
+
+            var accum = new int[columnWidthByLine[0].Length];
+
+            foreach (var line in columnWidthByLine)
+            {
+                if (line.Length > accum.Length)
+                {
+                    throw new ArgumentException("Records in CSV have to contain the same number of fields");
+                }
+
+                var length = Math.Min(accum.Length, line.Length);
+
+                for (var i = 0; i < length; i++)
+                {
+                    accum[i] = Math.Max(accum[i], line[i]);
+                }
+            }
+
+            return accum.ToArray();
+        }
     }
 }

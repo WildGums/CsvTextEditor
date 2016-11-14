@@ -14,7 +14,7 @@ namespace Orc.CsvTextEditor
     using System.Windows.Input;
     using System.Xml;
     using Catel.IoC;
-    using ICSharpCode.AvalonEdit;
+    using Catel.Logging;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Editing;
     using ICSharpCode.AvalonEdit.Highlighting;
@@ -23,19 +23,17 @@ namespace Orc.CsvTextEditor
 
     public partial class CsvTextEditorControl
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         #region Fields
         private readonly BackgroundWorker _backgroundWorker;
-        private readonly ColumnWidthCalculator _columnWidthCalculator;
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly TextArea _textArea;
-        private readonly TextDocument _textDocument;
-        private readonly IPostprocessorProvider _postprocessorProvider;
         private readonly IServiceLocator _serviceLocator;
         private readonly ITypeFactory _typeFactory;
 
         private ICsvTextEditorService _csvTextEditorService;
         private bool _isTextEditing;
-        private bool _isUpdating;
         #endregion
 
         #region Constructors
@@ -43,18 +41,14 @@ namespace Orc.CsvTextEditor
         {
             InitializeComponent();
 
-            _columnWidthCalculator = new ColumnWidthCalculator();
-            _elementGenerator = new TabSpaceElementGenerator(_columnWidthCalculator);
             _textArea = TextEditor.TextArea;
-            _textDocument = TextEditor.Document;
 
-            _textArea.TextView.ElementGenerators.Add(_elementGenerator);
+            _elementGenerator = new TabSpaceElementGenerator();
 
             _backgroundWorker = new BackgroundWorker();
             _backgroundWorker.DoWork += OnBackgroundWorkerDoWork;
 
             _serviceLocator = this.GetServiceLocator();
-            _postprocessorProvider = _serviceLocator.ResolveType<IPostprocessorProvider>();
             _typeFactory = _serviceLocator.ResolveType<ITypeFactory>();
 
             UpdateServiceRegistration();
@@ -81,12 +75,33 @@ namespace Orc.CsvTextEditor
             "Scope", typeof(object), typeof(CsvTextEditorControl), new PropertyMetadata(default(object), (s, e) => ((CsvTextEditorControl)s).OnScopeChanged()));
         #endregion
 
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            base.OnPreviewKeyDown(e);
+
+            Log.Info("Add column");
+
+            var offset = TextEditor.CaretOffset;
+
+            if (e.Key == Key.OemComma)
+            {
+                Text = _csvTextEditorService.AddColumnToDocument(offset);
+              //  SynchronizeDocumentText();
+
+                e.Handled = true;
+            }
+
+            Log.Info("Added column");
+        }
+
         private void OnTextChanged()
         {
             if (_isTextEditing)
             {
                 return;
             }
+
+            Log.Info("text changed");
 
             UpdateTextEditor();
         }
@@ -100,7 +115,7 @@ namespace Orc.CsvTextEditor
         {
             if (_csvTextEditorService == null)
             {
-                _csvTextEditorService = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorService>(TextEditor);
+                _csvTextEditorService = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorService>(TextEditor, _elementGenerator);
             }
 
             _serviceLocator.RegisterInstance(_csvTextEditorService, Scope);
@@ -108,56 +123,26 @@ namespace Orc.CsvTextEditor
 
         private void UpdateTextEditor()
         {
-            _textDocument.Changed -= OnTextDocumentChanged;
-            _textDocument.UpdateFinished -= TextDocumentOnUpdateFinished;
-            _textDocument.Changing -= TextDocumentOnChanging;
+            Log.Info("UpdateTextEditor start");
+
+            var document = TextEditor.Document;
+            document.Changed -= OnTextDocumentChanged;
 
             var text = Text;
 
-            if (ReferenceEquals(text, null))
-            {
-                return;
-            }
+            _csvTextEditorService.UpdateTextEditor(text);
 
-            var lines = text.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
-
-            var columnWidthByLine = lines.Select(x => x.Split(Symbols.Comma))
-                    .Select(x => x.Select(y => y.Length + 1).ToArray())
-                    .ToArray();
-
-            var columnWidth = CalculateColumnWidth(columnWidthByLine);
-
-            _elementGenerator.Lines = columnWidthByLine;
-            _elementGenerator.ColumnWidth = columnWidth;
-
-            TextEditor.Text = text;
-
-            _textDocument.Changed += OnTextDocumentChanged;
-            _textDocument.UpdateFinished += TextDocumentOnUpdateFinished;
-            _textDocument.Changing += TextDocumentOnChanging;
+            document.Changed += OnTextDocumentChanged;
 
             LoadSyntaxHighlighting();
-        }
 
-        private IPostprocessor _postprocessor;
-
-        private void TextDocumentOnChanging(object sender, DocumentChangeEventArgs e)
-        {
-            var changeState = new DocumentChangingContext()
-            {
-                InsertedText = e.InsertedText.Text,
-                Offset = e.Offset,
-                ColumnWidthCalculator = _columnWidthCalculator,
-                ElementGenerator = _elementGenerator,
-                TextEditor = TextEditor,
-                OldText = Text
-            };
-
-            _postprocessor = _postprocessorProvider.GetPostprocessors(TextEditor.Text, changeState);         
+            Log.Info("UpdateTextEditor end");
         }
 
         private void SynchronizeDocumentText()
         {
+            Log.Info("SynchronizeDocumentText start");
+
             _isTextEditing = true;
 
             try
@@ -168,32 +153,9 @@ namespace Orc.CsvTextEditor
             {
                 _isTextEditing = false;
             }
+
+            Log.Info("SynchronizeDocumentText end");
         }
-
-        private void TextDocumentOnUpdateFinished(object sender, EventArgs eventArgs)
-        {
-            if (ReferenceEquals(_postprocessor, null) || _isUpdating)
-            {
-                SynchronizeDocumentText();
-                return;
-            }            
-
-            _isUpdating = true;
-
-            // Note: important to remember this value, because can be changed
-            var postprocessor = _postprocessor;
-
-            postprocessor.Apply();
-
-            SynchronizeDocumentText();
-            UpdateTextEditor();
-
-            postprocessor.RestoreCaret();
-
-            _isUpdating = false;
-
-            _postprocessor = null;
-        }        
 
         private void LoadSyntaxHighlighting()
         {
@@ -211,67 +173,21 @@ namespace Orc.CsvTextEditor
             }
         }
 
-        private int[] CalculateColumnWidth(int[][] columnWidthByLine)
-        {
-            if (columnWidthByLine.Length == 0)
-            {
-                return new int[0];
-            }
-
-            var accum = new int[columnWidthByLine[0].Length];
-
-            foreach (var line in columnWidthByLine)
-            {
-                if (line.Length > accum.Length)
-                {
-                    throw new ArgumentException("Records in CSV have to contain the same number of fields");
-                }
-
-                var length = Math.Min(accum.Length, line.Length);
-
-                for (var i = 0; i < length; i++)
-                {
-                    accum[i] = Math.Max(accum[i], line[i]);
-                }
-            }
-
-            return accum.ToArray();
-        }
-
         private void OnTextDocumentChanged(object sender, DocumentChangeEventArgs e)
         {
-            var affectedLocation = _textDocument.GetLocation(e.Offset);
+            Log.Info("OnTextDocumentChanged start");
 
-            var columnWidth = _elementGenerator.ColumnWidth;
-            var columnWidthByLine = _elementGenerator.Lines;
+            var textDocument = TextEditor.Document;
 
-            var columnNumberWithOffset = _columnWidthCalculator.GetColumn(columnWidthByLine, affectedLocation);
+            var affectedLocation = textDocument.GetLocation(e.Offset);
+            var lenght = e.InsertionLength - e.RemovalLength;
 
-            var myColumn = columnNumberWithOffset.ColumnNumber;
-            var oldWidth = columnWidthByLine[affectedLocation.Line - 1][myColumn];
-            var length = e.InsertionLength - e.RemovalLength;
-            columnWidthByLine[affectedLocation.Line - 1][myColumn] = oldWidth + length;
-
-            if (length > 0)
+            if (_elementGenerator.RefreshLocation(affectedLocation, lenght))
             {
-                if (oldWidth + length > columnWidth[myColumn])
-                {
-                    columnWidth[columnNumberWithOffset.ColumnNumber] = oldWidth + length;
-
-                    UpdateLines();
-                }
+                UpdateLines();
             }
-            else
-            {
-                var maxLength = columnWidthByLine.Where(x => x.Length > myColumn).Select(x => x[myColumn]).Max();
 
-                if (maxLength != columnWidth[myColumn])
-                {
-                    columnWidth[myColumn] = maxLength;
-
-                    UpdateLines();
-                }
-            }
+            Log.Info("OnTextDocumentChanged end");
         }
 
         private void UpdateLines()

@@ -10,6 +10,7 @@ namespace Orc.CsvTextEditor
     using System.Linq;
     using Catel;
     using ICSharpCode.AvalonEdit;
+    using ICSharpCode.AvalonEdit.Document;
 
     public static class TextEditorExtensions
     {
@@ -24,6 +25,17 @@ namespace Orc.CsvTextEditor
             var columnOffset = columnWidthByLine[lineIndex].Take(columnIndex).Sum();
 
             textEditor.CaretOffset = offset + columnOffset;
+        }
+
+        public static int GetOffsetOfSpecificLineAndColumn(this TextDocument textDocument, int lineIndex, int columnIndex, int[][] columnWidthByLine)
+        {
+            Argument.IsNotNull(() => textDocument);
+
+            var line = textDocument.Lines[lineIndex];
+            var offset = line.Offset;
+            var columnOffset = columnWidthByLine[lineIndex].Take(columnIndex).Sum();
+
+            return offset + columnOffset;
         }
     }
 }

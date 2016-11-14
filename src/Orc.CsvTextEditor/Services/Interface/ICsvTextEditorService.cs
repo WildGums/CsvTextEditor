@@ -22,6 +22,11 @@ namespace Orc.CsvTextEditor.Services
         void Paste();
         void Redo();
         void Undo();
+
+        void AddColumn();
+        void UpdateTextEditor(string text);
+
+        string AddColumnToDocument(int offset);
         #endregion
     }
 }
