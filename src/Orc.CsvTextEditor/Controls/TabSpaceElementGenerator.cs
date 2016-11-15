@@ -9,14 +9,11 @@ namespace Orc.CsvTextEditor
 {
     using System;
     using System.Linq;
-    using Catel;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Rendering;
 
     internal class TabSpaceElementGenerator : VisualLineElementGenerator
     {
-        private readonly TextView _textView;
-
         #region Fields
         private int[][] _lines;
         private int _tabWidth;
@@ -42,13 +39,6 @@ namespace Orc.CsvTextEditor
         public int ColumnCount => Lines[0].Length;
         #endregion
 
-        public TabSpaceElementGenerator(TextView textView)
-        {
-            Argument.IsNotNull(() => textView);
-
-            _textView = textView;
-        }
-
         public bool RefreshLocation(TextLocation affectedLocation, int length)
         {
             var columnWidth = ColumnWidth;
@@ -61,7 +51,7 @@ namespace Orc.CsvTextEditor
             var oldWidth = columnWidthByLine[affectedLine][affectedColumn];
 
             var newWidth = oldWidth + length;
-            
+
             columnWidthByLine[affectedLine][affectedColumn] = newWidth;
 
             if (columnWidth[affectedColumn] >= newWidth)
@@ -73,7 +63,7 @@ namespace Orc.CsvTextEditor
             {
                 newWidth = columnWidthByLine.Where(x => x.Length > affectedColumn).Select(x => x[affectedColumn]).Max();
             }
-            
+
             columnWidth[affectedColumn] = newWidth;
             return true;
         }

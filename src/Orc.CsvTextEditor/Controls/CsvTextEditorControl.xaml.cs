@@ -15,6 +15,7 @@ namespace Orc.CsvTextEditor
     using System.Xml;
     using Catel.IoC;
     using Catel.Logging;
+    using Catel.Threading;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Editing;
     using ICSharpCode.AvalonEdit.Highlighting;
@@ -26,9 +27,7 @@ namespace Orc.CsvTextEditor
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
         #region Fields
-        private readonly BackgroundWorker _backgroundWorker;
         private readonly TabSpaceElementGenerator _elementGenerator;
-        private readonly TextArea _textArea;
         private readonly IServiceLocator _serviceLocator;
         private readonly ITypeFactory _typeFactory;
 
@@ -41,13 +40,7 @@ namespace Orc.CsvTextEditor
         {
             InitializeComponent();
 
-            _textArea = TextEditor.TextArea;
-
             _elementGenerator = new TabSpaceElementGenerator();
-
-            _backgroundWorker = new BackgroundWorker();
-            _backgroundWorker.DoWork += OnBackgroundWorkerDoWork;
-
             _serviceLocator = this.GetServiceLocator();
             _typeFactory = _serviceLocator.ResolveType<ITypeFactory>();
 
@@ -184,25 +177,10 @@ namespace Orc.CsvTextEditor
 
             if (_elementGenerator.RefreshLocation(affectedLocation, lenght))
             {
-                UpdateLines();
+                TaskHelper.RunAndWaitAsync(() => Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.SystemIdle, new Action(TextEditor.TextArea.TextView.Redraw)));
             }
 
             Log.Info("OnTextDocumentChanged end");
-        }
-
-        private void UpdateLines()
-        {
-            _textArea.TextView.Redraw();
-
-            if (!_backgroundWorker.IsBusy)
-            {
-                _backgroundWorker.RunWorkerAsync();
-            }
-        }
-
-        private void OnBackgroundWorkerDoWork(object sender, DoWorkEventArgs e)
-        {
-            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.SystemIdle, new Action(TextEditor.TextArea.TextView.Redraw));
         }
     }
 }
