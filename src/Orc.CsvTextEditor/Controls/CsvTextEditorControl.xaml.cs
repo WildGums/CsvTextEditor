@@ -8,25 +8,28 @@
 namespace Orc.CsvTextEditor
 {
     using System;
-    using System.ComponentModel;
-    using System.Linq;
     using System.Windows;
     using System.Windows.Input;
     using System.Xml;
     using Catel.IoC;
     using Catel.Logging;
-    using Catel.Threading;
+    using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.Document;
-    using ICSharpCode.AvalonEdit.Editing;
     using ICSharpCode.AvalonEdit.Highlighting;
     using ICSharpCode.AvalonEdit.Highlighting.Xshd;
     using Services;
 
     public partial class CsvTextEditorControl
     {
+        #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
-        #region Fields
+        public static readonly RoutedCommand DuplicateLine = new RoutedCommand("DuplicateLine", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.D, ModifierKeys.Control)});
+        public static readonly RoutedCommand AddColumn = new RoutedCommand("AddColumn", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.OemComma, ModifierKeys.None)});
+        public static readonly RoutedCommand RemoveLine = new RoutedCommand("RemoveLine", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.L, ModifierKeys.Control)});
+        public static readonly RoutedCommand AddLine = new RoutedCommand("AddLine", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.Enter, ModifierKeys.None)});
+        public static readonly RoutedCommand RemoveColumn = new RoutedCommand("RemoveColumn", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.OemComma, ModifierKeys.Control)});
+
         private readonly IServiceLocator _serviceLocator;
         private readonly ITypeFactory _typeFactory;
 
@@ -43,7 +46,9 @@ namespace Orc.CsvTextEditor
             _typeFactory = _serviceLocator.ResolveType<ITypeFactory>();
 
             UpdateServiceRegistration();
-        }       
+
+            AvalonEditCommands.DeleteLine.InputGestures.Clear();
+        }
         #endregion
 
         #region Dependency properties
@@ -54,7 +59,7 @@ namespace Orc.CsvTextEditor
         }
 
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            "Text", typeof(string), typeof(CsvTextEditorControl), new PropertyMetadata(default(string), (s, e) => ((CsvTextEditorControl)s).OnTextChanged()));        
+            "Text", typeof (string), typeof (CsvTextEditorControl), new PropertyMetadata(default(string), (s, e) => ((CsvTextEditorControl) s).OnTextChanged()));
 
         public object Scope
         {
@@ -63,57 +68,47 @@ namespace Orc.CsvTextEditor
         }
 
         public static readonly DependencyProperty ScopeProperty = DependencyProperty.Register(
-            "Scope", typeof(object), typeof(CsvTextEditorControl), new PropertyMetadata(default(object), (s, e) => ((CsvTextEditorControl)s).OnScopeChanged()));
+            "Scope", typeof (object), typeof (CsvTextEditorControl), new PropertyMetadata(default(object), (s, e) => ((CsvTextEditorControl) s).OnScopeChanged()));
         #endregion
 
-        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        private void OnDuplicateLine(object sender, ExecutedRoutedEventArgs e)
         {
-            base.OnPreviewKeyDown(e);
+            _csvTextEditorService.DuplicateLine();
+            Synchronize();
 
-           // var offset = TextEditor.CaretOffset;
+            e.Handled = true;
+        }
 
-            Log.Info("Add column");
+        private void OnAddColumn(object sender, ExecutedRoutedEventArgs e)
+        {
+            _csvTextEditorService.AddColumn();
+            Synchronize();
 
-            if (Keyboard.Modifiers == ModifierKeys.Control)
-            {
-                if (e.Key == Key.OemComma)
-                {
-                    _csvTextEditorService.RemoveColumn();
-                    e.Handled = true;
-                }
+            e.Handled = true;
+        }
 
-                if (e.Key == Key.D)
-                {
-                    _csvTextEditorService.DuplicateLine();
-                    e.Handled = true;
-                }
+        private void OnRemoveLine(object sender, ExecutedRoutedEventArgs e)
+        {
+            _csvTextEditorService.RemoveLine();
+            Synchronize();
 
-                if (e.Key == Key.L)
-                {
-                    _csvTextEditorService.RemoveLine();
-                    e.Handled = true;
-                }
-            }
-            
-            if (!e.Handled && e.Key == Key.OemComma)
-            {
-                _csvTextEditorService.AddColumn();
-                e.Handled = true;
-            }
+            e.Handled = true;
+        }
 
-            if (!e.Handled && e.Key == Key.Enter)
-            {
-                _csvTextEditorService.AddLine();
-                e.Handled = true;
-            }
-            
-            if (e.Handled)
-            {
-                SynchronizeDocumentText();
-                LoadSyntaxHighlighting();
-            }
+        private void OnAddLine(object sender, ExecutedRoutedEventArgs e)
+        {
+            _csvTextEditorService.AddLine();
+            Synchronize();
 
-            Log.Info("Added column");
+            e.Handled = true;
+        }
+
+        private void OnRemoveColumn(object sender, ExecutedRoutedEventArgs e)
+        {
+            _csvTextEditorService.RemoveColumn();
+            Synchronize();
+
+            e.Handled = true;
         }
 
         private void OnTextChanged()
@@ -158,6 +153,12 @@ namespace Orc.CsvTextEditor
             LoadSyntaxHighlighting();
 
             Log.Info("UpdateTextEditor end");
+        }
+
+        private void Synchronize()
+        {
+            SynchronizeDocumentText();
+            LoadSyntaxHighlighting();
         }
 
         private void SynchronizeDocumentText()
