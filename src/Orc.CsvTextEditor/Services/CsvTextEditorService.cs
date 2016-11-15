@@ -25,6 +25,8 @@ namespace Orc.CsvTextEditor.Services
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly TextEditor _textEditor;
 
+        private bool _isUpdating = false;
+
         CommandBinding _redoBinding;
         CommandBinding _undoBinding;
         #endregion
@@ -124,6 +126,26 @@ namespace Orc.CsvTextEditor.Services
             }
         }
 
+        public void RemoveColumn()
+        {
+            var textDocument = _textEditor.Document;
+            var linesCount = textDocument.LineCount;
+            var offset = _textEditor.CaretOffset;
+
+            var affectedLocation = textDocument.GetLocation(offset);
+            var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
+
+            var columnsCount = _elementGenerator.ColumnCount;
+
+            var lineIndex = affectedLocation.Line - 1;
+            var columnIndex = columnNumberWithOffset.ColumnNumber;
+
+            var text = _textEditor.Text.RemoveCommaSeparatedColumn(columnIndex, linesCount, columnsCount);
+
+            UpdateText(text);
+            Goto(lineIndex, columnIndex);
+        }
+
         public void AddLine()
         {
             var offset = _textEditor.CaretOffset;
@@ -158,43 +180,31 @@ namespace Orc.CsvTextEditor.Services
             Goto(nextLineIndex, caretColumnIndex);
         }
 
-        public void RemoveColumn()
+        public void DuplicateLine()
         {
             var textDocument = _textEditor.Document;
-            var linesCount = textDocument.LineCount;
             var offset = _textEditor.CaretOffset;
 
             var affectedLocation = textDocument.GetLocation(offset);
             var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
 
-            var columnsCount = _elementGenerator.ColumnCount;
-
             var lineIndex = affectedLocation.Line - 1;
             var columnIndex = columnNumberWithOffset.ColumnNumber;
 
-            var text = _textEditor.Text.RemoveCommaSeparatedColumn(columnIndex, linesCount, columnsCount);
+            var line = textDocument.Lines[lineIndex];
+            var lineOffset = line.Offset;
+            var endlineOffset = line.NextLine?.Offset ?? line.EndOffset;
+
+            var text = _textEditor.Text.DuplicateTextInLine(lineOffset, endlineOffset);
 
             UpdateText(text);
-            Goto(lineIndex, columnIndex);
+            Goto(lineIndex + 1, columnIndex);
         }
-
-        public void DuplicateLine()
-        {
-            throw new NotImplementedException();
-        }
-
 
         public void RemoveLine()
         {
             throw new NotImplementedException();
         }
-
-        public void Goto(int lineIndex, int columnIndex)
-        {
-            _textEditor.SetCaretToSpecificLineAndColumn(lineIndex, columnIndex, _elementGenerator.Lines);
-        }
-
-        private bool _isUpdating = false;
 
         public void UpdateTextLocation(int offset, int length)
         {
@@ -228,6 +238,11 @@ namespace Orc.CsvTextEditor.Services
             _isUpdating = false;
         }
         #endregion
+
+        public void Goto(int lineIndex, int columnIndex)
+        {
+            _textEditor.SetCaretToSpecificLineAndColumn(lineIndex, columnIndex, _elementGenerator.Lines);
+        }
 
         private void OnTextAreaSelectionChanged(object sender, EventArgs e)
         {

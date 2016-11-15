@@ -106,6 +106,17 @@ namespace Orc.CsvTextEditor
             return index;
         }
 
+        public static string DuplicateTextInLine(this string csvText, int startOffset, int endOffset)
+        {
+            var lineToDuplicate = csvText.Substring(startOffset, endOffset - startOffset);
+            if (!lineToDuplicate.EndsWith(Environment.NewLine))
+            {
+                lineToDuplicate = Environment.NewLine + lineToDuplicate;
+            }
+
+            return csvText.Insert(endOffset, lineToDuplicate);
+        }
+
         public static string RemoveCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount)
         {
             if (columnsCount == 0 || linesCount == 0)
