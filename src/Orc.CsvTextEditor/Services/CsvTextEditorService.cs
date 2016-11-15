@@ -15,6 +15,7 @@ namespace Orc.CsvTextEditor.Services
     using Catel.MVVM;
     using Catel.Threading;
     using ICSharpCode.AvalonEdit;
+    using ICSharpCode.AvalonEdit.Document;
 
     internal class CsvTextEditorService : ICsvTextEditorService
     {

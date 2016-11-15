@@ -150,7 +150,7 @@ namespace Orc.CsvTextEditor
 
             if (IsKeyGestureMatches(RemoveLineKeyGesture, e.Key))
             {
-                OnRemoveColumn();
+                OnRemoveLine();
 
                 e.Handled = true;
                 return;
