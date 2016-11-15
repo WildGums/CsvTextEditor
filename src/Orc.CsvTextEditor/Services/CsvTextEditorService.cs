@@ -169,9 +169,6 @@ namespace Orc.CsvTextEditor.Services
 
             var columnsCount = _elementGenerator.ColumnCount;
 
-            var columnLenght = columnNumberWithOffset.Length;
-            var columnOffset = columnNumberWithOffset.OffsetInLine;
-
             var lineIndex = affectedLocation.Line - 1;
             var columnIndex = columnNumberWithOffset.ColumnNumber;
 
