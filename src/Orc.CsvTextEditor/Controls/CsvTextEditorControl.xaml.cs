@@ -130,6 +130,7 @@ namespace Orc.CsvTextEditor
 
         protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
+            //NOTO: may change to Dictionary of KeyGesture and Action or Preprocessor
             base.OnPreviewKeyDown(e);
 
             if (IsKeyGestureMatches(DuplicateLineKeyGesture, e.Key))
