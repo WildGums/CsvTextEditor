@@ -241,6 +241,8 @@ namespace Orc.CsvTextEditor.Services
 
         public void UpdateText(string text)
         {
+            text = text ?? string.Empty;
+
             var lines = text.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
 
             var columnWidthByLine = lines.Select(x => x.Split(Symbols.Comma))

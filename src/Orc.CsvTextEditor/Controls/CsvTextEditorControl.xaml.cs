@@ -23,15 +23,6 @@ namespace Orc.CsvTextEditor
     {
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
-
-        public static readonly RoutedCommand DuplicateLine = new RoutedCommand("DuplicateLine", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.D, ModifierKeys.Control)});
-        public static readonly RoutedCommand AddColumn = new RoutedCommand("AddColumn", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.OemComma, ModifierKeys.None)});
-        public static readonly RoutedCommand RemoveLine = new RoutedCommand("RemoveLine", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.L, ModifierKeys.Control)});
-        public static readonly RoutedCommand AddLine = new RoutedCommand("AddLine", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.Enter, ModifierKeys.None)});
-        public static readonly RoutedCommand RemoveColumn = new RoutedCommand("RemoveColumn", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.OemComma, ModifierKeys.Control)});
-        public static readonly RoutedCommand GotoNextColumn = new RoutedCommand("GotoNextColumn", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.Tab, ModifierKeys.None)});
-        public static readonly RoutedCommand GotoPreviousColumn = new RoutedCommand("GotoPreviousColumn", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.Tab, ModifierKeys.Control)});
-
         private readonly IServiceLocator _serviceLocator;
         private readonly ITypeFactory _typeFactory;
 
@@ -71,60 +62,171 @@ namespace Orc.CsvTextEditor
 
         public static readonly DependencyProperty ScopeProperty = DependencyProperty.Register(
             "Scope", typeof (object), typeof (CsvTextEditorControl), new PropertyMetadata(default(object), (s, e) => ((CsvTextEditorControl) s).OnScopeChanged()));
+
+        public static readonly DependencyProperty DuplicateLineKeyGestureProperty = DependencyProperty.Register(
+            "DuplicateLineKeyGesture", typeof (KeyGesture), typeof (CsvTextEditorControl), new PropertyMetadata(new KeyGesture(Key.D, ModifierKeys.Control)));
+
+        public KeyGesture DuplicateLineKeyGesture
+        {
+            get { return (KeyGesture) GetValue(DuplicateLineKeyGestureProperty); }
+            set { SetValue(DuplicateLineKeyGestureProperty, value); }
+        }
+
+        public static readonly DependencyProperty AddColumnKeyGestureProperty = DependencyProperty.Register(
+            "AddColumnKeyGesture", typeof (KeyGesture), typeof (CsvTextEditorControl), new PropertyMetadata(new KeyGesture(Key.OemComma, ModifierKeys.None)));
+
+        public KeyGesture AddColumnKeyGesture
+        {
+            get { return (KeyGesture) GetValue(AddColumnKeyGestureProperty); }
+            set { SetValue(AddColumnKeyGestureProperty, value); }
+        }
+
+        public static readonly DependencyProperty RemoveLineKeyGestureProperty = DependencyProperty.Register(
+            "RemoveLineKeyGesture", typeof (KeyGesture), typeof (CsvTextEditorControl), new PropertyMetadata(new KeyGesture(Key.L, ModifierKeys.Control)));
+
+        public KeyGesture RemoveLineKeyGesture
+        {
+            get { return (KeyGesture) GetValue(RemoveLineKeyGestureProperty); }
+            set { SetValue(RemoveLineKeyGestureProperty, value); }
+        }
+
+        public static readonly DependencyProperty AddLineKeyGestureProperty = DependencyProperty.Register(
+            "AddLineKeyGesture", typeof (KeyGesture), typeof (CsvTextEditorControl), new PropertyMetadata(new KeyGesture(Key.Enter, ModifierKeys.None)));
+
+        public KeyGesture AddLineKeyGesture
+        {
+            get { return (KeyGesture) GetValue(AddLineKeyGestureProperty); }
+            set { SetValue(AddLineKeyGestureProperty, value); }
+        }
+
+        //
+        public static readonly DependencyProperty RemoveColumnKeyGestureProperty = DependencyProperty.Register(
+            "RemoveColumnKeyGesture", typeof (KeyGesture), typeof (CsvTextEditorControl), new PropertyMetadata(new KeyGesture(Key.OemComma, ModifierKeys.Control)));
+
+        public KeyGesture RemoveColumnKeyGesture
+        {
+            get { return (KeyGesture) GetValue(RemoveColumnKeyGestureProperty); }
+            set { SetValue(RemoveColumnKeyGestureProperty, value); }
+        }
+
+        public static readonly DependencyProperty GotoNextColumnKeyGestureProperty = DependencyProperty.Register(
+            "GotoNextColumnKeyGesture", typeof (KeyGesture), typeof (CsvTextEditorControl), new PropertyMetadata(new KeyGesture(Key.Tab, ModifierKeys.None)));
+
+        public KeyGesture GotoNextColumnKeyGesture
+        {
+            get { return (KeyGesture) GetValue(GotoNextColumnKeyGestureProperty); }
+            set { SetValue(GotoNextColumnKeyGestureProperty, value); }
+        }
+
+        public static readonly DependencyProperty GotoPreviousColumnKeyGestureProperty = DependencyProperty.Register(
+            "GotoPreviousColumnKeyGesture", typeof (KeyGesture), typeof (CsvTextEditorControl), new PropertyMetadata(new KeyGesture(Key.Tab, ModifierKeys.Control)));
+
+        public KeyGesture GotoPreviousColumnKeyGesture
+        {
+            get { return (KeyGesture) GetValue(GotoPreviousColumnKeyGestureProperty); }
+            set { SetValue(GotoPreviousColumnKeyGestureProperty, value); }
+        }
         #endregion
 
-        private void OnDuplicateLine(object sender, ExecutedRoutedEventArgs e)
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            base.OnPreviewKeyDown(e);
+
+            if (IsKeyGestureMatches(DuplicateLineKeyGesture, e.Key))
+            {
+                OnDuplicateLine();
+
+                e.Handled = true;
+                return;
+            }
+
+            if (IsKeyGestureMatches(AddColumnKeyGesture, e.Key))
+            {
+                OnAddColumn();
+
+                e.Handled = true;
+                return;
+            }
+
+            if (IsKeyGestureMatches(RemoveLineKeyGesture, e.Key))
+            {
+                OnRemoveColumn();
+
+                e.Handled = true;
+                return;
+            }
+
+            if (IsKeyGestureMatches(AddLineKeyGesture, e.Key))
+            {
+                OnAddLine();
+
+                e.Handled = true;
+                return;
+            }
+
+            if (IsKeyGestureMatches(RemoveColumnKeyGesture, e.Key))
+            {
+                OnRemoveColumn();
+
+                e.Handled = true;
+                return;
+            }
+
+            if (IsKeyGestureMatches(GotoNextColumnKeyGesture, e.Key))
+            {
+                OnGotoNextColumn();
+
+                e.Handled = true;
+                return;
+            }
+
+            if (IsKeyGestureMatches(GotoPreviousColumnKeyGesture, e.Key))
+            {
+                OnGotoPreviousColumn();
+
+                e.Handled = true;
+                return;
+            }
+        }
+
+        private void OnDuplicateLine()
         {
             _csvTextEditorService.DuplicateLine();
             Synchronize();
-
-            e.Handled = true;
         }
 
-        private void OnAddColumn(object sender, ExecutedRoutedEventArgs e)
+        private void OnAddColumn()
         {
             _csvTextEditorService.AddColumn();
             Synchronize();
-
-            e.Handled = true;
         }
 
-        private void OnRemoveLine(object sender, ExecutedRoutedEventArgs e)
+        private void OnRemoveLine()
         {
             _csvTextEditorService.RemoveLine();
             Synchronize();
-
-            e.Handled = true;
         }
 
-        private void OnAddLine(object sender, ExecutedRoutedEventArgs e)
+        private void OnAddLine()
         {
             _csvTextEditorService.AddLine();
             Synchronize();
-
-            e.Handled = true;
         }
 
-        private void OnRemoveColumn(object sender, ExecutedRoutedEventArgs e)
+        private void OnRemoveColumn()
         {
             _csvTextEditorService.RemoveColumn();
             Synchronize();
-
-            e.Handled = true;
         }
 
-        private void OnGotoNextColumn(object sender, ExecutedRoutedEventArgs e)
+        private void OnGotoNextColumn()
         {
             _csvTextEditorService.GotoNextColumn();
-
-            e.Handled = true;
         }
 
-        private void OnGotoPreviousColumn(object sender, ExecutedRoutedEventArgs e)
+        private void OnGotoPreviousColumn()
         {
             _csvTextEditorService.GotoPreviousColumn();
-
-            e.Handled = true;
         }
 
         private void OnTextChanged()
@@ -218,6 +320,11 @@ namespace Orc.CsvTextEditor
             _csvTextEditorService.UpdateTextLocation(e.Offset, e.InsertionLength - e.RemovalLength);
 
             Log.Info("OnTextDocumentChanged end");
+        }
+
+        private bool IsKeyGestureMatches(KeyGesture keyGesture, Key key)
+        {
+            return Keyboard.Modifiers == keyGesture.Modifiers && key == keyGesture.Key;
         }
     }
 }
