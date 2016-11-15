@@ -87,6 +87,12 @@ namespace Orc.CsvTextEditor
                     _csvTextEditorService.DuplicateLine();
                     e.Handled = true;
                 }
+
+                if (e.Key == Key.L)
+                {
+                    _csvTextEditorService.RemoveLine();
+                    e.Handled = true;
+                }
             }
             
             if (!e.Handled && e.Key == Key.OemComma)

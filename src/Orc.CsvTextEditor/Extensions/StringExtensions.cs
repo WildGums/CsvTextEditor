@@ -117,6 +117,11 @@ namespace Orc.CsvTextEditor
             return csvText.Insert(endOffset, lineToDuplicate);
         }
 
+        public static string RemoveText(this string csvText, int startOffset, int endOffset)
+        {
+            return csvText.Remove(startOffset, endOffset - startOffset);
+        }
+
         public static string RemoveCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount)
         {
             if (columnsCount == 0 || linesCount == 0)

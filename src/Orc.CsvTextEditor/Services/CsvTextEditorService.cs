@@ -203,7 +203,24 @@ namespace Orc.CsvTextEditor.Services
 
         public void RemoveLine()
         {
-            throw new NotImplementedException();
+            var textDocument = _textEditor.Document;
+            var offset = _textEditor.CaretOffset;
+
+            var affectedLocation = textDocument.GetLocation(offset);
+            var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
+
+            var lineIndex = affectedLocation.Line - 1;
+            var columnIndex = columnNumberWithOffset.ColumnNumber;
+
+            var line = textDocument.Lines[lineIndex];
+            var lineOffset = line.Offset;
+            var endlineOffset = line.NextLine?.Offset ?? line.EndOffset;
+
+            var text = _textEditor.Text.RemoveText(lineOffset, endlineOffset);
+
+            UpdateText(text);
+
+            Goto(lineIndex - 1, columnIndex);
         }
 
         public void UpdateTextLocation(int offset, int length)

@@ -27,7 +27,6 @@ namespace Orc.CsvTextEditor.Services
         void AddLine();
         void RemoveColumn();
         void DuplicateLine();
-        
         void RemoveLine();
 
         void UpdateText(string text);
