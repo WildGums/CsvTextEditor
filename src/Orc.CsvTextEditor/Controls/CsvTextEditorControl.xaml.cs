@@ -27,7 +27,6 @@ namespace Orc.CsvTextEditor
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
         #region Fields
-        private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly IServiceLocator _serviceLocator;
         private readonly ITypeFactory _typeFactory;
 
@@ -40,7 +39,6 @@ namespace Orc.CsvTextEditor
         {
             InitializeComponent();
 
-            _elementGenerator = new TabSpaceElementGenerator();
             _serviceLocator = this.GetServiceLocator();
             _typeFactory = _serviceLocator.ResolveType<ITypeFactory>();
 
@@ -72,16 +70,35 @@ namespace Orc.CsvTextEditor
         {
             base.OnPreviewKeyDown(e);
 
+           // var offset = TextEditor.CaretOffset;
+
             Log.Info("Add column");
 
-            var offset = TextEditor.CaretOffset;
-
-            if (e.Key == Key.OemComma)
+            if (Keyboard.Modifiers == ModifierKeys.Control)
             {
-                Text = _csvTextEditorService.AddColumnToDocument(offset);
-              //  SynchronizeDocumentText();
-
+                if (e.Key == Key.OemComma)
+                {
+                    _csvTextEditorService.RemoveColumn();
+                    e.Handled = true;
+                }
+            }
+            
+            if (!e.Handled && e.Key == Key.OemComma)
+            {
+                _csvTextEditorService.AddColumn();
                 e.Handled = true;
+            }
+
+            if (!e.Handled && e.Key == Key.Enter)
+            {
+                _csvTextEditorService.AddLine();
+                e.Handled = true;
+            }
+            
+            if (e.Handled)
+            {
+                SynchronizeDocumentText();
+                LoadSyntaxHighlighting();
             }
 
             Log.Info("Added column");
@@ -108,7 +125,7 @@ namespace Orc.CsvTextEditor
         {
             if (_csvTextEditorService == null)
             {
-                _csvTextEditorService = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorService>(TextEditor, _elementGenerator);
+                _csvTextEditorService = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorService>(TextEditor);
             }
 
             _serviceLocator.RegisterInstance(_csvTextEditorService, Scope);
@@ -122,8 +139,7 @@ namespace Orc.CsvTextEditor
             document.Changed -= OnTextDocumentChanged;
 
             var text = Text;
-
-            _csvTextEditorService.UpdateTextEditor(text);
+            _csvTextEditorService.UpdateText(text);
 
             document.Changed += OnTextDocumentChanged;
 
@@ -170,15 +186,7 @@ namespace Orc.CsvTextEditor
         {
             Log.Info("OnTextDocumentChanged start");
 
-            var textDocument = TextEditor.Document;
-
-            var affectedLocation = textDocument.GetLocation(e.Offset);
-            var lenght = e.InsertionLength - e.RemovalLength;
-
-            if (_elementGenerator.RefreshLocation(affectedLocation, lenght))
-            {
-                TaskHelper.RunAndWaitAsync(() => Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.SystemIdle, new Action(TextEditor.TextArea.TextView.Redraw)));
-            }
+            _csvTextEditorService.UpdateTextLocation(e.Offset, e.InsertionLength - e.RemovalLength);
 
             Log.Info("OnTextDocumentChanged end");
         }

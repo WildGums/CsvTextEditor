@@ -8,26 +8,27 @@
 namespace Orc.CsvTextEditor
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Text.RegularExpressions;
+    using System.Windows.Documents;
 
     public static class StringExtensions
     {
         #region Methods
         public static string InsertCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount)
         {
+            var newLineSymbvol = Environment.NewLine;
+
             if (column == columnsCount)
             {
-                var newLineSymbvol = Environment.NewLine;
-                text = text.Replace(newLineSymbvol, Symbols.Comma + newLineSymbvol);
-                return text;
+                return text.Replace(newLineSymbvol, Symbols.Comma + newLineSymbvol) + Symbols.Comma;
             }
 
             if (column == 0)
             {
-                text = text.Insert(0, Symbols.Comma.ToString());
-
-                var newLineSymbvol = Environment.NewLine;
-                return text.Replace(newLineSymbvol, newLineSymbvol + Symbols.Comma);
+                return text.Insert(0, Symbols.Comma.ToString())
+                    .Replace(newLineSymbvol, newLineSymbvol + Symbols.Comma);
             }
 
             var newCount = text.Length + linesCount;
@@ -106,6 +107,70 @@ namespace Orc.CsvTextEditor
             }
 
             return index;
+        }
+
+        public static string RemoveCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount)
+        {
+            if (columnsCount == 0 || linesCount == 0)
+            {
+                return string.Empty;
+            }
+
+            var newLine = Environment.NewLine;
+            var newLineLenght = newLine.Length;
+
+            var newCount = text.Length;
+            var textArray = new char[newCount];
+
+            var commaCounter = 0;
+            var indexer = 0;
+
+            for (var i = 0; i < text.Length; i++)
+            {
+                var c = text[i];
+
+                if (c == Symbols.Comma)
+                {
+                    commaCounter++;
+                }
+
+                if (IsLookupMatch(text, i, newLine))
+                {
+                    commaCounter = 0;
+
+                    i += newLineLenght - 1;
+
+                    foreach (var newLineChar in newLine)
+                    {
+                        textArray[indexer] = newLineChar;
+                        indexer++;
+                    }
+
+                    continue;
+                }
+
+                if (commaCounter == column)
+                {
+                    continue;
+                }
+
+                textArray[indexer] = c;
+                indexer++;
+            }
+            
+            return new string(textArray, 0, indexer);
+        }
+
+        private static bool IsLookupMatch(string text, int startIndex, string lookup)
+        {
+            var lookupLength = lookup.Length;
+            if (text.Length - startIndex < lookupLength)
+            {
+                return false;
+            }
+
+            var lookupNewLine = text.Substring(startIndex, lookupLength);
+            return string.Equals(lookupNewLine, lookup);
         }
         #endregion
     }

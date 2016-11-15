@@ -11,7 +11,9 @@ namespace Orc.CsvTextEditor.Services
     using System.Linq;
     using System.Windows.Input;
     using Catel;
+    using Catel.IoC;
     using Catel.MVVM;
+    using Catel.Threading;
     using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.Document;
 
@@ -28,16 +30,18 @@ namespace Orc.CsvTextEditor.Services
         #endregion
 
         #region Constructors
-        public CsvTextEditorService(TextEditor textEditor, TabSpaceElementGenerator tabSpaceElementGenerator, ICommandManager commandManager)
+        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager)
         {
             Argument.IsNotNull(() => textEditor);
-            Argument.IsNotNull(() => tabSpaceElementGenerator);
             Argument.IsNotNull(() => commandManager);
 
             _textEditor = textEditor;
             _commandManager = commandManager;
 
-            _elementGenerator = tabSpaceElementGenerator;
+            var serviceLocator = this.GetServiceLocator();
+            var typeFactory = serviceLocator.ResolveType<ITypeFactory>();
+            _elementGenerator = typeFactory.CreateInstance<TabSpaceElementGenerator>();
+
             _textEditor.TextArea.TextView.ElementGenerators.Add(_elementGenerator);
 
             _textEditor.TextArea.SelectionChanged += OnTextAreaSelectionChanged;
@@ -80,50 +84,15 @@ namespace Orc.CsvTextEditor.Services
             _textEditor.Undo();
         }
 
-        public string AddColumnToDocument(int offset)
-        {
-            var textDocument = _textEditor.Document;
-
-            var linesCount = textDocument.LineCount;
-
-            var affectedLocation = textDocument.GetLocation(offset);
-            var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
-            var columnCount = _elementGenerator.ColumnCount;
-
-            var columnLenght = columnNumberWithOffset.Length;
-            var columnOffset = columnNumberWithOffset.OffsetInLine;
-
-            var lineIndex = affectedLocation.Line - 1;
-            var columnIndex = columnNumberWithOffset.ColumnNumber + 1;
-
-            var oldText = textDocument.Text;
-
-            if (affectedLocation.Column == columnOffset)
-            {
-                return oldText.InsertCommaSeparatedColumn(columnIndex, linesCount, columnCount);
-            }
-
-            if (affectedLocation.Column == columnOffset - columnLenght + 1)
-            {
-                columnIndex--;
-
-                return oldText.InsertCommaSeparatedColumn(columnIndex, linesCount, columnCount);
-            }
-
-            return oldText;
-        }
-
         public void AddColumn()
         {
             var textDocument = _textEditor.Document;
-
-            
             var linesCount = textDocument.LineCount;
             var offset = _textEditor.CaretOffset;
 
             var affectedLocation = textDocument.GetLocation(offset);
-
             var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
+
             var columnsCount = _elementGenerator.ColumnCount;
 
             var columnLenght = columnNumberWithOffset.Length;
@@ -137,8 +106,10 @@ namespace Orc.CsvTextEditor.Services
                 var oldText = textDocument.Text;
                 var newText = oldText.InsertCommaSeparatedColumn(columnIndex, linesCount, columnsCount);
 
-                UpdateTextEditor(newText);
-                _textEditor.SetCaretToSpecificLineAndColumn(lineIndex, columnIndex, _elementGenerator.Lines);
+                UpdateText(newText);
+                Goto(lineIndex, columnIndex);
+
+                return;
             }
 
             if (affectedLocation.Column == columnOffset - columnLenght + 1)
@@ -148,12 +119,104 @@ namespace Orc.CsvTextEditor.Services
                 var oldText = textDocument.Text;
                 var newText = oldText.InsertCommaSeparatedColumn(columnIndex, linesCount, columnsCount);
 
-                UpdateTextEditor(newText);
-                _textEditor.SetCaretToSpecificLineAndColumn(lineIndex, columnIndex, _elementGenerator.Lines);
+                UpdateText(newText);
+                Goto(lineIndex, columnIndex);
             }
         }
 
-        public void UpdateTextEditor(string text)
+        public void AddLine()
+        {
+            var offset = _textEditor.CaretOffset;
+            var textDocument = _textEditor.Document;
+            var affectedLocation = textDocument.GetLocation(offset);
+
+            var nextLineIndex = affectedLocation.Line;
+            var affectedColumn = affectedLocation.Column;
+            var insertOffsetInLine = affectedColumn - 1;
+
+            if (affectedColumn == 1)
+            {
+                nextLineIndex--;
+            }
+
+            var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
+
+            var columnNumber = columnNumberWithOffset.ColumnNumber;
+            var columnOffset = columnNumberWithOffset.OffsetInLine;
+
+            var columnsCount = _elementGenerator.ColumnCount;
+            var caretColumnIndex = columnNumber;
+            if (columnNumber == columnsCount - 1 && affectedColumn == columnOffset)
+            {
+                caretColumnIndex = 0;
+            }
+
+            var oldText = _textEditor.Text;
+            var text = oldText.InsertLineWithTextTransfer(nextLineIndex, insertOffsetInLine, columnsCount);
+
+            UpdateText(text);
+            Goto(nextLineIndex, caretColumnIndex);
+        }
+
+        public void RemoveColumn()
+        {
+            var textDocument = _textEditor.Document;
+            var linesCount = textDocument.LineCount;
+            var offset = _textEditor.CaretOffset;
+
+            var affectedLocation = textDocument.GetLocation(offset);
+            var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
+
+            var columnsCount = _elementGenerator.ColumnCount;
+
+            var columnLenght = columnNumberWithOffset.Length;
+            var columnOffset = columnNumberWithOffset.OffsetInLine;
+
+            var lineIndex = affectedLocation.Line - 1;
+            var columnIndex = columnNumberWithOffset.ColumnNumber;
+
+            var text = _textEditor.Text.RemoveCommaSeparatedColumn(columnIndex, linesCount, columnsCount);
+
+            UpdateText(text);
+            Goto(lineIndex, columnIndex);
+        }
+
+        public void DuplicateLine()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void RemoveLine()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Goto(int lineIndex, int columnIndex)
+        {
+            _textEditor.SetCaretToSpecificLineAndColumn(lineIndex, columnIndex, _elementGenerator.Lines);
+        }
+
+        private bool _isUpdating = false;
+
+        public void UpdateTextLocation(int offset, int length)
+        {
+            if (_isUpdating)
+            {
+                return;
+            }
+
+            var textDocument = _textEditor.Document;
+
+            var affectedLocation = textDocument.GetLocation(offset);
+
+            if (_elementGenerator.RefreshLocation(affectedLocation, length))
+            {
+                TaskHelper.RunAndWaitAsync(() => _textEditor.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.SystemIdle, new Action(_textEditor.TextArea.TextView.Redraw)));
+            }
+        }
+
+        public void UpdateText(string text)
         {
             var lines = text.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
 
@@ -163,43 +226,11 @@ namespace Orc.CsvTextEditor.Services
 
             _elementGenerator.Lines = columnWidthByLine;
 
+            _isUpdating = true;
             _textEditor.Text = text;
+            _isUpdating = false;
         }
         #endregion
-
-        public Tuple<int, int> AddColumn(TextDocument document, int offset)
-        {
-            var textDocument = _textEditor.Document;
-            
-            var linesCount = textDocument.LineCount;
-
-            var affectedLocation = textDocument.GetLocation(offset);
-
-            var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
-            var columnsCount = _elementGenerator.ColumnCount;
-
-            var columnLenght = columnNumberWithOffset.Length;
-            var columnOffset = columnNumberWithOffset.OffsetInLine;
-
-            var lineIndex = affectedLocation.Line - 1;
-            var columnIndex = columnNumberWithOffset.ColumnNumber + 1;
-
-            var oldText = textDocument.Text;
-
-            if (affectedLocation.Column == columnOffset)
-            {
-                document.Text = oldText.InsertCommaSeparatedColumn(columnIndex, linesCount, columnsCount);
-            }
-
-            if (affectedLocation.Column == columnOffset - columnLenght + 1)
-            {
-                columnIndex--;
-
-                document.Text = oldText.InsertCommaSeparatedColumn(columnIndex, linesCount, columnsCount);
-            }
-
-            return new Tuple<int, int>(lineIndex, columnIndex);
-        }
 
         private void OnTextAreaSelectionChanged(object sender, EventArgs e)
         {

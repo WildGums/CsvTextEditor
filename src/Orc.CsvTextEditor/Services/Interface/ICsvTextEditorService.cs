@@ -24,9 +24,16 @@ namespace Orc.CsvTextEditor.Services
         void Undo();
 
         void AddColumn();
-        void UpdateTextEditor(string text);
+        void AddLine();
+        void RemoveColumn();
+        void DuplicateLine();
+        
+        void RemoveLine();
 
-        string AddColumnToDocument(int offset);
+        void UpdateText(string text);
+        void UpdateTextLocation(int offset, int length);
+
+        
         #endregion
     }
 }
