@@ -29,8 +29,8 @@ namespace Orc.CsvTextEditor
         public static readonly RoutedCommand RemoveLine = new RoutedCommand("RemoveLine", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.L, ModifierKeys.Control)});
         public static readonly RoutedCommand AddLine = new RoutedCommand("AddLine", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.Enter, ModifierKeys.None)});
         public static readonly RoutedCommand RemoveColumn = new RoutedCommand("RemoveColumn", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.OemComma, ModifierKeys.Control)});
-        public static readonly RoutedCommand GotoNextColumn = new RoutedCommand("GotoNextColumn", typeof (TextEditor), new InputGestureCollection {new KeyGesture(Key.Tab, ModifierKeys.None)});
-        public static readonly RoutedCommand GotoPreviousColumn = new RoutedCommand("GotoPreviousColumn", typeof (TextEditor), new InputGestureCollection {new KeyGesture(Key.Tab, ModifierKeys.Control)});
+        public static readonly RoutedCommand GotoNextColumn = new RoutedCommand("GotoNextColumn", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.Tab, ModifierKeys.None)});
+        public static readonly RoutedCommand GotoPreviousColumn = new RoutedCommand("GotoPreviousColumn", typeof (CsvTextEditorControl), new InputGestureCollection {new KeyGesture(Key.Tab, ModifierKeys.Control)});
 
         private readonly IServiceLocator _serviceLocator;
         private readonly ITypeFactory _typeFactory;

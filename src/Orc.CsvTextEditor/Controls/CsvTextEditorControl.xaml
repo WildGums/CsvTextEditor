@@ -17,18 +17,13 @@
         <CommandBinding Command="csvTextEditor:CsvTextEditorControl.RemoveLine" Executed="OnRemoveLine" />
         <CommandBinding Command="csvTextEditor:CsvTextEditorControl.RemoveColumn" Executed="OnRemoveColumn" />
         <CommandBinding Command="csvTextEditor:CsvTextEditorControl.AddLine" Executed="OnAddLine" />
-        <!--<CommandBinding Command="csvTextEditor:CsvTextEditorControl.GotoNextColumn" Executed="OnGotoNextColumn" />-->
-        
+        <CommandBinding Command="csvTextEditor:CsvTextEditorControl.GotoNextColumn" Executed="OnGotoNextColumn" />
+        <CommandBinding Command="csvTextEditor:CsvTextEditorControl.GotoPreviousColumn" Executed="OnGotoPreviousColumn" />
     </UserControl.CommandBindings>
     <Grid>
         <avalonedit:TextEditor x:Name="TextEditor" 
                                FontFamily="Consolas"
                                Focusable="False"
-                               FontSize="10pt">
-            <avalonedit:TextEditor.CommandBindings>
-                <CommandBinding Command="csvTextEditor:CsvTextEditorControl.GotoNextColumn" Executed="OnGotoNextColumn" />
-                <CommandBinding Command="csvTextEditor:CsvTextEditorControl.GotoPreviousColumn" Executed="OnGotoPreviousColumn" />
-            </avalonedit:TextEditor.CommandBindings>
-        </avalonedit:TextEditor>
+                               FontSize="10pt"/>
     </Grid>
 </UserControl>
