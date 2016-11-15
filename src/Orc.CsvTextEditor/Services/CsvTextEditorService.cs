@@ -253,9 +253,65 @@ namespace Orc.CsvTextEditor.Services
             _textEditor.Text = text;
             _isUpdating = false;
         }
+
+        public void GotoNextColumn()
+        {
+            var textDocument = _textEditor.Document;
+            var offset = _textEditor.CaretOffset;
+
+            var affectedLocation = textDocument.GetLocation(offset);
+            var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
+
+            var columnsCount = _elementGenerator.ColumnCount;
+            var nextColumnIndex = columnNumberWithOffset.ColumnNumber + 1;
+            var lineIndex = affectedLocation.Line - 1;
+            var nextLineIndex = lineIndex + 1;
+
+            if (nextColumnIndex == columnsCount)
+            {
+                var linesCount = textDocument.LineCount;
+                if (nextLineIndex == linesCount - 1)
+                {
+                    return;
+                }
+
+                Goto(nextLineIndex, 0);
+            }
+
+            Goto(lineIndex, nextColumnIndex);
+        }
+
+        public void GotoPreviousColumn()
+        {
+            var textDocument = _textEditor.Document;
+            var offset = _textEditor.CaretOffset;
+
+            var affectedLocation = textDocument.GetLocation(offset);
+            var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
+
+            var columnIndex = columnNumberWithOffset.ColumnNumber;
+            var previousColumnIndex = columnIndex > 0 ? columnIndex - 1 : -1;
+
+            var lineIndex = affectedLocation.Line - 1;
+            var previousLineIndex = lineIndex > 0 ? lineIndex - 1 : -1;
+
+            if (previousColumnIndex == -1)
+            {
+                if (previousLineIndex == -1)
+                {
+                    return;
+                }
+
+                var columnsCount = _elementGenerator.ColumnCount;
+                Goto(previousLineIndex, columnsCount - 1);
+            }
+
+            Goto(lineIndex, previousColumnIndex);
+        }
+
         #endregion
 
-        public void Goto(int lineIndex, int columnIndex)
+        private void Goto(int lineIndex, int columnIndex)
         {
             _textEditor.SetCaretToSpecificLineAndColumn(lineIndex, columnIndex, _elementGenerator.Lines);
         }

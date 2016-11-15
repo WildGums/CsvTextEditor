@@ -29,10 +29,11 @@ namespace Orc.CsvTextEditor.Services
         void DuplicateLine();
         void RemoveLine();
 
+        void GotoNextColumn();
+        void GotoPreviousColumn();
+
         void UpdateText(string text);
         void UpdateTextLocation(int offset, int length);
-
-        
         #endregion
     }
 }

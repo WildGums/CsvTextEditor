@@ -7,6 +7,7 @@
                    xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=System"
                    xmlns:catel="http://catel.codeplex.com"
                    xmlns:csvTextEditor="clr-namespace:Orc.CsvTextEditor"
+                   Focusable="True"
                    mc:Ignorable="d"
                    d:DesignHeight="300"
                    d:DesignWidth="300">
@@ -16,10 +17,18 @@
         <CommandBinding Command="csvTextEditor:CsvTextEditorControl.RemoveLine" Executed="OnRemoveLine" />
         <CommandBinding Command="csvTextEditor:CsvTextEditorControl.RemoveColumn" Executed="OnRemoveColumn" />
         <CommandBinding Command="csvTextEditor:CsvTextEditorControl.AddLine" Executed="OnAddLine" />
+        <!--<CommandBinding Command="csvTextEditor:CsvTextEditorControl.GotoNextColumn" Executed="OnGotoNextColumn" />-->
+        
     </UserControl.CommandBindings>
     <Grid>
         <avalonedit:TextEditor x:Name="TextEditor" 
                                FontFamily="Consolas"
-                               FontSize="10pt"/>
+                               Focusable="False"
+                               FontSize="10pt">
+            <avalonedit:TextEditor.CommandBindings>
+                <CommandBinding Command="csvTextEditor:CsvTextEditorControl.GotoNextColumn" Executed="OnGotoNextColumn" />
+                <CommandBinding Command="csvTextEditor:CsvTextEditorControl.GotoPreviousColumn" Executed="OnGotoPreviousColumn" />
+            </avalonedit:TextEditor.CommandBindings>
+        </avalonedit:TextEditor>
     </Grid>
 </UserControl>
