@@ -14,7 +14,6 @@ namespace Orc.CsvTextEditor.Services
     using Catel.MVVM;
     using Catel.Threading;
     using ICSharpCode.AvalonEdit;
-    using ICSharpCode.AvalonEdit.Document;
 
     internal class CsvTextEditorService : ICsvTextEditorService
     {
@@ -25,7 +24,6 @@ namespace Orc.CsvTextEditor.Services
         private readonly TextEditor _textEditor;
 
         private bool _isInCustomUpdate = false;
-
         private bool _isInRedoUndo = false;
 
         private CommandBinding _redoBinding;
@@ -77,7 +75,11 @@ namespace Orc.CsvTextEditor.Services
 
         public void Redo()
         {
-            using (new DisposableToken<CsvTextEditorService>(this, x => x.Instance._isInRedoUndo = true, x => { RefreshView(); x.Instance._isInRedoUndo = false;}))
+            using (new DisposableToken<CsvTextEditorService>(this, x => x.Instance._isInRedoUndo = true, x =>
+            {
+                RefreshView();
+                x.Instance._isInRedoUndo = false;
+            }))
             {
                 _textEditor.Redo();
             }
@@ -85,7 +87,11 @@ namespace Orc.CsvTextEditor.Services
 
         public void Undo()
         {
-            using (new DisposableToken<CsvTextEditorService>(this, x => x.Instance._isInRedoUndo = true, x => { RefreshView(); x.Instance._isInRedoUndo = false;}))
+            using (new DisposableToken<CsvTextEditorService>(this, x => x.Instance._isInRedoUndo = true, x =>
+            {
+                RefreshView();
+                x.Instance._isInRedoUndo = false;
+            }))
             {
                 _textEditor.Undo();
             }
@@ -250,7 +256,7 @@ namespace Orc.CsvTextEditor.Services
                 TaskHelper.RunAndWaitAsync(() => _textEditor.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.SystemIdle, new Action(_textEditor.TextArea.TextView.Redraw)));
             }
         }
-        
+
         public void UpdateText(string text)
         {
             _elementGenerator.Refresh(text);
