@@ -4,14 +4,14 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
-                   xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=System"
-                   xmlns:catel="http://catel.codeplex.com"
+                   Focusable="True"
                    mc:Ignorable="d"
                    d:DesignHeight="300"
                    d:DesignWidth="300">
     <Grid>
         <avalonedit:TextEditor x:Name="TextEditor" 
                                FontFamily="Consolas"
+                               Focusable="False"
                                FontSize="10pt"/>
     </Grid>
 </UserControl>

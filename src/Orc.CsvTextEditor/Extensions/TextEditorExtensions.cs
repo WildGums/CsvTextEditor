@@ -17,6 +17,11 @@ namespace Orc.CsvTextEditor
         {
             Argument.IsNotNull(() => textEditor);
 
+            if (lineIndex < 0 || columnIndex < 0)
+            {
+                return;
+            }
+
             var textDocument = textEditor.Document;
 
             var line = textDocument.Lines[lineIndex];
