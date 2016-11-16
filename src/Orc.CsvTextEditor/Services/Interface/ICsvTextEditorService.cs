@@ -33,7 +33,9 @@ namespace Orc.CsvTextEditor.Services
         void GotoPreviousColumn();
 
         void UpdateText(string text);
-        void UpdateTextLocation(int offset, int length);
+        void RefreshLocation(int offset, int length);
+
+        void RefreshView();
         #endregion
     }
 }

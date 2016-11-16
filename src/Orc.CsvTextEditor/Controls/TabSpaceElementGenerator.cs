@@ -39,6 +39,19 @@ namespace Orc.CsvTextEditor
         public int ColumnCount => Lines[0].Length;
         #endregion
 
+        public void Refresh(string text)
+        {
+            text = text ?? string.Empty;
+
+            var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+            var columnWidthByLine = lines.Select(x => x.Split(Symbols.Comma))
+                .Select(x => x.Select(y => y.Length + 1).ToArray())
+                .ToArray();
+
+            Lines = columnWidthByLine;
+        }
+
         public bool RefreshLocation(TextLocation affectedLocation, int length)
         {
             var columnWidth = ColumnWidth;

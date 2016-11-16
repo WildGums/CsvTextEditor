@@ -8,7 +8,6 @@
 namespace Orc.CsvTextEditor.Services
 {
     using System;
-    using System.Linq;
     using System.Windows.Input;
     using Catel;
     using Catel.IoC;
@@ -25,10 +24,12 @@ namespace Orc.CsvTextEditor.Services
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly TextEditor _textEditor;
 
-        private bool _isUpdating = false;
+        private bool _isInCustomUpdate = false;
 
-        CommandBinding _redoBinding;
-        CommandBinding _undoBinding;
+        private bool _isInRedoUndo = false;
+
+        private CommandBinding _redoBinding;
+        private CommandBinding _undoBinding;
         #endregion
 
         #region Constructors
@@ -48,8 +49,6 @@ namespace Orc.CsvTextEditor.Services
 
             _textEditor.TextArea.SelectionChanged += OnTextAreaSelectionChanged;
             _textEditor.TextChanged += OnTextChanged;
-
-            AvalonEditCommands.DeleteLine.InputGestures.Add(new KeyGesture(Key.L, ModifierKeys.Control));
         }
         #endregion
 
@@ -78,12 +77,18 @@ namespace Orc.CsvTextEditor.Services
 
         public void Redo()
         {
-            _textEditor.Redo();
+            using (new DisposableToken<CsvTextEditorService>(this, x => x.Instance._isInRedoUndo = true, x => { RefreshView(); x.Instance._isInRedoUndo = false;}))
+            {
+                _textEditor.Redo();
+            }
         }
 
         public void Undo()
         {
-            _textEditor.Undo();
+            using (new DisposableToken<CsvTextEditorService>(this, x => x.Instance._isInRedoUndo = true, x => { RefreshView(); x.Instance._isInRedoUndo = false;}))
+            {
+                _textEditor.Undo();
+            }
         }
 
         public void AddColumn()
@@ -223,9 +228,15 @@ namespace Orc.CsvTextEditor.Services
             Goto(lineIndex - 1, columnIndex);
         }
 
-        public void UpdateTextLocation(int offset, int length)
+        public void RefreshView()
         {
-            if (_isUpdating)
+            _elementGenerator.Refresh(_textEditor.Text);
+            TaskHelper.RunAndWaitAsync(() => _textEditor.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.SystemIdle, new Action(_textEditor.TextArea.TextView.Redraw)));
+        }
+
+        public void RefreshLocation(int offset, int length)
+        {
+            if (_isInCustomUpdate || _isInRedoUndo)
             {
                 return;
             }
@@ -239,22 +250,19 @@ namespace Orc.CsvTextEditor.Services
                 TaskHelper.RunAndWaitAsync(() => _textEditor.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.SystemIdle, new Action(_textEditor.TextArea.TextView.Redraw)));
             }
         }
-
+        
         public void UpdateText(string text)
         {
-            text = text ?? string.Empty;
+            _elementGenerator.Refresh(text);
 
-            var lines = text.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+            _isInCustomUpdate = true;
 
-            var columnWidthByLine = lines.Select(x => x.Split(Symbols.Comma))
-                .Select(x => x.Select(y => y.Length + 1).ToArray())
-                .ToArray();
+            using (_textEditor.Document.RunUpdate())
+            {
+                _textEditor.Document.Text = text;
+            }
 
-            _elementGenerator.Lines = columnWidthByLine;
-
-            _isUpdating = true;
-            _textEditor.Text = text;
-            _isUpdating = false;
+            _isInCustomUpdate = false;
         }
 
         public void GotoNextColumn()
@@ -311,7 +319,6 @@ namespace Orc.CsvTextEditor.Services
 
             Goto(lineIndex, previousColumnIndex);
         }
-
         #endregion
 
         private void Goto(int lineIndex, int columnIndex)
