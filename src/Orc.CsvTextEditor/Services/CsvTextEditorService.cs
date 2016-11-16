@@ -330,10 +330,8 @@ namespace Orc.CsvTextEditor.Services
 
             if (_undoBinding == null)
             {
-                _undoBinding = new CommandBinding(
-                    ApplicationCommands.Undo, new ExecutedRoutedEventHandler(UndoExecuted), null);
-                _redoBinding = new CommandBinding(
-                    ApplicationCommands.Redo, new ExecutedRoutedEventHandler(RedoExecuted), null);
+                _undoBinding = new CommandBinding(ApplicationCommands.Undo, new ExecutedRoutedEventHandler(UndoExecuted), null);
+                _redoBinding = new CommandBinding(ApplicationCommands.Redo, new ExecutedRoutedEventHandler(RedoExecuted), null);
 
                 _textEditor.CommandBindings.Add(_undoBinding);
                 _textEditor.CommandBindings.Add(_redoBinding);

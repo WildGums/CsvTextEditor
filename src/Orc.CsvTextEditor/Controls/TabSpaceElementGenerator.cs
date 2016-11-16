@@ -54,18 +54,19 @@ namespace Orc.CsvTextEditor
 
             columnWidthByLine[affectedLine][affectedColumn] = newWidth;
 
-            if (columnWidth[affectedColumn] >= newWidth)
+            if (length >= 0 && columnWidth[affectedColumn] <= newWidth)
             {
-                return false;
+                columnWidth[affectedColumn] = newWidth;
+                return true;
             }
 
-            if (length <= 0)
+            if (length <= 0 && columnWidth[affectedColumn] >= newWidth)
             {
-                newWidth = columnWidthByLine.Where(x => x.Length > affectedColumn).Select(x => x[affectedColumn]).Max();
+                columnWidth[affectedColumn] = columnWidthByLine.Where(x => x.Length > affectedColumn).Select(x => x[affectedColumn]).Max();
+                return true;
             }
-
-            columnWidth[affectedColumn] = newWidth;
-            return true;
+            
+            return false;
         }
 
         public override VisualLineElement ConstructElement(int offset)
