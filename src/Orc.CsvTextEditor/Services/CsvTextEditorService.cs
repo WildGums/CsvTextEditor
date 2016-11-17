@@ -234,7 +234,7 @@ namespace Orc.CsvTextEditor.Services
         public void RefreshView()
         {
             _elementGenerator.Refresh(_textEditor.Text);
-            TaskHelper.RunAndWaitAsync(() => _textEditor.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.SystemIdle, new Action(_textEditor.TextArea.TextView.Redraw)));
+            _textEditor.TextArea.TextView.Redraw();
         }
 
         public void RefreshLocation(int offset, int length)
