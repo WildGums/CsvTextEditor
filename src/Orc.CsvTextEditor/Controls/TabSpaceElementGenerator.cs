@@ -66,7 +66,7 @@ namespace Orc.CsvTextEditor
             var newWidth = oldWidth + length;
 
             columnWidthByLine[affectedLine][affectedColumn] = newWidth;
-
+            
             if (length >= 0 && columnWidth[affectedColumn] <= newWidth)
             {
                 columnWidth[affectedColumn] = newWidth;

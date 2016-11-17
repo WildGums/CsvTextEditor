@@ -13,7 +13,6 @@ namespace Orc.CsvTextEditor
     using System.Xml;
     using Catel.IoC;
     using Catel.Logging;
-    using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Highlighting;
     using ICSharpCode.AvalonEdit.Highlighting.Xshd;
@@ -44,7 +43,6 @@ namespace Orc.CsvTextEditor
 
             UpdateServiceRegistration();
         }
-
         #endregion
 
         #region Dependency properties
@@ -268,7 +266,7 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-            Log.Info("text changed");
+     //       Log.Info("text changed");
 
             UpdateTextEditor();
         }

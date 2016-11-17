@@ -14,7 +14,6 @@ namespace Orc.CsvTextEditor.Services
     using Catel.MVVM;
     using Catel.Threading;
     using ICSharpCode.AvalonEdit;
-    using ICSharpCode.AvalonEdit.Document;
 
     internal class CsvTextEditorService : ICsvTextEditorService
     {
@@ -25,11 +24,8 @@ namespace Orc.CsvTextEditor.Services
         private readonly TextEditor _textEditor;
 
         private bool _isInCustomUpdate = false;
-
         private bool _isInRedoUndo = false;
 
-        private CommandBinding _redoBinding;
-        private CommandBinding _undoBinding;
         #endregion
 
         #region Constructors
@@ -48,7 +44,6 @@ namespace Orc.CsvTextEditor.Services
             _textEditor.TextArea.TextView.ElementGenerators.Add(_elementGenerator);
 
             _textEditor.TextArea.SelectionChanged += OnTextAreaSelectionChanged;
-            _textEditor.TextChanged += OnTextChanged;
         }
         #endregion
 
@@ -77,7 +72,11 @@ namespace Orc.CsvTextEditor.Services
 
         public void Redo()
         {
-            using (new DisposableToken<CsvTextEditorService>(this, x => x.Instance._isInRedoUndo = true, x => { RefreshView(); x.Instance._isInRedoUndo = false;}))
+            using (new DisposableToken<CsvTextEditorService>(this, x => x.Instance._isInRedoUndo = true, x =>
+            {
+                RefreshView();
+                x.Instance._isInRedoUndo = false;
+            }))
             {
                 _textEditor.Redo();
             }
@@ -85,7 +84,11 @@ namespace Orc.CsvTextEditor.Services
 
         public void Undo()
         {
-            using (new DisposableToken<CsvTextEditorService>(this, x => x.Instance._isInRedoUndo = true, x => { RefreshView(); x.Instance._isInRedoUndo = false;}))
+            using (new DisposableToken<CsvTextEditorService>(this, x => x.Instance._isInRedoUndo = true, x =>
+            {
+                RefreshView();
+                x.Instance._isInRedoUndo = false;
+            }))
             {
                 _textEditor.Undo();
             }
@@ -242,15 +245,14 @@ namespace Orc.CsvTextEditor.Services
             }
 
             var textDocument = _textEditor.Document;
-
             var affectedLocation = textDocument.GetLocation(offset);
 
             if (_elementGenerator.RefreshLocation(affectedLocation, length))
             {
-                TaskHelper.RunAndWaitAsync(() => _textEditor.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.SystemIdle, new Action(_textEditor.TextArea.TextView.Redraw)));
+                _textEditor.TextArea.TextView.Redraw();
             }
         }
-        
+
         public void UpdateText(string text)
         {
             _elementGenerator.Refresh(text);
@@ -329,30 +331,6 @@ namespace Orc.CsvTextEditor.Services
         private void OnTextAreaSelectionChanged(object sender, EventArgs e)
         {
             _commandManager.InvalidateCommands();
-        }
-
-        private void OnTextChanged(object sender, EventArgs e)
-        {
-            _commandManager.InvalidateCommands();
-
-            if (_undoBinding == null)
-            {
-                _undoBinding = new CommandBinding(ApplicationCommands.Undo, new ExecutedRoutedEventHandler(UndoExecuted), null);
-                _redoBinding = new CommandBinding(ApplicationCommands.Redo, new ExecutedRoutedEventHandler(RedoExecuted), null);
-
-                _textEditor.CommandBindings.Add(_undoBinding);
-                _textEditor.CommandBindings.Add(_redoBinding);
-            }
-        }
-
-        private void UndoExecuted(object sender, ExecutedRoutedEventArgs args)
-        {
-            //  ApplicationCommands.Undo.Execute(null, Application.Current.MainWindow);
-        }
-
-        private void RedoExecuted(object sender, ExecutedRoutedEventArgs args)
-        {
-            //    ApplicationCommands.Redo.Execute(null, Application.Current.MainWindow);
         }
     }
 }
