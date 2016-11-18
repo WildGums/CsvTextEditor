@@ -12,7 +12,6 @@ namespace Orc.CsvTextEditor
 
     public static class StringExtensions
     {
-        #region Methods
         public static string InsertCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount)
         {
             var newLineSymbvol = Environment.NewLine;
@@ -170,7 +169,7 @@ namespace Orc.CsvTextEditor
                 textArray[indexer] = c;
                 indexer++;
             }
-            
+
             return new string(textArray, 0, indexer);
         }
 
@@ -185,6 +184,5 @@ namespace Orc.CsvTextEditor
             var lookupNewLine = text.Substring(startIndex, lookupLength);
             return string.Equals(lookupNewLine, lookup);
         }
-        #endregion
     }
 }

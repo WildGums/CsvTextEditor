@@ -13,7 +13,6 @@ namespace Orc.CsvTextEditor
     using System.Xml;
     using Catel.IoC;
     using Catel.Logging;
-    using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Highlighting;
     using ICSharpCode.AvalonEdit.Highlighting.Xshd;
@@ -23,6 +22,10 @@ namespace Orc.CsvTextEditor
     {
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
+        private static readonly KeyGesture UndoKeyGesture = new KeyGesture(Key.Z, ModifierKeys.Control);
+        private static readonly KeyGesture RedoKeyGesture = new KeyGesture(Key.Y, ModifierKeys.Control);
+
         private readonly IServiceLocator _serviceLocator;
         private readonly ITypeFactory _typeFactory;
 
@@ -39,8 +42,6 @@ namespace Orc.CsvTextEditor
             _typeFactory = _serviceLocator.ResolveType<ITypeFactory>();
 
             UpdateServiceRegistration();
-
-            AvalonEditCommands.DeleteLine.InputGestures.Clear();
         }
         #endregion
 
@@ -188,6 +189,34 @@ namespace Orc.CsvTextEditor
                 e.Handled = true;
                 return;
             }
+
+            if (IsKeyGestureMatches(UndoKeyGesture, e.Key))
+            {
+                OnUndo();
+
+                e.Handled = true;
+                return;
+            }
+
+            if (IsKeyGestureMatches(RedoKeyGesture, e.Key))
+            {
+                OnRedo();
+
+                e.Handled = true;
+                return;
+            }
+        }
+
+        private void OnUndo()
+        {
+            _csvTextEditorService.Undo();
+            Synchronize();
+        }
+
+        private void OnRedo()
+        {
+            _csvTextEditorService.Redo();
+            Synchronize();
         }
 
         private void OnDuplicateLine()
@@ -237,7 +266,7 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-            Log.Info("text changed");
+     //       Log.Info("text changed");
 
             UpdateTextEditor();
         }
@@ -318,7 +347,7 @@ namespace Orc.CsvTextEditor
         {
             Log.Info("OnTextDocumentChanged start");
 
-            _csvTextEditorService.UpdateTextLocation(e.Offset, e.InsertionLength - e.RemovalLength);
+            _csvTextEditorService.RefreshLocation(e.Offset, e.InsertionLength - e.RemovalLength);
 
             Log.Info("OnTextDocumentChanged end");
         }

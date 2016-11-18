@@ -39,6 +39,19 @@ namespace Orc.CsvTextEditor
         public int ColumnCount => Lines[0].Length;
         #endregion
 
+        public void Refresh(string text)
+        {
+            text = text ?? string.Empty;
+
+            var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+            var columnWidthByLine = lines.Select(x => x.Split(Symbols.Comma))
+                .Select(x => x.Select(y => y.Length + 1).ToArray())
+                .ToArray();
+
+            Lines = columnWidthByLine;
+        }
+
         public bool RefreshLocation(TextLocation affectedLocation, int length)
         {
             var columnWidth = ColumnWidth;
@@ -53,19 +66,20 @@ namespace Orc.CsvTextEditor
             var newWidth = oldWidth + length;
 
             columnWidthByLine[affectedLine][affectedColumn] = newWidth;
-
-            if (columnWidth[affectedColumn] >= newWidth)
+            
+            if (length >= 0 && columnWidth[affectedColumn] <= newWidth)
             {
-                return false;
+                columnWidth[affectedColumn] = newWidth;
+                return true;
             }
 
-            if (length <= 0)
+            if (length <= 0 && columnWidth[affectedColumn] >= newWidth)
             {
-                newWidth = columnWidthByLine.Where(x => x.Length > affectedColumn).Select(x => x[affectedColumn]).Max();
+                columnWidth[affectedColumn] = columnWidthByLine.Where(x => x.Length > affectedColumn).Select(x => x[affectedColumn]).Max();
+                return true;
             }
-
-            columnWidth[affectedColumn] = newWidth;
-            return true;
+            
+            return false;
         }
 
         public override VisualLineElement ConstructElement(int offset)
