@@ -94,9 +94,16 @@
     <Compile Include="Services\Interface\ICsvTextEditorService.cs" />
     <Compile Include="Transformers\FirstLineAlwaysBoldTransformer.cs" />
     <Compile Include="Transformers\HighlightAllOccurencesOfSelectedWordTransformer.cs" />
+    <Compile Include="Views\FindReplaceDialog.xaml.cs">
+      <DependentUpon>FindReplaceDialog.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\CsvTextEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\FindReplaceDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

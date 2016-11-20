@@ -60,7 +60,8 @@ namespace Orc.CsvTextEditor.Services
 
             _textEditor.TextArea.TextView.LineTransformers.Add(new FirstLineAlwaysBoldTransformer());
 
-            SearchPanel.Install(_textEditor.TextArea);
+            //SearchPanel.Install(_textEditor.TextArea);
+            FindReplaceDialog.ShowForReplace(_textEditor);
         }
         #endregion
 
@@ -349,6 +350,7 @@ namespace Orc.CsvTextEditor.Services
         {
             _commandManager.InvalidateCommands();
 
+            // Disable this line if the user is using the "Find Replace" dialog box
             _highlightAllOccurencesOfSelectedWordTransformer.SelectedWord = _textEditor.SelectedText;
             _highlightAllOccurencesOfSelectedWordTransformer.Selection = _textEditor.TextArea.Selection;
 
