@@ -8,12 +8,15 @@
 namespace Orc.CsvTextEditor.Services
 {
     using System;
+    using System.Runtime.InteropServices;
     using System.Windows.Input;
     using Catel;
     using Catel.IoC;
     using Catel.MVVM;
     using Catel.Threading;
     using ICSharpCode.AvalonEdit;
+    using ICSharpCode.AvalonEdit.Search;
+    using Transformers;
 
     internal class CsvTextEditorService : ICsvTextEditorService
     {
@@ -22,6 +25,7 @@ namespace Orc.CsvTextEditor.Services
 
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly TextEditor _textEditor;
+        private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
 
         private bool _isInCustomUpdate = false;
         private bool _isInRedoUndo = false;
@@ -37,6 +41,12 @@ namespace Orc.CsvTextEditor.Services
             _textEditor = textEditor;
             _commandManager = commandManager;
 
+            // Need to make these options accessible to the user in the settings window
+            _textEditor.ShowLineNumbers = true;
+            _textEditor.Options.HighlightCurrentLine = true;
+            _textEditor.Options.ShowEndOfLine = true;
+            _textEditor.Options.ShowTabs = true;
+
             var serviceLocator = this.GetServiceLocator();
             var typeFactory = serviceLocator.ResolveType<ITypeFactory>();
             _elementGenerator = typeFactory.CreateInstance<TabSpaceElementGenerator>();
@@ -44,6 +54,13 @@ namespace Orc.CsvTextEditor.Services
             _textEditor.TextArea.TextView.ElementGenerators.Add(_elementGenerator);
 
             _textEditor.TextArea.SelectionChanged += OnTextAreaSelectionChanged;
+
+            _highlightAllOccurencesOfSelectedWordTransformer = new HighlightAllOccurencesOfSelectedWordTransformer();
+            _textEditor.TextArea.TextView.LineTransformers.Add(_highlightAllOccurencesOfSelectedWordTransformer);
+
+            _textEditor.TextArea.TextView.LineTransformers.Add(new FirstLineAlwaysBoldTransformer());
+
+            SearchPanel.Install(_textEditor.TextArea);
         }
         #endregion
 
@@ -331,6 +348,11 @@ namespace Orc.CsvTextEditor.Services
         private void OnTextAreaSelectionChanged(object sender, EventArgs e)
         {
             _commandManager.InvalidateCommands();
+
+            _highlightAllOccurencesOfSelectedWordTransformer.SelectedWord = _textEditor.SelectedText;
+            _highlightAllOccurencesOfSelectedWordTransformer.Selection = _textEditor.TextArea.Selection;
+
+            RefreshView();
         }
     }
 }

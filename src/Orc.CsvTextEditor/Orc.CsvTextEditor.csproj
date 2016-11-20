@@ -92,6 +92,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CsvTextEditorService.cs" />
     <Compile Include="Services\Interface\ICsvTextEditorService.cs" />
+    <Compile Include="Transformers\FirstLineAlwaysBoldTransformer.cs" />
+    <Compile Include="Transformers\HighlightAllOccurencesOfSelectedWordTransformer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\CsvTextEditorControl.xaml">
