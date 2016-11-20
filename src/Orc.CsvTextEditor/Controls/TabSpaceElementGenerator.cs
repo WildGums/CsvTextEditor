@@ -43,7 +43,8 @@ namespace Orc.CsvTextEditor
         {
             text = text ?? string.Empty;
 
-            var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            // Some files do not respect the Environment.NewLine so we need to add "\n"
+            var lines = text.Split(new[] { Environment.NewLine, "\n"}, StringSplitOptions.None);
 
             var columnWidthByLine = lines.Select(x => x.Split(Symbols.Comma))
                 .Select(x => x.Select(y => y.Length + 1).ToArray())
