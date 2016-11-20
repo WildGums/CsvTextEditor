@@ -120,7 +120,7 @@ namespace Orc.CsvTextEditor
         }
 
         public static readonly DependencyProperty GotoPreviousColumnKeyGestureProperty = DependencyProperty.Register(
-            "GotoPreviousColumnKeyGesture", typeof (KeyGesture), typeof (CsvTextEditorControl), new PropertyMetadata(new KeyGesture(Key.Tab, ModifierKeys.Control)));
+            "GotoPreviousColumnKeyGesture", typeof (KeyGesture), typeof (CsvTextEditorControl), new PropertyMetadata(new KeyGesture(Key.Tab, ModifierKeys.Shift)));
 
         public KeyGesture GotoPreviousColumnKeyGesture
         {
