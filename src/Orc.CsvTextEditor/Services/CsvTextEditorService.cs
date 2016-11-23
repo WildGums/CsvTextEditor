@@ -273,6 +273,8 @@ namespace Orc.CsvTextEditor.Services
 
         public void UpdateText(string text)
         {
+            text = text ?? string.Empty;
+
             _elementGenerator.Refresh(text);
 
             _isInCustomUpdate = true;

@@ -100,7 +100,6 @@ namespace Orc.CsvTextEditor
             set { SetValue(AddLineKeyGestureProperty, value); }
         }
 
-        //
         public static readonly DependencyProperty RemoveColumnKeyGestureProperty = DependencyProperty.Register(
             "RemoveColumnKeyGesture", typeof (KeyGesture), typeof (CsvTextEditorControl), new PropertyMetadata(new KeyGesture(Key.OemComma, ModifierKeys.Control)));
 
@@ -266,8 +265,6 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-     //       Log.Info("text changed");
-
             UpdateTextEditor();
         }
 
@@ -294,6 +291,7 @@ namespace Orc.CsvTextEditor
             document.Changed -= OnTextDocumentChanged;
 
             var text = Text;
+           
             _csvTextEditorService.UpdateText(text);
 
             document.Changed += OnTextDocumentChanged;
