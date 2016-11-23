@@ -82,13 +82,6 @@
     <Compile Include="Extensions\TextEditorExtensions.cs" />
     <Compile Include="Models\DocumentChangingContext.cs" />
     <Compile Include="ModuleInitializer.cs" />
-    <Compile Include="Postprocessors\AddColumnPostprocessor.cs" />
-    <Compile Include="Postprocessors\AddLinePostprocessor.cs" />
-    <Compile Include="Postprocessors\AddLineWithTextTransferPostprocessor.cs" />
-    <Compile Include="Postprocessors\Interfaces\IPostprocessor.cs" />
-    <Compile Include="Postprocessors\Interfaces\IPostprocessorProvider.cs" />
-    <Compile Include="Postprocessors\PostprocessorProvider.cs" />
-    <Compile Include="Postprocessors\RestrictTabPostprocessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CsvTextEditorService.cs" />
     <Compile Include="Services\Interface\ICsvTextEditorService.cs" />

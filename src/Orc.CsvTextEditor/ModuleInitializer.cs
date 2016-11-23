@@ -22,7 +22,6 @@ public static class ModuleInitializer
     {
         var serviceLocator = ServiceLocator.Default;
 
-        serviceLocator.RegisterType<IPostprocessorProvider, PostprocessorProvider>();
         serviceLocator.RegisterType<ICsvTextEditorService, CsvTextEditorService>();
     }
     #endregion
