@@ -67,7 +67,7 @@ namespace Orc.CsvTextEditor
                 return InsertLine(text, insertLineIndex, columnCount);
             }
 
-            var previousLineOffset = text.IndexOfSpecificOccurance(newLine, insertLineIndex - 1) + newLineLenght;
+            var previousLineOffset = insertLineIndex == 1 ? 0 : text.IndexOfSpecificOccurance(newLine, insertLineIndex - 1) + newLineLenght;
             var leftLineChunk = text.Substring(previousLineOffset, offsetInLine);
             var splitColumnIndex = leftLineChunk.Count(x => x.Equals(Symbols.Comma));
 
