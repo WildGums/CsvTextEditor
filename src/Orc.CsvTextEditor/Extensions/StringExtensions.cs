@@ -107,45 +107,90 @@ namespace Orc.CsvTextEditor
                 return string.Empty;
             }
 
+            if (columnsCount == 1)
+            {
+                return string.Empty;
+            }
+
             var newLineLenght = newLine.Length;
 
             var newCount = text.Length;
             var textArray = new char[newCount];
-
-            var commaCounter = 0;
             var indexer = 0;
+
+            var separatorCounter = 0;
+            var isLastColumn = columnsCount - 1 == column;
 
             for (var i = 0; i < text.Length; i++)
             {
                 var c = text[i];
+                var isSeparator = false;
 
                 if (c == Symbols.Comma)
                 {
-                    commaCounter++;
-                }
+                    isSeparator = true;
 
-                if (IsLookupMatch(text, i, newLine))
-                {
-                    commaCounter = 0;
-
-                    i += newLineLenght - 1;
-
-                    foreach (var newLineChar in newLine)
+                    if (separatorCounter == column)
                     {
-                        textArray[indexer] = newLineChar;
-                        indexer++;
+                        separatorCounter++;
+                        continue;
                     }
+                    
+                    separatorCounter++;
 
-                    continue;
+                    if (isLastColumn && separatorCounter == column)
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    if(IsLookupMatch(text, i, newLine))
+                    {
+                        separatorCounter = 0;
+
+                        i += newLineLenght - 1;
+                        indexer = WriteStringToCharArray(textArray, newLine, indexer);
+
+                        continue;
+                    }
                 }
 
-                if (commaCounter == column)
+                if (!isSeparator && separatorCounter == column)
                 {
                     continue;
                 }
 
                 textArray[indexer] = c;
                 indexer++;
+
+                //if (c == Symbols.Comma)
+                //{
+                //    commaCounter++;
+
+                //    if (commaCounter == column - 1)
+                //    {
+                //        continue;
+                //    }
+                //}
+                
+                //if (IsLookupMatch(text, i, newLine))
+                //{
+                //    commaCounter = 0;
+
+                //    i += newLineLenght - 1;
+                //    indexer = WriteStringToCharArray(textArray, newLine, indexer);
+
+                //    continue;
+                //}
+
+                //if (commaCounter == column)
+                //{
+                //    continue;
+                //}
+
+                //textArray[indexer] = c;
+                //indexer++;
             }
 
             return new string(textArray, 0, indexer).TrimEnd(newLine); 
@@ -205,6 +250,19 @@ namespace Orc.CsvTextEditor
             }
 
             return index;
+        }
+
+        private static int WriteStringToCharArray(char[] array, string text, int startPosition)
+        {
+            var indexer = startPosition;
+
+            foreach (var newLineChar in text)
+            {
+                array[indexer] = newLineChar;
+                indexer++;
+            }
+
+            return indexer;
         }
     }
 }
