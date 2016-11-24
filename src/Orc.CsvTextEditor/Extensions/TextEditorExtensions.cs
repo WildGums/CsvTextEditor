@@ -28,7 +28,9 @@ namespace Orc.CsvTextEditor
             var offset = line.Offset;
             var columnOffset = columnWidthByLine[lineIndex].Take(columnIndex).Sum();
 
-            textEditor.CaretOffset = offset + columnOffset;
+            var maxCaretOffset = textDocument.TextLength;
+            var newCaretOffset = offset + columnOffset;
+            textEditor.CaretOffset = maxCaretOffset > newCaretOffset ? newCaretOffset : maxCaretOffset;
         }
     }
 }
