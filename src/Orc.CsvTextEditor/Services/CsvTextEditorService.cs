@@ -122,6 +122,7 @@ namespace Orc.CsvTextEditor.Services
             var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
 
             var columnsCount = _elementGenerator.ColumnCount;
+            var newLine = _elementGenerator.NewLine;
 
             var columnLenght = columnNumberWithOffset.Length;
             var columnOffset = columnNumberWithOffset.OffsetInLine;
@@ -132,7 +133,7 @@ namespace Orc.CsvTextEditor.Services
             if (affectedLocation.Column == columnOffset)
             {
                 var oldText = textDocument.Text;
-                var newText = oldText.InsertCommaSeparatedColumn(columnIndex, linesCount, columnsCount);
+                var newText = oldText.InsertCommaSeparatedColumn(columnIndex, linesCount, columnsCount, newLine);
 
                 UpdateText(newText);
                 Goto(lineIndex, columnIndex);
@@ -145,7 +146,7 @@ namespace Orc.CsvTextEditor.Services
                 columnIndex--;
 
                 var oldText = textDocument.Text;
-                var newText = oldText.InsertCommaSeparatedColumn(columnIndex, linesCount, columnsCount);
+                var newText = oldText.InsertCommaSeparatedColumn(columnIndex, linesCount, columnsCount, newLine);
 
                 UpdateText(newText);
                 Goto(lineIndex, columnIndex);
@@ -162,11 +163,12 @@ namespace Orc.CsvTextEditor.Services
             var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
 
             var columnsCount = _elementGenerator.ColumnCount;
+            var newLine = _elementGenerator.NewLine;
 
             var lineIndex = affectedLocation.Line - 1;
             var columnIndex = columnNumberWithOffset.ColumnNumber;
 
-            var text = _textEditor.Text.RemoveCommaSeparatedColumn(columnIndex, linesCount, columnsCount);
+            var text = _textEditor.Text.RemoveCommaSeparatedColumn(columnIndex, linesCount, columnsCount, newLine);
 
             UpdateText(text);
             Goto(lineIndex, columnIndex);
@@ -193,6 +195,8 @@ namespace Orc.CsvTextEditor.Services
             var columnOffset = columnNumberWithOffset.OffsetInLine;
 
             var columnsCount = _elementGenerator.ColumnCount;
+            var newLine = _elementGenerator.NewLine;
+
             var caretColumnIndex = columnNumber;
             if (columnNumber == columnsCount - 1 && affectedColumn == columnOffset)
             {
@@ -200,7 +204,7 @@ namespace Orc.CsvTextEditor.Services
             }
 
             var oldText = _textEditor.Text;
-            var text = oldText.InsertLineWithTextTransfer(nextLineIndex, insertOffsetInLine, columnsCount);
+            var text = oldText.InsertLineWithTextTransfer(nextLineIndex, insertOffsetInLine, columnsCount, newLine);
 
             UpdateText(text);
             Goto(nextLineIndex, caretColumnIndex);
@@ -213,6 +217,7 @@ namespace Orc.CsvTextEditor.Services
 
             var affectedLocation = textDocument.GetLocation(offset);
             var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
+            var newLine = _elementGenerator.NewLine;
 
             var lineIndex = affectedLocation.Line - 1;
             var columnIndex = columnNumberWithOffset.ColumnNumber;
@@ -221,7 +226,7 @@ namespace Orc.CsvTextEditor.Services
             var lineOffset = line.Offset;
             var endlineOffset = line.NextLine?.Offset ?? line.EndOffset;
 
-            var text = _textEditor.Text.DuplicateTextInLine(lineOffset, endlineOffset);
+            var text = _textEditor.Text.DuplicateTextInLine(lineOffset, endlineOffset, newLine);
 
             UpdateText(text);
             Goto(lineIndex + 1, columnIndex);
@@ -234,6 +239,7 @@ namespace Orc.CsvTextEditor.Services
 
             var affectedLocation = textDocument.GetLocation(offset);
             var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
+            var newLine = _elementGenerator.NewLine;
 
             var lineIndex = affectedLocation.Line - 1;
             var columnIndex = columnNumberWithOffset.ColumnNumber;
@@ -242,7 +248,7 @@ namespace Orc.CsvTextEditor.Services
             var lineOffset = line.Offset;
             var endlineOffset = line.NextLine?.Offset ?? line.EndOffset;
 
-            var text = _textEditor.Text.RemoveText(lineOffset, endlineOffset);
+            var text = _textEditor.Text.RemoveText(lineOffset, endlineOffset, newLine);
 
             UpdateText(text);
 

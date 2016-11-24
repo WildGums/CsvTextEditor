@@ -12,10 +12,8 @@ namespace Orc.CsvTextEditor
 
     public static class StringExtensions
     {
-        public static string InsertCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount)
+        public static string InsertCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount, string newLine)
         {
-            var newLine = Environment.NewLine;
-
             if (column == columnsCount)
             {
                 return text.Replace(newLine, Symbols.Comma + newLine) + Symbols.Comma;
@@ -57,14 +55,13 @@ namespace Orc.CsvTextEditor
             return new string(textArray).TrimEnd(newLine);
         }
 
-        public static string InsertLineWithTextTransfer(this string text, int insertLineIndex, int offsetInLine, int columnCount)
+        public static string InsertLineWithTextTransfer(this string text, int insertLineIndex, int offsetInLine, int columnCount, string newLine)
         {
-            var newLine = Environment.NewLine;
             var newLineLenght = newLine.Length;
 
             if (offsetInLine == 0 || insertLineIndex == 0)
             {
-                return InsertLine(text, insertLineIndex, columnCount);
+                return InsertLine(text, insertLineIndex, columnCount, newLine);
             }
 
             var previousLineOffset = insertLineIndex == 1 ? 0 : text.IndexOfSpecificOccurance(newLine, insertLineIndex - 1) + newLineLenght;
@@ -77,9 +74,8 @@ namespace Orc.CsvTextEditor
             return text.Insert(insertPosition, insetionText).TrimEnd(newLine);
         }
 
-        public static string InsertLine(this string text, int insertLineIndex, int columnsCount)
+        public static string InsertLine(this string text, int insertLineIndex, int columnsCount, string newLine)
         {
-            var newLine = Environment.NewLine;
             var newLineLenght = newLine.Length;
 
             var insertLineText = $"{new string(Symbols.Comma, columnsCount - 1)}{newLine}";
@@ -88,10 +84,8 @@ namespace Orc.CsvTextEditor
             return text.Insert(insertionPosition, insertLineText).TrimEnd(newLine);
         }
 
-        public static string DuplicateTextInLine(this string csvText, int startOffset, int endOffset)
+        public static string DuplicateTextInLine(this string csvText, int startOffset, int endOffset, string newLine)
         {
-            var newLine = Environment.NewLine;
-
             var lineToDuplicate = csvText.Substring(startOffset, endOffset - startOffset);
             if (!lineToDuplicate.EndsWith(newLine))
             {
@@ -101,21 +95,18 @@ namespace Orc.CsvTextEditor
             return csvText.Insert(endOffset, lineToDuplicate).TrimEnd(newLine);
         }
 
-        public static string RemoveText(this string csvText, int startOffset, int endOffset)
+        public static string RemoveText(this string csvText, int startOffset, int endOffset, string newLine)
         {
-            var newLine = Environment.NewLine;
-
             return csvText.Remove(startOffset, endOffset - startOffset).TrimEnd(newLine);
         }
 
-        public static string RemoveCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount)
+        public static string RemoveCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount, string newLine)
         {
             if (columnsCount == 0 || linesCount == 0)
             {
                 return string.Empty;
             }
 
-            var newLine = Environment.NewLine;
             var newLineLenght = newLine.Length;
 
             var newCount = text.Length;
@@ -160,6 +151,23 @@ namespace Orc.CsvTextEditor
             return new string(textArray, 0, indexer).TrimEnd(newLine); 
         }
 
+        public static string GetNewLineSymbol(this string text)
+        {
+            if (text.Contains(Environment.NewLine))
+            {
+                return Environment.NewLine;
+            }
+            else
+            {
+                if (text.Contains("\n"))
+                {
+                    return "\n";
+                }
+            }
+
+            return Environment.NewLine;
+        }
+
         public static string TrimEnd(this string target, string trimString)
         {
             var result = target;
@@ -198,6 +206,5 @@ namespace Orc.CsvTextEditor
 
             return index;
         }
-
     }
 }
