@@ -47,6 +47,8 @@ namespace CsvTextEditor
 
         protected virtual void ProjectActivated(Project oldProject, Project newProject)
         {
+
+
         }
 
         protected override bool CanExecute(object parameter)

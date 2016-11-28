@@ -166,7 +166,7 @@ namespace Orc.CsvTextEditor
 
             var text = Text;
 
-            _csvTextEditorService.UpdateText(text);
+            _csvTextEditorService.Initialize(text);
 
             document.Changed += OnTextDocumentChanged;
 

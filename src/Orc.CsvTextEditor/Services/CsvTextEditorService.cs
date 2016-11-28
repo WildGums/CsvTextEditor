@@ -55,6 +55,7 @@ namespace Orc.CsvTextEditor.Services
 
             _textEditor.TextArea.SelectionChanged += OnTextAreaSelectionChanged;
             _textEditor.TextArea.Caret.PositionChanged += OnCaretPositionChanged;
+            _textEditor.TextChanged += OnTextChanged;
 
             _highlightAllOccurencesOfSelectedWordTransformer = new HighlightAllOccurencesOfSelectedWordTransformer();
             _textEditor.TextArea.TextView.LineTransformers.Add(_highlightAllOccurencesOfSelectedWordTransformer);
@@ -63,6 +64,11 @@ namespace Orc.CsvTextEditor.Services
 
             //SearchPanel.Install(_textEditor.TextArea);
             FindReplaceDialog.ShowForReplace(_textEditor);
+        }
+
+        private void OnTextChanged(object sender, EventArgs eventArgs)
+        {
+            TextChanged?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 
@@ -75,6 +81,7 @@ namespace Orc.CsvTextEditor.Services
 
         #region Methods
         public event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
+        public event EventHandler<EventArgs> TextChanged;
 
         public void Copy()
         {
@@ -286,6 +293,13 @@ namespace Orc.CsvTextEditor.Services
         {
             _elementGenerator.Refresh(_textEditor.Text);
             _textEditor.TextArea.TextView.Redraw();
+        }
+
+        public void Initialize(string text)
+        {
+            UpdateText(text);
+
+            _textEditor.Document.UndoStack.ClearAll();
         }
 
         public void RefreshLocation(int offset, int length)

@@ -203,7 +203,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Behavior\" />
-    <Folder Include="Providers\Interfaces\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orc.CsvTextEditor\Orc.CsvTextEditor.csproj">

@@ -24,6 +24,8 @@ namespace Orc.CsvTextEditor.Services
         void Redo();
         void Undo();
 
+        void Initialize(string text);
+
         void AddColumn();
         void AddLine();
         void RemoveColumn();
@@ -40,5 +42,6 @@ namespace Orc.CsvTextEditor.Services
         void RefreshView();
 
         event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
+        event EventHandler<EventArgs> TextChanged;
     }
 }
