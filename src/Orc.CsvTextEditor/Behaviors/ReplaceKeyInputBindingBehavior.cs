@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ReplaceInputBindingBehavior.cs" company="WildGums">
+// <copyright file="ReplaceKeyInputBindingBehavior.cs" company="WildGums">
 //   Copyright (c) 2008 - 2016 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -7,40 +7,46 @@
 
 namespace Orc.CsvTextEditor
 {
-    using System;
     using System.Linq;
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Interactivity;
-    using Catel.MVVM;
     using ICSharpCode.AvalonEdit;
 
     public class ReplaceKeyInputBindingBehavior : Behavior<TextEditor>
     {
+        #region Fields
         public static readonly DependencyProperty GestureProperty = DependencyProperty.Register(
             "Gesture", typeof (KeyGesture), typeof (ReplaceKeyInputBindingBehavior), new PropertyMetadata(default(KeyGesture)));
 
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
+            "Command", typeof (ICommand), typeof (ReplaceKeyInputBindingBehavior), new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceKeyInputBindingBehavior) o).OnCommandPropertyChanged(args)));
+        #endregion
+
+        #region Properties
         public KeyGesture Gesture
         {
             get { return (KeyGesture) GetValue(GestureProperty); }
             set { SetValue(GestureProperty, value); }
         }
 
-        public static readonly DependencyProperty ExecutedProperty = DependencyProperty.Register(
-            "Executed", typeof (ExecutedRoutedEventHandler), typeof (ReplaceKeyInputBindingBehavior), new PropertyMetadata(default(ExecutedRoutedEventHandler)));
-
-        public ExecutedRoutedEventHandler Executed
+        public ICommand Command
         {
-            get { return (ExecutedRoutedEventHandler) GetValue(ExecutedProperty); }
-            set { SetValue(ExecutedProperty, value); }
+            get { return (ICommand) GetValue(CommandProperty); }
+            set { SetValue(CommandProperty, value); }
         }
+        #endregion
 
-        protected override void OnAttached()
+        private void OnCommandPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
-            base.OnAttached();
-
             var textArea = AssociatedObject?.TextArea;
             if (textArea == null)
+            {
+                return;
+            }
+
+            var command = args.NewValue as ICommand;
+            if (command == null)
             {
                 return;
             }
@@ -80,7 +86,7 @@ namespace Orc.CsvTextEditor
                 break;
             }
 
-            inputBindings.Add(new InputBinding(new Command(() => Executed(this, null)), Gesture));
+            inputBindings.Add(new InputBinding(command, Gesture));
         }
     }
 }

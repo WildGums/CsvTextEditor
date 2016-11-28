@@ -38,7 +38,7 @@ namespace Orc.CsvTextEditor.Services
         void GotoNextColumn();
         void GotoPreviousColumn();
 
-        void RefreshLocation(int offset, int length);
+        void RefreshView();
 
         event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
         event EventHandler<EventArgs> TextChanged;

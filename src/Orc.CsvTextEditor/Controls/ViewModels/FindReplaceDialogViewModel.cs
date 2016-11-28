@@ -8,7 +8,6 @@
 namespace Orc.CsvTextEditor
 {
     using System.Media;
-    using Catel;
     using Catel.IoC;
     using Catel.MVVM;
     using Controls;
@@ -18,16 +17,22 @@ namespace Orc.CsvTextEditor
     {
         #region Fields
         private readonly ICsvTextEditorSearchService _csvTextEditorSearchService;
+        private readonly ICsvTextEditorService _csvTextEditorService;
         #endregion
 
         #region Constructors
-        public FindReplaceDialogViewModel(object scope, IServiceLocator serviceLocator)
+        public FindReplaceDialogViewModel(object scope)
         {
-            Argument.IsNotNull(() => serviceLocator);
+            var serviceLocator = this.GetServiceLocator();
 
             if (_csvTextEditorSearchService == null && serviceLocator.IsTypeRegistered<ICsvTextEditorSearchService>(scope))
             {
                 _csvTextEditorSearchService = serviceLocator.ResolveType<ICsvTextEditorSearchService>(scope);
+            }
+
+            if (_csvTextEditorService == null && serviceLocator.IsTypeRegistered<ICsvTextEditorService>(scope))
+            {
+                _csvTextEditorService = serviceLocator.ResolveType<ICsvTextEditorService>(scope);
             }
 
             FindNext = new Command<string>(OnFindNext);
@@ -56,6 +61,8 @@ namespace Orc.CsvTextEditor
             var replacementText = values[1] as string ?? string.Empty;
 
             _csvTextEditorSearchService.ReplaceAll(textToFind, replacementText, FindReplaceSettings);
+
+            _csvTextEditorService.RefreshView();
         }
 
         private void OnReplace(object parameter)
@@ -64,17 +71,19 @@ namespace Orc.CsvTextEditor
             var textToFind = values[0] as string ?? string.Empty;
             var replacementText = values[1] as string ?? string.Empty;
 
-            if (_csvTextEditorSearchService.Replace(textToFind, replacementText, FindReplaceSettings))
+            if (!_csvTextEditorSearchService.Replace(textToFind, replacementText, FindReplaceSettings))
             {
                 SystemSounds.Beep.Play();
             }
+
+            _csvTextEditorService.RefreshView();
         }
 
         private void OnFindNext(string text)
         {
             var textToFind = text ?? string.Empty;
 
-            if (_csvTextEditorSearchService.FindNext(textToFind, FindReplaceSettings))
+            if (!_csvTextEditorSearchService.FindNext(textToFind, FindReplaceSettings))
             {
                 SystemSounds.Beep.Play();
             }

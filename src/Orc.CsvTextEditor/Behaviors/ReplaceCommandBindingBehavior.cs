@@ -7,7 +7,6 @@
 
 namespace Orc.CsvTextEditor
 {
-    using System.Runtime.InteropServices.ComTypes;
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Interactivity;
@@ -15,32 +14,27 @@ namespace Orc.CsvTextEditor
 
     public class ReplaceCommandBindingBehavior : Behavior<TextEditor>
     {
-        #region Fields
+
         public static readonly DependencyProperty ReplacementCommandProperty = DependencyProperty.Register(
             "ReplacementCommand", typeof (RoutedCommand), typeof (ReplaceCommandBindingBehavior), new PropertyMetadata(default(RoutedCommand)));
 
-        public static readonly DependencyProperty ExecutedProperty = DependencyProperty.Register(
-            "Executed", typeof (ExecutedRoutedEventHandler), typeof (ReplaceCommandBindingBehavior), new PropertyMetadata(default(ExecutedRoutedEventHandler)));
-        #endregion
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
+            "Command", typeof (ICommand), typeof (ReplaceCommandBindingBehavior), new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceCommandBindingBehavior) o).OnCommandPropertyChanged(args)));
 
-        #region Properties
         public RoutedCommand ReplacementCommand
         {
             get { return (RoutedCommand) GetValue(ReplacementCommandProperty); }
             set { SetValue(ReplacementCommandProperty, value); }
         }
 
-        public ExecutedRoutedEventHandler Executed
+        public ICommand Command
         {
-            get { return (ExecutedRoutedEventHandler) GetValue(ExecutedProperty); }
-            set { SetValue(ExecutedProperty, value); }
+            get { return (ICommand) GetValue(CommandProperty); }
+            set { SetValue(CommandProperty, value); }
         }
-        #endregion
-
-        protected override void OnAttached()
+        
+        private void OnCommandPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
-            base.OnAttached();
-
             var textArea = AssociatedObject?.TextArea;
             if (textArea == null)
             {
@@ -52,52 +46,15 @@ namespace Orc.CsvTextEditor
             for (var i = 0; i < commandBindings.Count; i++)
             {
                 var commandBinding = commandBindings[i];
-                if (commandBinding.Command == ReplacementCommand)
-                {
-                    textArea.CommandBindings.Remove(commandBinding);
-                    textArea.CommandBindings.Add(new CommandBinding(ReplacementCommand, Executed));
-                    return;
-                }
-            }
-
-            var inputBindings = textArea.InputBindings;
-            for (var i = 0; i < commandBindings.Count; i++)
-            {
-                var commandBinding = commandBindings[i];
-                var routedCommand = commandBinding.Command as RoutedCommand;
-                if (routedCommand == null)
+                if (commandBinding.Command != ReplacementCommand)
                 {
                     continue;
                 }
-                
-                if (routedCommand.Name == "DeleteLine")
-                {
-                    var routedCommandKeyGestures = routedCommand.InputGestures;
-                    if (routedCommand.InputGestures.Contains(ReplacementCommand.InputGestures[0]))
-                    {
-                        commandBindings.Remove(commandBinding);
-                        textArea.CommandBindings.Add(new CommandBinding(ReplacementCommand, Executed));
-                        return;
-                    }
 
-                }
+                textArea.CommandBindings.Remove(commandBinding);
+                textArea.CommandBindings.Add(new CommandBinding(ReplacementCommand, (sender, e) => Command?.Execute(null)));
+                return;
             }
-            
-            //for (var i = 0; i < inputBindings.Count; i++)
-            //{
-            //    var inputBinding = inputBindings[i];
-            //    if ((ReplacementCommand as RoutedCommand).InputGestures.Contains(inputBinding.Gesture))
-            //    {
-            //        textArea.InputBindings.Remove(inputBinding);
-            //        textArea.InputBindings.Add(new InputBinding(ReplacementCommand, inputBinding.Gesture));
-            //        return;
-            //    }
-            //}
-        }
-
-        protected override void OnDetaching()
-        {
-            base.OnDetaching();
         }
     }
 }

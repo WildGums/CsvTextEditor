@@ -43,7 +43,7 @@ namespace Orc.CsvTextEditor.Services
 
             if (!match.Success)
             {
-                return match.Success;
+                return false;
             }
 
             _textEditor.Select(match.Index, match.Length);
@@ -61,12 +61,12 @@ namespace Orc.CsvTextEditor.Services
 
             if (!match.Success || match.Index != 0 || match.Length != input.Length)
             {
-                return !FindNext(textToFind, settings);
+                return FindNext(textToFind, settings);
             }
 
             _textEditor.Document.Replace(_textEditor.SelectionStart, _textEditor.SelectionLength, textToReplace);
 
-            return false;
+            return true;
         }
 
         public void ReplaceAll(string textToFind, string textToReplace, FindReplaceSettings settings)

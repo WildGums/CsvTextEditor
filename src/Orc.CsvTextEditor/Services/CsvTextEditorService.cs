@@ -8,25 +8,28 @@
 namespace Orc.CsvTextEditor.Services
 {
     using System;
-    using System.Runtime.InteropServices;
     using System.Windows;
+    using System.Xml;
     using Catel;
     using Catel.IoC;
     using Catel.MVVM;
     using Catel.Services;
     using ICSharpCode.AvalonEdit;
+    using ICSharpCode.AvalonEdit.Document;
+    using ICSharpCode.AvalonEdit.Highlighting;
+    using ICSharpCode.AvalonEdit.Highlighting.Xshd;
     using Transformers;
 
     internal class CsvTextEditorService : ICsvTextEditorService
     {
         #region Fields
         private readonly ICommandManager _commandManager;
-        private readonly IUIVisualizerService _uiVisualizerService;
 
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
         private readonly object _scope;
         private readonly TextEditor _textEditor;
+        private readonly IUIVisualizerService _uiVisualizerService;
 
         private bool _isInCustomUpdate = false;
         private bool _isInRedoUndo = false;
@@ -310,25 +313,16 @@ namespace Orc.CsvTextEditor.Services
 
         public void Initialize(string text)
         {
+            var document = _textEditor.Document;
+            document.Changed -= OnTextDocumentChanged;
+
             UpdateText(text);
 
             _textEditor.Document.UndoStack.ClearAll();
-        }
 
-        public void RefreshLocation(int offset, int length)
-        {
-            if (_isInCustomUpdate || _isInRedoUndo)
-            {
-                return;
-            }
+            document.Changed += OnTextDocumentChanged;
 
-            var textDocument = _textEditor.Document;
-            var affectedLocation = textDocument.GetLocation(offset);
-
-            if (_elementGenerator.RefreshLocation(affectedLocation, length))
-            {
-                _textEditor.TextArea.TextView.Redraw();
-            }
+            RefreshHighlightings();
         }
 
         public void GotoNextColumn()
@@ -387,7 +381,50 @@ namespace Orc.CsvTextEditor.Services
 
             Goto(lineIndex, previousColumnIndex);
         }
+
+        public void RefreshView()
+        {
+            _elementGenerator.Refresh(_textEditor.Text);
+            _textEditor.TextArea.TextView.Redraw();
+        }
         #endregion
+
+        private void RefreshHighlightings()
+        {
+            using (var s = GetType().Assembly.GetManifestResourceStream("Orc.CsvTextEditor.Resources.Highlightings.CustomHighlighting.xshd"))
+            {
+                if (s == null)
+                {
+                    throw new InvalidOperationException("Could not find embedded resource");
+                }
+
+                using (var reader = new XmlTextReader(s))
+                {
+                    _textEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+                }
+            }
+        }
+
+        private void RefreshLocation(int offset, int length)
+        {
+            if (_isInCustomUpdate || _isInRedoUndo)
+            {
+                return;
+            }
+
+            var textDocument = _textEditor.Document;
+            var affectedLocation = textDocument.GetLocation(offset);
+
+            if (_elementGenerator.RefreshLocation(affectedLocation, length))
+            {
+                _textEditor.TextArea.TextView.Redraw();
+            }
+        }
+
+        private void OnTextDocumentChanged(object sender, DocumentChangeEventArgs e)
+        {
+            RefreshLocation(e.Offset, e.InsertionLength - e.RemovalLength);
+        }
 
         private void ClearSelectedText()
         {
@@ -427,13 +464,6 @@ namespace Orc.CsvTextEditor.Services
             }
 
             textDocument.Remove(deletePosition, 1);
-            return;
-        }
-
-        private void RefreshView()
-        {
-            _elementGenerator.Refresh(_textEditor.Text);
-            _textEditor.TextArea.TextView.Redraw();
         }
 
         private void UpdateText(string text)
