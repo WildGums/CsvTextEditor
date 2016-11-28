@@ -325,7 +325,7 @@ namespace Orc.CsvTextEditor.Services
             }
 
             var deletingChar = textDocument.Text[deletePosition];
-            if (deletingChar == '\n' || deletingChar == Symbols.Comma || deletingChar == '\r')
+            if (deletingChar == Symbols.NewLineStart || deletingChar == Symbols.Comma || deletingChar == Symbols.NewLineEnd)
             {
                 return;
             }
