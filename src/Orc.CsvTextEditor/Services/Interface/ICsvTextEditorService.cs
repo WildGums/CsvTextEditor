@@ -7,6 +7,8 @@
 
 namespace Orc.CsvTextEditor.Services
 {
+    using System;
+
     public interface ICsvTextEditorService
     {
         #region Properties
@@ -16,7 +18,6 @@ namespace Orc.CsvTextEditor.Services
         bool CanUndo { get; }
         #endregion
 
-        #region Methods
         void Copy();
         void Cut();
         void Paste();
@@ -28,6 +29,7 @@ namespace Orc.CsvTextEditor.Services
         void RemoveColumn();
         void DuplicateLine();
         void RemoveLine();
+        void DeleteSelectedText();
 
         void GotoNextColumn();
         void GotoPreviousColumn();
@@ -36,6 +38,7 @@ namespace Orc.CsvTextEditor.Services
         void RefreshLocation(int offset, int length);
 
         void RefreshView();
-        #endregion
+
+        event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
     }
 }

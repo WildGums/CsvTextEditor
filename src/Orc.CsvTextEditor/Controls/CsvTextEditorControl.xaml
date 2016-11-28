@@ -19,6 +19,8 @@
             <i:Interaction.Behaviors>
                 <csvTextEditor:DisableDropBehavior/>
                 <csvTextEditor:ReplaceCommandBindingBehavior ReplacementCommand="ApplicationCommands.Paste" Executed="OnPaste"/>
+                <csvTextEditor:ReplaceCommandBindingBehavior ReplacementCommand="ApplicationCommands.Cut" Executed="OnCut"/>
+                
                 <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+Y" Executed="OnRedo"/>
                 <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+Z" Executed="OnUndo"/>
                 

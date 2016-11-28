@@ -7,10 +7,12 @@
 
 namespace CsvTextEditor.ViewModels
 {
+    using System;
     using System.Threading.Tasks;
     using Catel;
     using Catel.Fody;
     using Catel.MVVM;
+    using Catel.Services;
     using Catel.Threading;
     using Models;
     using Orc.ProjectManagement;
@@ -19,14 +21,16 @@ namespace CsvTextEditor.ViewModels
     {
         #region Fields
         private readonly IProjectManager _projectManager;
+        private readonly IDispatcherService _dispatcherService;
         #endregion
 
         #region Constructors
-        public MainViewModel(IProjectManager projectManager)
+        public MainViewModel(IProjectManager projectManager, IDispatcherService dispatcherService)
         {
             Argument.IsNotNull(() => projectManager);
 
             _projectManager = projectManager;
+            _dispatcherService = dispatcherService;
         }
         #endregion
 
@@ -35,34 +39,23 @@ namespace CsvTextEditor.ViewModels
         public Project Project { get; set; }
 
         #region Methods
-        protected override Task InitializeAsync()
+        protected override async Task InitializeAsync()
         {
-            _projectManager.ProjectActivatedAsync += OnProjectActivated;
+            await base.InitializeAsync();
 
-            return base.InitializeAsync();
+            _projectManager.ProjectActivationAsync += OnProjectActivationAsync;
         }
 
-        protected override Task CloseAsync()
+        private async Task OnProjectActivationAsync(object sender, ProjectUpdatingCancelEventArgs e)
         {
-            _projectManager.ProjectActivatedAsync -= OnProjectActivated;
-
-            return base.CloseAsync();
+            _dispatcherService.Invoke(() => Project = e.NewProject as Project, true);
         }
 
-        private Task OnProjectActivated(object sender, ProjectUpdatedEventArgs e)
+        protected override async Task CloseAsync()
         {
-            var project = e.NewProject as Project;
+            await base.CloseAsync();
 
-            if (ReferenceEquals(project, null))
-            {
-                Project = null;
-
-                return TaskHelper.Completed;
-            }
-
-            Project = project;
-
-            return TaskHelper.Completed;
+            _projectManager.ProjectActivationAsync -= OnProjectActivationAsync;
         }
         #endregion
     }

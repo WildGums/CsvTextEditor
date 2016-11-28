@@ -12,6 +12,34 @@ namespace Orc.CsvTextEditor
 
     public static class StringExtensions
     {
+        public static string RemoveCommaSeparatedText(this string text, int positionStart, int lenght, string newLine)
+        {
+            var endPosition = positionStart + lenght;
+
+            var replacementText = string.Empty;
+
+            for (var i = positionStart; i < endPosition; i++)
+            {
+                var c = text[i];
+                if (c == Symbols.Comma)
+                {
+                    replacementText += Symbols.Comma;
+                    continue;
+                }
+
+                if (IsLookupMatch(text, i, newLine))
+                {
+                    replacementText += newLine;
+                    continue;
+                }
+            }
+
+            text = text.Remove(positionStart, lenght)
+                .Insert(positionStart, replacementText);
+
+            return text;
+        }
+
         public static string InsertCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount, string newLine)
         {
             if (column == columnsCount)

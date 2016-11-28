@@ -81,6 +81,7 @@
     </Compile>
     <Compile Include="Controls\EmptyVisualLineElement.cs" />
     <Compile Include="Controls\TabSpaceElementGenerator.cs" />
+    <Compile Include="EventArgs\CaretTextLocationChangedEventArgs.cs" />
     <Compile Include="Extensions\KeyGestureExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TextEditorExtensions.cs" />

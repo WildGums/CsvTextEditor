@@ -60,10 +60,19 @@ namespace Orc.CsvTextEditor
 
         public static readonly DependencyProperty ScopeProperty = DependencyProperty.Register(
             "Scope", typeof (object), typeof (CsvTextEditorControl), new PropertyMetadata(default(object), (s, e) => ((CsvTextEditorControl) s).OnScopeChanged()));
-
-        public static readonly DependencyProperty DuplicateLineKeyGestureProperty = DependencyProperty.Register(
-            "DuplicateLineKeyGesture", typeof (KeyGesture), typeof (CsvTextEditorControl), new PropertyMetadata(new KeyGesture(Key.D, ModifierKeys.Control)));
         #endregion
+
+        private void OnDeleteSelectedText(object sender, ExecutedRoutedEventArgs e)
+        {
+            _csvTextEditorService.DeleteSelectedText();
+            Synchronize();
+        }
+
+        private void OnCut(object sender, ExecutedRoutedEventArgs e)
+        {
+            _csvTextEditorService.Cut();
+            Synchronize();
+        }
 
         private void OnPaste(object sender, ExecutedRoutedEventArgs e)
         {

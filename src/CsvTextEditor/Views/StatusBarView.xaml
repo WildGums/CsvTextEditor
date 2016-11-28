@@ -31,6 +31,18 @@
                     </Separator.LayoutTransform>
                 </Separator>
 
+                <TextBlock Text="Line "/>
+                <TextBlock Text="{Binding Line}"/>
+                
+                <TextBlock Text="Column "/>
+                <TextBlock Text="{Binding Column}"/>
+
+                <Separator Margin="3,0,3,0" Width="{Binding ElementName=stackPanel, Path=ActualHeight}">
+                    <Separator.LayoutTransform>
+                        <RotateTransform Angle="90" />
+                    </Separator.LayoutTransform>
+                </Separator>
+
                 <TextBlock Text="{Binding Version}" />
             </StackPanel>
 

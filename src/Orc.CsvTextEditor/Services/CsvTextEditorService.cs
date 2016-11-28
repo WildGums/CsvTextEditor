@@ -8,15 +8,12 @@
 namespace Orc.CsvTextEditor.Services
 {
     using System;
-    using System.Runtime.InteropServices;
     using System.Windows;
-    using System.Windows.Input;
     using Catel;
     using Catel.IoC;
     using Catel.MVVM;
-    using Catel.Threading;
     using ICSharpCode.AvalonEdit;
-    using ICSharpCode.AvalonEdit.Search;
+    using ICSharpCode.AvalonEdit.Document;
     using Transformers;
 
     internal class CsvTextEditorService : ICsvTextEditorService
@@ -25,12 +22,14 @@ namespace Orc.CsvTextEditor.Services
         private readonly ICommandManager _commandManager;
 
         private readonly TabSpaceElementGenerator _elementGenerator;
-        private readonly TextEditor _textEditor;
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
+        private readonly TextEditor _textEditor;
 
         private bool _isInCustomUpdate = false;
         private bool _isInRedoUndo = false;
 
+        private int _previousCaretColumn;
+        private int _previousCaretLine;
         #endregion
 
         #region Constructors
@@ -55,6 +54,7 @@ namespace Orc.CsvTextEditor.Services
             _textEditor.TextArea.TextView.ElementGenerators.Add(_elementGenerator);
 
             _textEditor.TextArea.SelectionChanged += OnTextAreaSelectionChanged;
+            _textEditor.TextArea.Caret.PositionChanged += OnCaretPositionChanged;
 
             _highlightAllOccurencesOfSelectedWordTransformer = new HighlightAllOccurencesOfSelectedWordTransformer();
             _textEditor.TextArea.TextView.LineTransformers.Add(_highlightAllOccurencesOfSelectedWordTransformer);
@@ -74,14 +74,11 @@ namespace Orc.CsvTextEditor.Services
         #endregion
 
         #region Methods
+        public event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
+
         public void Copy()
         {
             _textEditor.Copy();
-        }
-
-        public void Cut()
-        {
-            _textEditor.Cut();
         }
 
         public void Paste()
@@ -116,6 +113,30 @@ namespace Orc.CsvTextEditor.Services
             {
                 _textEditor.Undo();
             }
+        }
+
+        public void DeleteSelectedText()
+        {
+        }
+
+        public void Cut()
+        {
+            var selectedText = _textEditor.SelectedText;
+            var textDocument = _textEditor.Document;
+
+            var selectionStart = _textEditor.SelectionStart;
+            var selectionLenght = _textEditor.SelectionLength;
+
+            var newLine = _elementGenerator.NewLine;
+
+            var text = textDocument.Text.RemoveCommaSeparatedText(selectionStart, selectionLenght, newLine);
+
+            _textEditor.SelectionLength = 0;
+
+            UpdateText(text);
+            _textEditor.CaretOffset = selectionStart;
+
+            Clipboard.SetText(selectedText);
         }
 
         public void AddColumn()
@@ -354,6 +375,24 @@ namespace Orc.CsvTextEditor.Services
             Goto(lineIndex, previousColumnIndex);
         }
         #endregion
+
+        private void OnCaretPositionChanged(object sender, EventArgs eventArgs)
+        {
+            var offset = _textEditor.CaretOffset;
+            var textDocument = _textEditor.Document;
+            var currentTextLocation = textDocument.GetLocation(offset);
+            var columnNumberWithOffset = _elementGenerator.GetColumn(currentTextLocation);
+            var column = columnNumberWithOffset.ColumnNumber;
+            var line = currentTextLocation.Line;
+
+            if (_previousCaretColumn != column || _previousCaretLine != line)
+            {
+                CaretTextLocationChanged?.Invoke(this, new CaretTextLocationChangedEventArgs(column, line));
+
+                _previousCaretColumn = column;
+                _previousCaretLine = line;
+            }
+        }
 
         private void Goto(int lineIndex, int columnIndex)
         {
