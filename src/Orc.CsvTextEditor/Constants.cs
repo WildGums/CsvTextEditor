@@ -7,6 +7,8 @@
 
 namespace Orc.CsvTextEditor
 {
+    using System.Collections.Generic;
+
     public static class Symbols
     {
         #region Fields

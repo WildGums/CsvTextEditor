@@ -87,7 +87,8 @@ namespace Orc.CsvTextEditor.Services
         public void Paste()
         {
             var text = Clipboard.GetText();
-            text = text.Replace(Symbols.Comma.ToString(), string.Empty);
+            text = text.Replace(Symbols.Comma.ToString(), string.Empty)
+                .Replace(_elementGenerator.NewLine, string.Empty);
 
             var offset = _textEditor.CaretOffset;
             _textEditor.Document.Insert(offset, text);

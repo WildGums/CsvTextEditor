@@ -198,19 +198,12 @@ namespace Orc.CsvTextEditor
 
         public static string GetNewLineSymbol(this string text)
         {
-            if (text.Contains(Environment.NewLine))
+            if (text.Contains("\r\n"))
             {
-                return Environment.NewLine;
-            }
-            else
-            {
-                if (text.Contains("\n"))
-                {
-                    return "\n";
-                }
+                return "\r\n";
             }
 
-            return Environment.NewLine;
+            return text.Contains("\n") ? "\n" : "\r\n";
         }
 
         public static string TrimEnd(this string target, string trimString)
