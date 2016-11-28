@@ -70,6 +70,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\DisableDropBehavior.cs" />
+    <Compile Include="Behaviors\ReplaceCommandBindingBehavior.cs" />
+    <Compile Include="Behaviors\ReplaceKeyInputBindingBehavior.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Controls\ColumnNumberWithOffset.cs" />
     <Compile Include="Controls\ColumnWidthCalculator.cs" />
@@ -78,6 +81,7 @@
     </Compile>
     <Compile Include="Controls\EmptyVisualLineElement.cs" />
     <Compile Include="Controls\TabSpaceElementGenerator.cs" />
+    <Compile Include="Extensions\KeyGestureExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TextEditorExtensions.cs" />
     <Compile Include="Models\DocumentChangingContext.cs" />

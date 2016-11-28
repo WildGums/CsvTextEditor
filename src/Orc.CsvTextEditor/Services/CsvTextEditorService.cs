@@ -9,6 +9,7 @@ namespace Orc.CsvTextEditor.Services
 {
     using System;
     using System.Runtime.InteropServices;
+    using System.Windows;
     using System.Windows.Input;
     using Catel;
     using Catel.IoC;
@@ -85,7 +86,11 @@ namespace Orc.CsvTextEditor.Services
 
         public void Paste()
         {
-            _textEditor.Paste();
+            var text = Clipboard.GetText();
+            text = text.Replace(Symbols.Comma.ToString(), string.Empty);
+
+            var offset = _textEditor.CaretOffset;
+            _textEditor.Document.Insert(offset, text);
         }
 
         public void Redo()
