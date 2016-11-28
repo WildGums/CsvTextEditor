@@ -13,7 +13,6 @@ namespace Orc.CsvTextEditor.Services
     using Catel.IoC;
     using Catel.MVVM;
     using ICSharpCode.AvalonEdit;
-    using ICSharpCode.AvalonEdit.Document;
     using Transformers;
 
     internal class CsvTextEditorService : ICsvTextEditorService
@@ -62,13 +61,7 @@ namespace Orc.CsvTextEditor.Services
 
             _textEditor.TextArea.TextView.LineTransformers.Add(new FirstLineAlwaysBoldTransformer());
 
-            //SearchPanel.Install(_textEditor.TextArea);
             FindReplaceDialog.ShowForReplace(_textEditor);
-        }
-
-        private void OnTextChanged(object sender, EventArgs eventArgs)
-        {
-            TextChanged?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 
@@ -122,17 +115,26 @@ namespace Orc.CsvTextEditor.Services
             }
         }
 
-        public void DeleteSelectedText()
-        {
-        }
-
         public void Cut()
         {
             var selectedText = _textEditor.SelectedText;
+
+            ClearSelectedText();
+
+            Clipboard.SetText(selectedText);
+        }
+
+        private void ClearSelectedText()
+        {
             var textDocument = _textEditor.Document;
 
             var selectionStart = _textEditor.SelectionStart;
             var selectionLenght = _textEditor.SelectionLength;
+
+            if (selectionLenght == 0)
+            {
+                return;
+            }
 
             var newLine = _elementGenerator.NewLine;
 
@@ -142,8 +144,6 @@ namespace Orc.CsvTextEditor.Services
 
             UpdateText(text);
             _textEditor.CaretOffset = selectionStart;
-
-            Clipboard.SetText(selectedText);
         }
 
         public void AddColumn()
@@ -289,6 +289,51 @@ namespace Orc.CsvTextEditor.Services
             Goto(lineIndex - 1, columnIndex);
         }
 
+        public void DeleteNextSelectedText()
+        {
+            var selectionLenght = _textEditor.SelectionLength;
+            if (selectionLenght == 0)
+            {
+                var deletePosition = _textEditor.SelectionStart;
+                DeleteFromPosition(deletePosition);
+                return;
+            }
+
+            ClearSelectedText();
+        }
+
+        public void DeletePreviousSelectedText()
+        {
+            var selectionLenght = _textEditor.SelectionLength;
+            if (selectionLenght == 0)
+            {
+                var deletePosition = _textEditor.SelectionStart - 1;
+                DeleteFromPosition(deletePosition);
+                return;
+            }
+
+            ClearSelectedText();
+        }
+
+        private void DeleteFromPosition(int deletePosition)
+        {
+            var textDocument = _textEditor.Document;
+
+            if (deletePosition < 0 || deletePosition >= textDocument.TextLength)
+            {
+                return;
+            }
+
+            var deletingChar = textDocument.Text[deletePosition];
+            if (deletingChar == '\n' || deletingChar == Symbols.Comma || deletingChar == '\r')
+            {
+                return;
+            }
+
+            textDocument.Remove(deletePosition, 1);
+            return;
+        }
+
         public void RefreshView()
         {
             _elementGenerator.Refresh(_textEditor.Text);
@@ -389,6 +434,11 @@ namespace Orc.CsvTextEditor.Services
             Goto(lineIndex, previousColumnIndex);
         }
         #endregion
+
+        private void OnTextChanged(object sender, EventArgs eventArgs)
+        {
+            TextChanged?.Invoke(this, EventArgs.Empty);
+        }
 
         private void OnCaretPositionChanged(object sender, EventArgs eventArgs)
         {

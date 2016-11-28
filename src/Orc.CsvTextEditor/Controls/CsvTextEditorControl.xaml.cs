@@ -62,9 +62,15 @@ namespace Orc.CsvTextEditor
             "Scope", typeof (object), typeof (CsvTextEditorControl), new PropertyMetadata(default(object), (s, e) => ((CsvTextEditorControl) s).OnScopeChanged()));
         #endregion
 
-        private void OnDeleteSelectedText(object sender, ExecutedRoutedEventArgs e)
+        private void OnDeleteForward(object sender, ExecutedRoutedEventArgs e)
         {
-            _csvTextEditorService.DeleteSelectedText();
+            _csvTextEditorService.DeleteNextSelectedText();
+            Synchronize();
+        }
+
+        private void OnDeleteBack(object sender, ExecutedRoutedEventArgs e)
+        {
+            _csvTextEditorService.DeletePreviousSelectedText();
             Synchronize();
         }
 

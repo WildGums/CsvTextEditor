@@ -31,6 +31,8 @@
                 <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="Shift+Tab" Executed="OnGotoPreviousColumn"/>
                 <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+OemComma" Executed="OnRemoveColumn"/>
                 <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="OemComma" Executed="OnAddColumn"/>
+                <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="Del" Executed="OnDeleteForward"/>
+                <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="Backspace" Executed="OnDeleteBack"/>
             </i:Interaction.Behaviors>
             
         </avalonedit:TextEditor >

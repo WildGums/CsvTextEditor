@@ -31,7 +31,8 @@ namespace Orc.CsvTextEditor.Services
         void RemoveColumn();
         void DuplicateLine();
         void RemoveLine();
-        void DeleteSelectedText();
+        void DeleteNextSelectedText();
+        void DeletePreviousSelectedText();
 
         void GotoNextColumn();
         void GotoPreviousColumn();
