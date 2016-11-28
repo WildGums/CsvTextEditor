@@ -8,10 +8,12 @@
 namespace Orc.CsvTextEditor.Services
 {
     using System;
+    using System.Runtime.InteropServices;
     using System.Windows;
     using Catel;
     using Catel.IoC;
     using Catel.MVVM;
+    using Catel.Services;
     using ICSharpCode.AvalonEdit;
     using Transformers;
 
@@ -19,9 +21,11 @@ namespace Orc.CsvTextEditor.Services
     {
         #region Fields
         private readonly ICommandManager _commandManager;
+        private readonly IUIVisualizerService _uiVisualizerService;
 
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
+        private readonly object _scope;
         private readonly TextEditor _textEditor;
 
         private bool _isInCustomUpdate = false;
@@ -32,13 +36,16 @@ namespace Orc.CsvTextEditor.Services
         #endregion
 
         #region Constructors
-        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager)
+        public CsvTextEditorService(object scope, TextEditor textEditor, ICommandManager commandManager, IUIVisualizerService uiVisualizerService)
         {
             Argument.IsNotNull(() => textEditor);
             Argument.IsNotNull(() => commandManager);
+            Argument.IsNotNull(() => uiVisualizerService);
 
+            _scope = scope;
             _textEditor = textEditor;
             _commandManager = commandManager;
+            _uiVisualizerService = uiVisualizerService;
 
             // Need to make these options accessible to the user in the settings window
             _textEditor.ShowLineNumbers = true;
@@ -60,8 +67,6 @@ namespace Orc.CsvTextEditor.Services
             _textEditor.TextArea.TextView.LineTransformers.Add(_highlightAllOccurencesOfSelectedWordTransformer);
 
             _textEditor.TextArea.TextView.LineTransformers.Add(new FirstLineAlwaysBoldTransformer());
-
-            FindReplaceDialog.ShowForReplace(_textEditor);
         }
         #endregion
 
@@ -122,6 +127,16 @@ namespace Orc.CsvTextEditor.Services
             ClearSelectedText();
 
             Clipboard.SetText(selectedText);
+        }
+
+        public void ShowFindReplaceDialog()
+        {
+            var serviceLocator = this.GetServiceLocator();
+            var typeFactory = serviceLocator.ResolveType<ITypeFactory>();
+
+            var findReplaceViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<FindReplaceDialogViewModel>(_scope);
+
+            _uiVisualizerService.ShowAsync(findReplaceViewModel);
         }
 
         public void AddColumn()

@@ -95,6 +95,7 @@ namespace CsvTextEditor.Services
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Cut");
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "DeleteLine");
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "DuplicateLine");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "FindReplace");
 
             _commandManager.CreateCommandWithGesture(typeof(Commands.Help), "About");
         }

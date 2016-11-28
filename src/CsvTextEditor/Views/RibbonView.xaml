@@ -55,7 +55,12 @@
                     <fluent:Button Header="Redo"
                                    LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.MailForward}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding Edit.Redo}" />
+
+                    <fluent:Button Header="Find and replace"
+                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Search}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.FindReplace}" />
                 </fluent:RibbonGroupBox>
+
             </fluent:RibbonTabItem>
         </fluent:Ribbon.Tabs>
     </fluent:Ribbon>

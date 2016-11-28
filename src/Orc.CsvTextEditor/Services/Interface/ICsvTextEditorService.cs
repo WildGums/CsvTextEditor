@@ -25,6 +25,7 @@ namespace Orc.CsvTextEditor.Services
         void Undo();
 
         void Initialize(string text);
+        void ShowFindReplaceDialog();
 
         void AddColumn();
         void AddLine();

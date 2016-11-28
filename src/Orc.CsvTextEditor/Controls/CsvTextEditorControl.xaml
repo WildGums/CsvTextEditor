@@ -23,6 +23,8 @@
                 
                 <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+Y" Executed="OnRedo"/>
                 <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+Z" Executed="OnUndo"/>
+
+                <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+F" Executed="OnShowFindReplaceDialog"/>
                 
                 <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="Enter" Executed="OnAddLine"/>
                 <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+L" Executed="OnRemoveLine"/>

@@ -6,6 +6,9 @@
 
 
 using Catel.IoC;
+using Catel.Logging;
+using Catel.MVVM;
+using Catel.Services;
 using Orc.CsvTextEditor;
 using Orc.CsvTextEditor.Services;
 
@@ -14,6 +17,8 @@ using Orc.CsvTextEditor.Services;
 /// </summary>
 public static class ModuleInitializer
 {
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
     #region Methods
     /// <summary>
     /// Initializes the module.
@@ -23,6 +28,12 @@ public static class ModuleInitializer
         var serviceLocator = ServiceLocator.Default;
 
         serviceLocator.RegisterType<ICsvTextEditorService, CsvTextEditorService>();
+
+        var viewModelLocator = serviceLocator.ResolveType<IViewModelLocator>();
+        viewModelLocator.Register<FindReplaceDialog, FindReplaceDialogViewModel>();
+
+        var uiVisualizerService = serviceLocator.ResolveType<IUIVisualizerService>();
+        uiVisualizerService.Register(typeof(FindReplaceDialogViewModel), typeof(FindReplaceDialog));
     }
     #endregion
 }

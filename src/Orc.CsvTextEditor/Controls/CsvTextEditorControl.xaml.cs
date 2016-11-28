@@ -26,6 +26,7 @@ namespace Orc.CsvTextEditor
         private readonly IServiceLocator _serviceLocator;
         private readonly ITypeFactory _typeFactory;
         private ICsvTextEditorService _csvTextEditorService;
+        private ICsvTextEditorSearchService _csvTextEditorSearchService;
 
         private bool _isTextEditing;
         #endregion
@@ -61,6 +62,11 @@ namespace Orc.CsvTextEditor
         public static readonly DependencyProperty ScopeProperty = DependencyProperty.Register(
             "Scope", typeof (object), typeof (CsvTextEditorControl), new PropertyMetadata(default(object), (s, e) => ((CsvTextEditorControl) s).OnScopeChanged()));
         #endregion
+
+        private void OnShowFindReplaceDialog(object sender, ExecutedRoutedEventArgs e)
+        {
+            _csvTextEditorService.ShowFindReplaceDialog();
+        }
 
         private void OnDeleteForward(object sender, ExecutedRoutedEventArgs e)
         {
@@ -157,9 +163,15 @@ namespace Orc.CsvTextEditor
         {
             if (_csvTextEditorService == null)
             {
-                _csvTextEditorService = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorService>(TextEditor);
+                _csvTextEditorService = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorService>(Scope, TextEditor);
             }
 
+            if (_csvTextEditorSearchService == null)
+            {
+                _csvTextEditorSearchService = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorSearchService>(TextEditor);
+            }
+
+            _serviceLocator.RegisterInstance(_csvTextEditorSearchService, Scope);
             _serviceLocator.RegisterInstance(_csvTextEditorService, Scope);
         }
 
