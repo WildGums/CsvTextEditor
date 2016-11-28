@@ -223,11 +223,7 @@ namespace Orc.CsvTextEditor
 
         private void OnTextDocumentChanged(object sender, DocumentChangeEventArgs e)
         {
-            Log.Info("OnTextDocumentChanged start");
-
             _csvTextEditorService.RefreshLocation(e.Offset, e.InsertionLength - e.RemovalLength);
-
-            Log.Info("OnTextDocumentChanged end");
         }
     }
 }

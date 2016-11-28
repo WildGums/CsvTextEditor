@@ -124,28 +124,6 @@ namespace Orc.CsvTextEditor.Services
             Clipboard.SetText(selectedText);
         }
 
-        private void ClearSelectedText()
-        {
-            var textDocument = _textEditor.Document;
-
-            var selectionStart = _textEditor.SelectionStart;
-            var selectionLenght = _textEditor.SelectionLength;
-
-            if (selectionLenght == 0)
-            {
-                return;
-            }
-
-            var newLine = _elementGenerator.NewLine;
-
-            var text = textDocument.Text.RemoveCommaSeparatedText(selectionStart, selectionLenght, newLine);
-
-            _textEditor.SelectionLength = 0;
-
-            UpdateText(text);
-            _textEditor.CaretOffset = selectionStart;
-        }
-
         public void AddColumn()
         {
             var textDocument = _textEditor.Document;
@@ -315,31 +293,6 @@ namespace Orc.CsvTextEditor.Services
             ClearSelectedText();
         }
 
-        private void DeleteFromPosition(int deletePosition)
-        {
-            var textDocument = _textEditor.Document;
-
-            if (deletePosition < 0 || deletePosition >= textDocument.TextLength)
-            {
-                return;
-            }
-
-            var deletingChar = textDocument.Text[deletePosition];
-            if (deletingChar == Symbols.NewLineStart || deletingChar == Symbols.Comma || deletingChar == Symbols.NewLineEnd)
-            {
-                return;
-            }
-
-            textDocument.Remove(deletePosition, 1);
-            return;
-        }
-
-        public void RefreshView()
-        {
-            _elementGenerator.Refresh(_textEditor.Text);
-            _textEditor.TextArea.TextView.Redraw();
-        }
-
         public void Initialize(string text)
         {
             UpdateText(text);
@@ -363,22 +316,6 @@ namespace Orc.CsvTextEditor.Services
             }
         }
 
-        public void UpdateText(string text)
-        {
-            text = text ?? string.Empty;
-
-            _elementGenerator.Refresh(text);
-
-            _isInCustomUpdate = true;
-
-            using (_textEditor.Document.RunUpdate())
-            {
-                _textEditor.Document.Text = text;
-            }
-
-            _isInCustomUpdate = false;
-        }
-
         public void GotoNextColumn()
         {
             var textDocument = _textEditor.Document;
@@ -395,12 +332,13 @@ namespace Orc.CsvTextEditor.Services
             if (nextColumnIndex == columnsCount)
             {
                 var linesCount = textDocument.LineCount;
-                if (nextLineIndex == linesCount - 1)
+                if (nextLineIndex == linesCount)
                 {
                     return;
                 }
 
                 Goto(nextLineIndex, 0);
+                return;
             }
 
             Goto(lineIndex, nextColumnIndex);
@@ -429,11 +367,75 @@ namespace Orc.CsvTextEditor.Services
 
                 var columnsCount = _elementGenerator.ColumnCount;
                 Goto(previousLineIndex, columnsCount - 1);
+                return;
             }
 
             Goto(lineIndex, previousColumnIndex);
         }
         #endregion
+
+        private void ClearSelectedText()
+        {
+            var textDocument = _textEditor.Document;
+
+            var selectionStart = _textEditor.SelectionStart;
+            var selectionLenght = _textEditor.SelectionLength;
+
+            if (selectionLenght == 0)
+            {
+                return;
+            }
+
+            var newLine = _elementGenerator.NewLine;
+
+            var text = textDocument.Text.RemoveCommaSeparatedText(selectionStart, selectionLenght, newLine);
+
+            _textEditor.SelectionLength = 0;
+
+            UpdateText(text);
+            _textEditor.CaretOffset = selectionStart;
+        }
+
+        private void DeleteFromPosition(int deletePosition)
+        {
+            var textDocument = _textEditor.Document;
+
+            if (deletePosition < 0 || deletePosition >= textDocument.TextLength)
+            {
+                return;
+            }
+
+            var deletingChar = textDocument.Text[deletePosition];
+            if (deletingChar == Symbols.NewLineStart || deletingChar == Symbols.Comma || deletingChar == Symbols.NewLineEnd)
+            {
+                return;
+            }
+
+            textDocument.Remove(deletePosition, 1);
+            return;
+        }
+
+        private void RefreshView()
+        {
+            _elementGenerator.Refresh(_textEditor.Text);
+            _textEditor.TextArea.TextView.Redraw();
+        }
+
+        private void UpdateText(string text)
+        {
+            text = text ?? string.Empty;
+
+            _elementGenerator.Refresh(text);
+
+            _isInCustomUpdate = true;
+
+            using (_textEditor.Document.RunUpdate())
+            {
+                _textEditor.Document.Text = text;
+            }
+
+            _isInCustomUpdate = false;
+        }
 
         private void OnTextChanged(object sender, EventArgs eventArgs)
         {
