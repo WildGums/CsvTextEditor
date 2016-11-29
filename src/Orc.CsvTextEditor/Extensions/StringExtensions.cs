@@ -12,19 +12,45 @@ namespace Orc.CsvTextEditor
 
     public static class StringExtensions
     {
-        public static string InsertCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount)
+        public static string RemoveCommaSeparatedText(this string text, int positionStart, int lenght, string newLine)
         {
-            var newLineSymbvol = Environment.NewLine;
+            var endPosition = positionStart + lenght;
 
+            var replacementText = string.Empty;
+
+            for (var i = positionStart; i < endPosition; i++)
+            {
+                var c = text[i];
+                if (c == Symbols.Comma)
+                {
+                    replacementText += Symbols.Comma;
+                    continue;
+                }
+
+                if (IsLookupMatch(text, i, newLine))
+                {
+                    replacementText += newLine;
+                    continue;
+                }
+            }
+
+            text = text.Remove(positionStart, lenght)
+                .Insert(positionStart, replacementText);
+
+            return text;
+        }
+
+        public static string InsertCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount, string newLine)
+        {
             if (column == columnsCount)
             {
-                return text.Replace(newLineSymbvol, Symbols.Comma + newLineSymbvol) + Symbols.Comma;
+                return text.Replace(newLine, Symbols.Comma + newLine) + Symbols.Comma;
             }
 
             if (column == 0)
             {
                 return text.Insert(0, Symbols.Comma.ToString())
-                    .Replace(newLineSymbvol, newLineSymbvol + Symbols.Comma);
+                    .Replace(newLine, newLine + Symbols.Comma);
             }
 
             var newCount = text.Length + linesCount;
@@ -54,42 +80,184 @@ namespace Orc.CsvTextEditor
                 indexer++;
             }
 
-            return new string(textArray);
+            return new string(textArray).TrimEnd(newLine);
         }
 
-        public static string InsertLineWithTextTransfer(this string text, int insertLineIndex, int offsetInLine, int columnCount)
+        public static string InsertLineWithTextTransfer(this string text, int insertLineIndex, int offsetInLine, int columnCount, string newLine)
         {
-            var newLine = Environment.NewLine;
             var newLineLenght = newLine.Length;
 
             if (offsetInLine == 0 || insertLineIndex == 0)
             {
-                return InsertLine(text, insertLineIndex, columnCount);
+                return InsertLine(text, insertLineIndex, columnCount, newLine);
             }
 
-            var previousLineOffset = text.IndexOfSpecificOccurance(newLine, insertLineIndex - 1) + newLineLenght;
+            var previousLineOffset = insertLineIndex == 1 ? 0 : text.IndexOfSpecificOccurance(newLine, insertLineIndex - 1) + newLineLenght;
             var leftLineChunk = text.Substring(previousLineOffset, offsetInLine);
             var splitColumnIndex = leftLineChunk.Count(x => x.Equals(Symbols.Comma));
 
             var insetionText = $"{new string(Symbols.Comma, columnCount - splitColumnIndex - 1)}{newLine}{new string(Symbols.Comma, splitColumnIndex)}";
 
             var insertPosition = previousLineOffset + offsetInLine;
-            text = text.Insert(insertPosition, insetionText);
-            return text;
+            return text.Insert(insertPosition, insetionText).TrimEnd(newLine);
         }
 
-        public static string InsertLine(this string text, int insertLineIndex, int columnsCount)
+        public static string InsertLine(this string text, int insertLineIndex, int columnsCount, string newLine)
         {
-            var newLine = Environment.NewLine;
             var newLineLenght = newLine.Length;
 
             var insertLineText = $"{new string(Symbols.Comma, columnsCount - 1)}{newLine}";
             var insertionPosition = insertLineIndex != 0 ? text.IndexOfSpecificOccurance(newLine, insertLineIndex) + newLineLenght : 0;
 
-            return text.Insert(insertionPosition, insertLineText);
+            return text.Insert(insertionPosition, insertLineText).TrimEnd(newLine);
         }
 
-        public static int IndexOfSpecificOccurance(this string source, string value, int occuranceNumber)
+        public static string DuplicateTextInLine(this string csvText, int startOffset, int endOffset, string newLine)
+        {
+            var lineToDuplicate = csvText.Substring(startOffset, endOffset - startOffset);
+            if (!lineToDuplicate.EndsWith(newLine))
+            {
+                lineToDuplicate = newLine + lineToDuplicate;
+            }
+
+            return csvText.Insert(endOffset, lineToDuplicate).TrimEnd(newLine);
+        }
+
+        public static string RemoveText(this string csvText, int startOffset, int endOffset, string newLine)
+        {
+            return csvText.Remove(startOffset, endOffset - startOffset).TrimEnd(newLine);
+        }
+
+        public static string RemoveCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount, string newLine)
+        {
+            if (columnsCount == 0 || linesCount == 0)
+            {
+                return string.Empty;
+            }
+
+            if (columnsCount == 1)
+            {
+                return string.Empty;
+            }
+
+            var newLineLenght = newLine.Length;
+
+            var newCount = text.Length;
+            var textArray = new char[newCount];
+            var indexer = 0;
+
+            var separatorCounter = 0;
+            var isLastColumn = columnsCount - 1 == column;
+
+            for (var i = 0; i < text.Length; i++)
+            {
+                var c = text[i];
+                var isSeparator = false;
+
+                if (c == Symbols.Comma)
+                {
+                    isSeparator = true;
+
+                    if (separatorCounter == column)
+                    {
+                        separatorCounter++;
+                        continue;
+                    }
+                    
+                    separatorCounter++;
+
+                    if (isLastColumn && separatorCounter == column)
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    if(IsLookupMatch(text, i, newLine))
+                    {
+                        separatorCounter = 0;
+
+                        i += newLineLenght - 1;
+                        indexer = WriteStringToCharArray(textArray, newLine, indexer);
+
+                        continue;
+                    }
+                }
+
+                if (!isSeparator && separatorCounter == column)
+                {
+                    continue;
+                }
+
+                textArray[indexer] = c;
+                indexer++;
+
+                //if (c == Symbols.Comma)
+                //{
+                //    commaCounter++;
+
+                //    if (commaCounter == column - 1)
+                //    {
+                //        continue;
+                //    }
+                //}
+                
+                //if (IsLookupMatch(text, i, newLine))
+                //{
+                //    commaCounter = 0;
+
+                //    i += newLineLenght - 1;
+                //    indexer = WriteStringToCharArray(textArray, newLine, indexer);
+
+                //    continue;
+                //}
+
+                //if (commaCounter == column)
+                //{
+                //    continue;
+                //}
+
+                //textArray[indexer] = c;
+                //indexer++;
+            }
+
+            return new string(textArray, 0, indexer).TrimEnd(newLine); 
+        }
+
+        public static string GetNewLineSymbol(this string text)
+        {
+            if (text.Contains("\r\n"))
+            {
+                return "\r\n";
+            }
+
+            return text.Contains("\n") ? "\n" : "\r\n";
+        }
+
+        public static string TrimEnd(this string target, string trimString)
+        {
+            var result = target;
+            while (result.EndsWith(trimString))
+            {
+                result = result.Substring(0, result.Length - trimString.Length);
+            }
+
+            return result;
+        }
+
+        private static bool IsLookupMatch(string text, int startIndex, string lookup)
+        {
+            var lookupLength = lookup.Length;
+            if (text.Length - startIndex < lookupLength)
+            {
+                return false;
+            }
+
+            var lookupNewLine = text.Substring(startIndex, lookupLength);
+            return string.Equals(lookupNewLine, lookup);
+        }
+
+        private static int IndexOfSpecificOccurance(this string source, string value, int occuranceNumber)
         {
             var index = -1;
             for (var i = 0; i < occuranceNumber; i++)
@@ -105,84 +273,17 @@ namespace Orc.CsvTextEditor
             return index;
         }
 
-        public static string DuplicateTextInLine(this string csvText, int startOffset, int endOffset)
+        private static int WriteStringToCharArray(char[] array, string text, int startPosition)
         {
-            var lineToDuplicate = csvText.Substring(startOffset, endOffset - startOffset);
-            if (!lineToDuplicate.EndsWith(Environment.NewLine))
+            var indexer = startPosition;
+
+            foreach (var newLineChar in text)
             {
-                lineToDuplicate = Environment.NewLine + lineToDuplicate;
-            }
-
-            return csvText.Insert(endOffset, lineToDuplicate);
-        }
-
-        public static string RemoveText(this string csvText, int startOffset, int endOffset)
-        {
-            return csvText.Remove(startOffset, endOffset - startOffset);
-        }
-
-        public static string RemoveCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount)
-        {
-            if (columnsCount == 0 || linesCount == 0)
-            {
-                return string.Empty;
-            }
-
-            var newLine = Environment.NewLine;
-            var newLineLenght = newLine.Length;
-
-            var newCount = text.Length;
-            var textArray = new char[newCount];
-
-            var commaCounter = 0;
-            var indexer = 0;
-
-            for (var i = 0; i < text.Length; i++)
-            {
-                var c = text[i];
-
-                if (c == Symbols.Comma)
-                {
-                    commaCounter++;
-                }
-
-                if (IsLookupMatch(text, i, newLine))
-                {
-                    commaCounter = 0;
-
-                    i += newLineLenght - 1;
-
-                    foreach (var newLineChar in newLine)
-                    {
-                        textArray[indexer] = newLineChar;
-                        indexer++;
-                    }
-
-                    continue;
-                }
-
-                if (commaCounter == column)
-                {
-                    continue;
-                }
-
-                textArray[indexer] = c;
+                array[indexer] = newLineChar;
                 indexer++;
             }
 
-            return new string(textArray, 0, indexer);
-        }
-
-        private static bool IsLookupMatch(string text, int startIndex, string lookup)
-        {
-            var lookupLength = lookup.Length;
-            if (text.Length - startIndex < lookupLength)
-            {
-                return false;
-            }
-
-            var lookupNewLine = text.Substring(startIndex, lookupLength);
-            return string.Equals(lookupNewLine, lookup);
+            return indexer;
         }
     }
 }

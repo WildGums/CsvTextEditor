@@ -12,6 +12,7 @@ namespace CsvTextEditor
     using Catel;
     using Catel.IoC;
     using Catel.MVVM;
+    using Models;
     using Orc.CsvTextEditor.Services;
     using Orc.ProjectManagement;
 
@@ -47,10 +48,41 @@ namespace CsvTextEditor
                 if (_csvTextEditorService == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorService>(activeProject))
                 {
                     _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(activeProject);
+                    
                 }
 
                 return _csvTextEditorService;
             }
+        }
+
+        protected override void ProjectActivated(Project oldProject, Project newProject)
+        {
+            base.ProjectActivated(oldProject, newProject);
+
+            if (_csvTextEditorService != null)
+            {
+                _csvTextEditorService.TextChanged -= CsvTextEditorServiceOnTextChanged;
+            }
+
+            if (newProject == null)
+            {
+                return;
+            }
+
+            if (_csvTextEditorService == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorService>(newProject))
+            {
+                _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(newProject);
+            }
+
+            if (_csvTextEditorService != null)
+            {
+                _csvTextEditorService.TextChanged += CsvTextEditorServiceOnTextChanged;
+            }
+        }
+
+        private void CsvTextEditorServiceOnTextChanged(object sender, EventArgs eventArgs)
+        {
+            (_commandManager.GetCommand(CommandName) as Command)?.RaiseCanExecuteChanged();
         }
 
         #region Methods

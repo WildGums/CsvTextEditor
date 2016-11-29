@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IPostprocessor.cs" company="WildGums">
+// <copyright file="KeyGestureExtensions.cs" company="WildGums">
 //   Copyright (c) 2008 - 2016 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -7,9 +7,13 @@
 
 namespace Orc.CsvTextEditor
 {
-    public interface IPostprocessor
+    using System.Windows.Input;
+
+    public static class KeyGestureExtensions
     {
-        void Apply();
-        void RestoreCaret();
+        public static bool IsKeyAndModifierEquals(this KeyGesture left, KeyGesture right)
+        {
+            return left.Key == right.Key && left.Modifiers == right.Modifiers;
+        }
     }
 }

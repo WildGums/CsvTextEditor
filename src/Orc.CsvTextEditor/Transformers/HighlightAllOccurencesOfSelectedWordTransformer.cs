@@ -33,6 +33,11 @@ namespace Orc.CsvTextEditor.Transformers
                 if (Selection.StartPosition.Column == index + 1 && Selection.StartPosition.Line == line.LineNumber)
                 {
                     start = Selection.EndPosition.Column;
+
+                    if (start >= text.Length)
+                    {
+                        break;
+                    }
                     continue;
                 }
 

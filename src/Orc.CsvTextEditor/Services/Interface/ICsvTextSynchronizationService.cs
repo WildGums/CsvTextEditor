@@ -1,21 +1,19 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Constants.cs" company="WildGums">
+// <copyright file="ICsvTextSynchronizationService.cs" company="WildGums">
 //   Copyright (c) 2008 - 2016 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace Orc.CsvTextEditor
+namespace Orc.CsvTextEditor.Services
 {
-    using System.Collections.Generic;
+    using System;
 
-    public static class Symbols
+    public interface ICsvTextSynchronizationService
     {
-        #region Fields
-        public const char Comma = ',';
-        public const char NewLineStart = '\r';
-        public const char NewLineEnd = '\n';
-        public const char HorizontalTab = '\t';
+        #region Properties
+        bool IsSynchronizing { get; }
+        IDisposable Synchronizing();
         #endregion
     }
 }
