@@ -15,6 +15,10 @@ namespace Orc.CsvTextEditor
 
     internal class ReplaceKeyInputBindingBehavior : Behavior<TextEditor>
     {
+        private RoutedCommand _removedRoutedCommand;
+        private KeyGesture _removedKeyGesture;
+        private InputBinding _removedInputBinding;
+
         public KeyGesture Gesture
         {
             get { return (KeyGesture) GetValue(GestureProperty); }
@@ -49,6 +53,8 @@ namespace Orc.CsvTextEditor
             }
 
             var commandBindings = textArea.CommandBindings;
+            _removedRoutedCommand?.InputGestures.Add(_removedKeyGesture);
+
             for (var i = 0; i < commandBindings.Count; i++)
             {
                 var commandBinding = commandBindings[i];
@@ -61,10 +67,18 @@ namespace Orc.CsvTextEditor
                 }
 
                 routedCommand.InputGestures.Remove(gesture);
+
+                _removedKeyGesture = gesture;
+                _removedRoutedCommand = routedCommand;
                 break;
             }
 
             var inputBindings = textArea.InputBindings;
+            if (_removedInputBinding != null)
+            {
+                inputBindings.Add(_removedInputBinding);
+            }
+
             for (var i = 0; i < inputBindings.Count; i++)
             {
                 var inputBinding = inputBindings[i];
@@ -80,6 +94,8 @@ namespace Orc.CsvTextEditor
                 }
 
                 inputBindings.Remove(inputBinding);
+
+                _removedInputBinding = inputBinding;
                 break;
             }
 

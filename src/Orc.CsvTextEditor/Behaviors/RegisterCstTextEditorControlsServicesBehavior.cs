@@ -14,14 +14,18 @@ namespace Orc.CsvTextEditor
 
     internal class RegisterCstTextEditorControlsServicesBehavior : BehaviorBase<CsvTextEditorControl>
     {
-        private readonly ITypeFactory _typeFactory;
+        #region Fields
         private readonly IServiceLocator _serviceLocator;
+        private readonly ITypeFactory _typeFactory;
+        #endregion
 
+        #region Constructors
         public RegisterCstTextEditorControlsServicesBehavior()
         {
             _serviceLocator = this.GetServiceLocator();
             _typeFactory = _serviceLocator.ResolveType<ITypeFactory>();
         }
+        #endregion
 
         protected override void OnAttached()
         {
@@ -61,7 +65,7 @@ namespace Orc.CsvTextEditor
             var scope = textEditorControl.Scope;
             if (!_serviceLocator.IsTypeRegistered<ICsvTextEditorService>(scope))
             {
-                var csvTextEditorService = (ICsvTextEditorService)_typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorService>(scope, textEditor);
+                var csvTextEditorService = (ICsvTextEditorService) _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorService>(scope, textEditor);
                 _serviceLocator.RegisterInstance(csvTextEditorService, scope);
             }
 
@@ -73,7 +77,7 @@ namespace Orc.CsvTextEditor
 
             if (!_serviceLocator.IsTypeRegistered<ICsvTextSynchronizationService>(scope))
             {
-                var csvTextSynchronizationService = (ICsvTextSynchronizationService)_typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextSynchronizationService>();
+                var csvTextSynchronizationService = (ICsvTextSynchronizationService) _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextSynchronizationService>();
                 _serviceLocator.RegisterInstance(csvTextSynchronizationService, scope);
             }
         }

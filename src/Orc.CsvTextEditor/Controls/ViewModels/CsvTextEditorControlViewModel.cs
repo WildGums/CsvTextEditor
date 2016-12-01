@@ -15,11 +15,10 @@ namespace Orc.CsvTextEditor
 
     internal class CsvTextEditorControlViewModel : ViewModelBase
     {
-        private readonly IServiceLocator _serviceLocator;
-
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
+        private readonly IServiceLocator _serviceLocator;
         private ICsvTextEditorService _csvTextEditorService;
         private ICsvTextSynchronizationService _csvTextSynchronizationService;
         #endregion
@@ -52,7 +51,6 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region Properties
-        
         public object Scope { get; set; }
         public string Text { get; set; }
 
@@ -86,7 +84,7 @@ namespace Orc.CsvTextEditor
         private void OnScopeChanged()
         {
             var scope = Scope;
-            
+
             if (_csvTextEditorService == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorService>(scope))
             {
                 _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(scope);

@@ -13,7 +13,7 @@ namespace Orc.CsvTextEditor
     using Catel.Windows.Interactivity;
     using Services;
 
-    public class TextEditorSynchronizeTextBehavior : BehaviorBase<CsvTextEditorControl>
+    internal class TextEditorSynchronizeTextBehavior : BehaviorBase<CsvTextEditorControl>
     {
         #region Fields
         private ICsvTextSynchronizationService _csvTextSynchronizationService;

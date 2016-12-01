@@ -46,6 +46,11 @@ namespace Orc.CsvTextEditor
 
             var commandBindings = textArea.CommandBindings;
 
+            if (_replacedCommandBinding != null)
+            {
+                commandBindings.Add(_replacedCommandBinding);
+            }
+
             for (var i = 0; i < commandBindings.Count; i++)
             {
                 var commandBinding = commandBindings[i];
@@ -60,6 +65,8 @@ namespace Orc.CsvTextEditor
                 _replacedCommandBinding = commandBinding;
                 return;
             }
+
+            _replacedCommandBinding = null;
         }
     }
 }

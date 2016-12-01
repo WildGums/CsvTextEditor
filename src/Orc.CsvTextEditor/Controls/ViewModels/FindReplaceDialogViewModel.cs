@@ -8,6 +8,7 @@
 namespace Orc.CsvTextEditor
 {
     using System.Media;
+    using Catel;
     using Catel.IoC;
     using Catel.MVVM;
     using Controls;
@@ -18,13 +19,15 @@ namespace Orc.CsvTextEditor
         #region Fields
         private readonly ICsvTextEditorSearchService _csvTextEditorSearchService;
         private readonly ICsvTextEditorService _csvTextEditorService;
+        private readonly IServiceLocator _serviceLocator;
         #endregion
 
         #region Constructors
-        public FindReplaceDialogViewModel(object scope)
+        public FindReplaceDialogViewModel(object scope, IServiceLocator serviceLocator)
         {
-            var serviceLocator = this.GetServiceLocator();
+            Argument.IsNotNull(() => serviceLocator);
 
+            _serviceLocator = serviceLocator;
             if (_csvTextEditorSearchService == null && serviceLocator.IsTypeRegistered<ICsvTextEditorSearchService>(scope))
             {
                 _csvTextEditorSearchService = serviceLocator.ResolveType<ICsvTextEditorSearchService>(scope);
