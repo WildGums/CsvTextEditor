@@ -13,6 +13,9 @@ namespace Orc.CsvTextEditor.Services
     {
         #region Properties
         public bool IsSynchronizing { get; set; }
+        #endregion
+
+        #region Methods
         public IDisposable SynchronizeInScope()
         {
             return new CsvTextSynchronizationScope(this);
