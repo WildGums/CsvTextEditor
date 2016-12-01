@@ -82,7 +82,7 @@ namespace CsvTextEditor
 
         private void CsvTextEditorServiceOnTextChanged(object sender, EventArgs eventArgs)
         {
-            (_commandManager.GetCommand(CommandName) as Command)?.RaiseCanExecuteChanged();
+            _commandManager.InvalidateCommands();
         }
 
         #region Methods

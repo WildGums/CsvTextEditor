@@ -12,7 +12,7 @@ namespace Orc.CsvTextEditor
     using Catel.MVVM;
     using Services;
 
-    public class CsvTextEditorControlViewModel : ViewModelBase
+    internal class CsvTextEditorControlViewModel : ViewModelBase
     {
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();

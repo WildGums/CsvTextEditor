@@ -9,30 +9,33 @@ namespace Orc.CsvTextEditor
 {
     using System.Windows;
     using System.Windows.Input;
-    using System.Windows.Interactivity;
+    using Catel.Windows.Interactivity;
     using ICSharpCode.AvalonEdit;
 
-    public class ReplaceCommandBindingBehavior : Behavior<TextEditor>
+    internal class ReplaceCommandBindingBehavior : BehaviorBase<TextEditor>
     {
-
-        public static readonly DependencyProperty ReplacementCommandProperty = DependencyProperty.Register(
-            "ReplacementCommand", typeof (RoutedCommand), typeof (ReplaceCommandBindingBehavior), new PropertyMetadata(default(RoutedCommand)));
-
-        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
-            "Command", typeof (ICommand), typeof (ReplaceCommandBindingBehavior), new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceCommandBindingBehavior) o).OnCommandPropertyChanged(args)));
+        #region Fields
+        private CommandBinding _replacedCommandBinding;
+        #endregion
 
         public RoutedCommand ReplacementCommand
         {
-            get { return (RoutedCommand) GetValue(ReplacementCommandProperty); }
+            get { return (RoutedCommand)GetValue(ReplacementCommandProperty); }
             set { SetValue(ReplacementCommandProperty, value); }
         }
 
+        public static readonly DependencyProperty ReplacementCommandProperty = DependencyProperty.Register("ReplacementCommand", typeof(RoutedCommand),
+            typeof(ReplaceCommandBindingBehavior), new PropertyMetadata(default(RoutedCommand)));
+
         public ICommand Command
         {
-            get { return (ICommand) GetValue(CommandProperty); }
+            get { return (ICommand)GetValue(CommandProperty); }
             set { SetValue(CommandProperty, value); }
         }
-        
+
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register("Command", typeof(ICommand),
+            typeof(ReplaceCommandBindingBehavior), new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceCommandBindingBehavior)o).OnCommandPropertyChanged(args)));
+
         private void OnCommandPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
             var textArea = AssociatedObject?.TextArea;
@@ -53,6 +56,8 @@ namespace Orc.CsvTextEditor
 
                 textArea.CommandBindings.Remove(commandBinding);
                 textArea.CommandBindings.Add(new CommandBinding(ReplacementCommand, (sender, e) => Command?.Execute(null)));
+
+                _replacedCommandBinding = commandBinding;
                 return;
             }
         }

@@ -13,7 +13,7 @@ namespace Orc.CsvTextEditor
     using Controls;
     using Services;
 
-    public class FindReplaceDialogViewModel : ViewModelBase
+    internal class FindReplaceDialogViewModel : ViewModelBase
     {
         #region Fields
         private readonly ICsvTextEditorSearchService _csvTextEditorSearchService;

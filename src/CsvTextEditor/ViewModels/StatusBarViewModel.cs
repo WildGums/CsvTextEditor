@@ -21,14 +21,18 @@ namespace CsvTextEditor.ViewModels
     {
         #region Fields
         private readonly IProjectManager _projectManager;
+        private readonly IServiceLocator _serviceLocator;
         private ICsvTextEditorService _csvTextEditorService;
         #endregion
 
         #region Constructors
-        public StatusBarViewModel(IProjectManager projectManager)
+        public StatusBarViewModel(IProjectManager projectManager, IServiceLocator serviceLocator)
         {
-            _projectManager = projectManager;
             Argument.IsNotNull(() => projectManager);
+            Argument.IsNotNull(() => serviceLocator);
+
+            _projectManager = projectManager;
+            _serviceLocator = serviceLocator;
         }
         #endregion
 
@@ -47,21 +51,27 @@ namespace CsvTextEditor.ViewModels
             return base.InitializeAsync();
         }
 
+        protected override Task CloseAsync()
+        {
+            _projectManager.ProjectActivatedAsync -= OnProjectActivatedAsync;
+
+            return base.CloseAsync();
+        }
+
         private Task OnProjectActivatedAsync(object sender, ProjectUpdatedEventArgs args)
         {
+            if (_csvTextEditorService != null)
+            {
+                _csvTextEditorService.CaretTextLocationChanged -= OnCaretTextLocationChanged;
+            }
+
             var activeProject = args.NewProject;
             if (activeProject == null)
             {
                 return TaskHelper.Completed;
             }
 
-            if (_csvTextEditorService != null)
-            {
-                _csvTextEditorService.CaretTextLocationChanged -= OnCaretTextLocationChanged;
-            }
-
-            var serviceLocator = this.GetServiceLocator();
-            _csvTextEditorService = serviceLocator.ResolveType<ICsvTextEditorService>(args.NewProject);
+            _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(args.NewProject);
 
             _csvTextEditorService.CaretTextLocationChanged += OnCaretTextLocationChanged;
 
