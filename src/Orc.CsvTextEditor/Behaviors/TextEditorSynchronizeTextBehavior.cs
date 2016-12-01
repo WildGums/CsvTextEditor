@@ -57,7 +57,7 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-            using (_csvTextSynchronizationService.Synchronizing())
+            using (_csvTextSynchronizationService.SynchronizeInScope())
             {
                 AssociatedObject.Text = textEditor.Text;
             }
