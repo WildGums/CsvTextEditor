@@ -19,9 +19,9 @@ namespace Orc.CsvTextEditor
         private ICsvTextSynchronizationService _csvTextSynchronizationService;
         #endregion
 
-        protected override void OnAttached()
+        protected override void OnAssociatedObjectLoaded()
         {
-            base.OnAttached();
+            base.OnAssociatedObjectLoaded();
 
             var textEditorControl = AssociatedObject;
 
@@ -29,10 +29,8 @@ namespace Orc.CsvTextEditor
             textEditorControl.PropertyChanged += OnTextEditorControlPropertyChanged;
         }
 
-        protected override void OnDetaching()
+        protected override void OnAssociatedObjectUnloaded()
         {
-            base.OnDetaching();
-
             var textEditorControl = AssociatedObject;
 
             _csvTextSynchronizationService = null;
@@ -44,9 +42,10 @@ namespace Orc.CsvTextEditor
             {
                 return;
             }
-
             
             textEditor.TextChanged -= OnTextChanged;
+
+            base.OnAssociatedObjectUnloaded();
         }
 
         private void OnTextChanged(object sender, EventArgs eventArgs)

@@ -7,6 +7,7 @@
 
 namespace Orc.CsvTextEditor
 {
+    using Catel;
     using Catel.IoC;
     using Catel.Logging;
     using Catel.MVVM;
@@ -14,6 +15,8 @@ namespace Orc.CsvTextEditor
 
     internal class CsvTextEditorControlViewModel : ViewModelBase
     {
+        private readonly IServiceLocator _serviceLocator;
+
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
@@ -22,8 +25,11 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region Constructors
-        public CsvTextEditorControlViewModel()
+        public CsvTextEditorControlViewModel(IServiceLocator serviceLocator)
         {
+            _serviceLocator = serviceLocator;
+            Argument.IsNotNull(() => serviceLocator);
+
             Paste = new Command(() => _csvTextEditorService.Paste());
             Cut = new Command(() => _csvTextEditorService.Cut());
 
@@ -79,17 +85,16 @@ namespace Orc.CsvTextEditor
 
         private void OnScopeChanged()
         {
-            var serviceLocator = this.GetServiceLocator();
             var scope = Scope;
-
-            if (_csvTextEditorService == null && serviceLocator.IsTypeRegistered<ICsvTextEditorService>(scope))
+            
+            if (_csvTextEditorService == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorService>(scope))
             {
-                _csvTextEditorService = serviceLocator.ResolveType<ICsvTextEditorService>(scope);
+                _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(scope);
             }
 
-            if (_csvTextSynchronizationService == null && serviceLocator.IsTypeRegistered<ICsvTextSynchronizationService>(scope))
+            if (_csvTextSynchronizationService == null && _serviceLocator.IsTypeRegistered<ICsvTextSynchronizationService>(scope))
             {
-                _csvTextSynchronizationService = serviceLocator.ResolveType<ICsvTextSynchronizationService>(scope);
+                _csvTextSynchronizationService = _serviceLocator.ResolveType<ICsvTextSynchronizationService>(scope);
             }
         }
     }

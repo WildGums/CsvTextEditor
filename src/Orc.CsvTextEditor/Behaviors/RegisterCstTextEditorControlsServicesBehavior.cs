@@ -23,9 +23,9 @@ namespace Orc.CsvTextEditor
             _typeFactory = _serviceLocator.ResolveType<ITypeFactory>();
         }
 
-        protected override void OnAssociatedObjectLoaded()
+        protected override void OnAttached()
         {
-            base.OnAssociatedObjectLoaded();
+            base.OnAttached();
 
             UpdateServiceRegistration();
 
