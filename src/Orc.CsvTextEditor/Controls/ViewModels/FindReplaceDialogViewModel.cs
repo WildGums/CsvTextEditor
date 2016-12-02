@@ -9,7 +9,6 @@ namespace Orc.CsvTextEditor
 {
     using System.Media;
     using Catel;
-    using Catel.IoC;
     using Catel.MVVM;
     using Controls;
     using Services;

@@ -109,18 +109,6 @@ namespace Orc.CsvTextEditor
             return text.Insert(insertPosition, insetionText).TrimEnd(newLine);
         }
 
-        public static string InsertLine(this string text, int insertLineIndex, int columnsCount, string newLine)
-        {
-            Argument.IsNotNull(nameof(text), text);
-
-            var newLineLenght = newLine.Length;
-
-            var insertLineText = $"{new string(Symbols.Comma, columnsCount - 1)}{newLine}";
-            var insertionPosition = insertLineIndex != 0 ? text.IndexOfSpecificOccurance(newLine, insertLineIndex) + newLineLenght : 0;
-
-            return text.Insert(insertionPosition, insertLineText).TrimEnd(newLine);
-        }
-
         public static string DuplicateTextInLine(this string text, int startOffset, int endOffset, string newLine)
         {
             Argument.IsNotNull(nameof(text), text);
@@ -178,7 +166,7 @@ namespace Orc.CsvTextEditor
                         separatorCounter++;
                         continue;
                     }
-                    
+
                     separatorCounter++;
 
                     if (isLastColumn && separatorCounter == column)
@@ -188,7 +176,7 @@ namespace Orc.CsvTextEditor
                 }
                 else
                 {
-                    if(IsLookupMatch(text, i, newLine))
+                    if (IsLookupMatch(text, i, newLine))
                     {
                         separatorCounter = 0;
 
@@ -208,7 +196,7 @@ namespace Orc.CsvTextEditor
                 indexer++;
             }
 
-            return new string(textArray, 0, indexer).TrimEnd(newLine); 
+            return new string(textArray, 0, indexer).TrimEnd(newLine);
         }
 
         public static string GetNewLineSymbol(this string text)
@@ -223,7 +211,7 @@ namespace Orc.CsvTextEditor
             return text.Contains("\n") ? "\n" : "\r\n";
         }
 
-        public static string TrimEnd(this string text, string trimString)
+        private static string TrimEnd(this string text, string trimString)
         {
             Argument.IsNotNull(nameof(text), text);
 
@@ -234,6 +222,18 @@ namespace Orc.CsvTextEditor
             }
 
             return result;
+        }
+
+        private static string InsertLine(this string text, int insertLineIndex, int columnsCount, string newLine)
+        {
+            Argument.IsNotNull(nameof(text), text);
+
+            var newLineLenght = newLine.Length;
+
+            var insertLineText = $"{new string(Symbols.Comma, columnsCount - 1)}{newLine}";
+            var insertionPosition = insertLineIndex != 0 ? text.IndexOfSpecificOccurance(newLine, insertLineIndex) + newLineLenght : 0;
+
+            return text.Insert(insertionPosition, insertLineText).TrimEnd(newLine);
         }
 
         private static bool IsLookupMatch(string text, int startIndex, string lookup)
