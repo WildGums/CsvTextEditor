@@ -13,7 +13,7 @@ namespace Orc.CsvTextEditor
     /// <summary>
     /// Interaction logic for FindReplaceDialog.xaml
     /// </summary>
-    public partial class FindReplaceDialog
+    internal partial class FindReplaceDialog
     {
         #region Constructors
         static FindReplaceDialog()

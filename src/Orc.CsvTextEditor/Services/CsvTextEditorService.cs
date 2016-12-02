@@ -27,7 +27,6 @@ namespace Orc.CsvTextEditor.Services
 
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
-        private readonly object _scope;
         private readonly TextEditor _textEditor;
         private readonly IUIVisualizerService _uiVisualizerService;
 
@@ -39,13 +38,12 @@ namespace Orc.CsvTextEditor.Services
         #endregion
 
         #region Constructors
-        public CsvTextEditorService(object scope, TextEditor textEditor, ICommandManager commandManager, IUIVisualizerService uiVisualizerService)
+        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager, IUIVisualizerService uiVisualizerService)
         {
             Argument.IsNotNull(() => textEditor);
             Argument.IsNotNull(() => commandManager);
             Argument.IsNotNull(() => uiVisualizerService);
 
-            _scope = scope;
             _textEditor = textEditor;
             _commandManager = commandManager;
             _uiVisualizerService = uiVisualizerService;
@@ -130,16 +128,6 @@ namespace Orc.CsvTextEditor.Services
             ClearSelectedText();
 
             Clipboard.SetText(selectedText);
-        }
-
-        public void ShowFindReplaceDialog()
-        {
-            var serviceLocator = this.GetServiceLocator();
-            var typeFactory = serviceLocator.ResolveType<ITypeFactory>();
-
-            var findReplaceViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<FindReplaceDialogViewModel>(_scope);
-
-            _uiVisualizerService.ShowAsync(findReplaceViewModel);
         }
 
         public void AddColumn()

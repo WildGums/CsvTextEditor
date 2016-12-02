@@ -8,32 +8,26 @@
 namespace Orc.CsvTextEditor
 {
     using System.Media;
-    using Catel.IoC;
+    using Catel;
     using Catel.MVVM;
     using Controls;
     using Services;
 
-    public class FindReplaceDialogViewModel : ViewModelBase
+    internal class FindReplaceDialogViewModel : ViewModelBase
     {
         #region Fields
-        private readonly ICsvTextEditorSearchService _csvTextEditorSearchService;
+        private readonly ICsvTextEditorFindReplaceSerivce _csvTextEditorFindReplaceSerivce;
         private readonly ICsvTextEditorService _csvTextEditorService;
         #endregion
 
         #region Constructors
-        public FindReplaceDialogViewModel(object scope)
+        public FindReplaceDialogViewModel(ICsvTextEditorFindReplaceSerivce csvTextEditorFindReplaceSerivce, ICsvTextEditorService csvTextEditorService)
         {
-            var serviceLocator = this.GetServiceLocator();
+            Argument.IsNotNull(() => csvTextEditorFindReplaceSerivce);
+            Argument.IsNotNull(() => csvTextEditorService);
 
-            if (_csvTextEditorSearchService == null && serviceLocator.IsTypeRegistered<ICsvTextEditorSearchService>(scope))
-            {
-                _csvTextEditorSearchService = serviceLocator.ResolveType<ICsvTextEditorSearchService>(scope);
-            }
-
-            if (_csvTextEditorService == null && serviceLocator.IsTypeRegistered<ICsvTextEditorService>(scope))
-            {
-                _csvTextEditorService = serviceLocator.ResolveType<ICsvTextEditorService>(scope);
-            }
+            _csvTextEditorFindReplaceSerivce = csvTextEditorFindReplaceSerivce;
+            _csvTextEditorService = csvTextEditorService;
 
             FindNext = new Command<string>(OnFindNext);
             Replace = new Command<object>(OnReplace);
@@ -60,7 +54,7 @@ namespace Orc.CsvTextEditor
             var textToFind = values[0] as string ?? string.Empty;
             var replacementText = values[1] as string ?? string.Empty;
 
-            _csvTextEditorSearchService.ReplaceAll(textToFind, replacementText, FindReplaceSettings);
+            _csvTextEditorFindReplaceSerivce.ReplaceAll(textToFind, replacementText, FindReplaceSettings);
 
             _csvTextEditorService.RefreshView();
         }
@@ -71,7 +65,7 @@ namespace Orc.CsvTextEditor
             var textToFind = values[0] as string ?? string.Empty;
             var replacementText = values[1] as string ?? string.Empty;
 
-            if (!_csvTextEditorSearchService.Replace(textToFind, replacementText, FindReplaceSettings))
+            if (!_csvTextEditorFindReplaceSerivce.Replace(textToFind, replacementText, FindReplaceSettings))
             {
                 SystemSounds.Beep.Play();
             }
@@ -83,7 +77,7 @@ namespace Orc.CsvTextEditor
         {
             var textToFind = text ?? string.Empty;
 
-            if (!_csvTextEditorSearchService.FindNext(textToFind, FindReplaceSettings))
+            if (!_csvTextEditorFindReplaceSerivce.FindNext(textToFind, FindReplaceSettings))
             {
                 SystemSounds.Beep.Play();
             }

@@ -7,23 +7,28 @@
 
 namespace Orc.CsvTextEditor
 {
+    using Catel;
     using Catel.IoC;
     using Catel.Logging;
     using Catel.MVVM;
     using Services;
 
-    public class CsvTextEditorControlViewModel : ViewModelBase
+    internal class CsvTextEditorControlViewModel : ViewModelBase
     {
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
+        private readonly IServiceLocator _serviceLocator;
         private ICsvTextEditorService _csvTextEditorService;
         private ICsvTextSynchronizationService _csvTextSynchronizationService;
         #endregion
 
         #region Constructors
-        public CsvTextEditorControlViewModel()
+        public CsvTextEditorControlViewModel(IServiceLocator serviceLocator)
         {
+            _serviceLocator = serviceLocator;
+            Argument.IsNotNull(() => serviceLocator);
+
             Paste = new Command(() => _csvTextEditorService.Paste());
             Cut = new Command(() => _csvTextEditorService.Cut());
 
@@ -32,8 +37,6 @@ namespace Orc.CsvTextEditor
 
             Undo = new Command(() => _csvTextEditorService.Undo(), () => _csvTextEditorService.CanUndo);
             Redo = new Command(() => _csvTextEditorService.Redo(), () => _csvTextEditorService.CanRedo);
-
-            ShowFindReplaceDialog = new Command(() => _csvTextEditorService.ShowFindReplaceDialog());
 
             AddLine = new Command(() => _csvTextEditorService.AddLine());
             RemoveLine = new Command(() => _csvTextEditorService.RemoveLine());
@@ -46,7 +49,6 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region Properties
-        
         public object Scope { get; set; }
         public string Text { get; set; }
 
@@ -79,17 +81,16 @@ namespace Orc.CsvTextEditor
 
         private void OnScopeChanged()
         {
-            var serviceLocator = this.GetServiceLocator();
             var scope = Scope;
 
-            if (_csvTextEditorService == null && serviceLocator.IsTypeRegistered<ICsvTextEditorService>(scope))
+            if (_csvTextEditorService == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorService>(scope))
             {
-                _csvTextEditorService = serviceLocator.ResolveType<ICsvTextEditorService>(scope);
+                _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(scope);
             }
 
-            if (_csvTextSynchronizationService == null && serviceLocator.IsTypeRegistered<ICsvTextSynchronizationService>(scope))
+            if (_csvTextSynchronizationService == null && _serviceLocator.IsTypeRegistered<ICsvTextSynchronizationService>(scope))
             {
-                _csvTextSynchronizationService = serviceLocator.ResolveType<ICsvTextSynchronizationService>(scope);
+                _csvTextSynchronizationService = _serviceLocator.ResolveType<ICsvTextSynchronizationService>(scope);
             }
         }
     }

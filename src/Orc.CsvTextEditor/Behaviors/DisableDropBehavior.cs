@@ -10,11 +10,11 @@ namespace Orc.CsvTextEditor
     using Catel.Windows.Interactivity;
     using ICSharpCode.AvalonEdit;
 
-    public class DisableDropBehavior : BehaviorBase<TextEditor>
+    internal class DisableDropBehavior : BehaviorBase<TextEditor>
     {
-        protected override void OnAttached()
+        protected override void OnAssociatedObjectLoaded()
         {
-            base.OnAttached();
+            base.OnAssociatedObjectLoaded();
 
             var textArea = AssociatedObject?.TextArea;
             if (textArea == null)
@@ -23,6 +23,19 @@ namespace Orc.CsvTextEditor
             }
 
             textArea.AllowDrop = false;
+        }
+
+        protected override void OnAssociatedObjectUnloaded()
+        {
+            base.OnAssociatedObjectUnloaded();
+
+            var textArea = AssociatedObject?.TextArea;
+            if (textArea == null)
+            {
+                return;
+            }
+
+            textArea.AllowDrop = true;
         }
     }
 }

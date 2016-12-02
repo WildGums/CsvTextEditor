@@ -13,29 +13,30 @@ namespace Orc.CsvTextEditor
     using System.Windows.Interactivity;
     using ICSharpCode.AvalonEdit;
 
-    public class ReplaceKeyInputBindingBehavior : Behavior<TextEditor>
+    internal class ReplaceKeyInputBindingBehavior : Behavior<TextEditor>
     {
-        #region Fields
-        public static readonly DependencyProperty GestureProperty = DependencyProperty.Register(
-            "Gesture", typeof (KeyGesture), typeof (ReplaceKeyInputBindingBehavior), new PropertyMetadata(default(KeyGesture)));
+        private RoutedCommand _removedRoutedCommand;
+        private KeyGesture _removedKeyGesture;
+        private InputBinding _removedInputBinding;
 
-        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
-            "Command", typeof (ICommand), typeof (ReplaceKeyInputBindingBehavior), new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceKeyInputBindingBehavior) o).OnCommandPropertyChanged(args)));
-        #endregion
-
-        #region Properties
         public KeyGesture Gesture
         {
             get { return (KeyGesture) GetValue(GestureProperty); }
             set { SetValue(GestureProperty, value); }
         }
 
+        public static readonly DependencyProperty GestureProperty = DependencyProperty.Register(
+            "Gesture", typeof(KeyGesture), typeof(ReplaceKeyInputBindingBehavior), new PropertyMetadata(default(KeyGesture)));
+
         public ICommand Command
         {
             get { return (ICommand) GetValue(CommandProperty); }
             set { SetValue(CommandProperty, value); }
         }
-        #endregion
+
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
+            "Command", typeof(ICommand), typeof(ReplaceKeyInputBindingBehavior), new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceKeyInputBindingBehavior)o).OnCommandPropertyChanged(args)));
+
 
         private void OnCommandPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
@@ -52,6 +53,8 @@ namespace Orc.CsvTextEditor
             }
 
             var commandBindings = textArea.CommandBindings;
+            _removedRoutedCommand?.InputGestures.Add(_removedKeyGesture);
+
             for (var i = 0; i < commandBindings.Count; i++)
             {
                 var commandBinding = commandBindings[i];
@@ -64,10 +67,18 @@ namespace Orc.CsvTextEditor
                 }
 
                 routedCommand.InputGestures.Remove(gesture);
+
+                _removedKeyGesture = gesture;
+                _removedRoutedCommand = routedCommand;
                 break;
             }
 
             var inputBindings = textArea.InputBindings;
+            if (_removedInputBinding != null)
+            {
+                inputBindings.Add(_removedInputBinding);
+            }
+
             for (var i = 0; i < inputBindings.Count; i++)
             {
                 var inputBinding = inputBindings[i];
@@ -83,6 +94,8 @@ namespace Orc.CsvTextEditor
                 }
 
                 inputBindings.Remove(inputBinding);
+
+                _removedInputBinding = inputBinding;
                 break;
             }
 

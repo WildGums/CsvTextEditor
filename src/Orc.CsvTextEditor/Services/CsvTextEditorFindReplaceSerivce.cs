@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CsvTextEditorSearchService.cs" company="WildGums">
+// <copyright file="CsvTextEditorFindReplaceSerivce.cs" company="WildGums">
 //   Copyright (c) 2008 - 2016 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -13,14 +13,14 @@ namespace Orc.CsvTextEditor.Services
     using Controls;
     using ICSharpCode.AvalonEdit;
 
-    public class CsvTextEditorSearchService : ICsvTextEditorSearchService
+    public class CsvTextEditorFindReplaceSerivce : ICsvTextEditorFindReplaceSerivce
     {
         #region Fields
         private readonly TextEditor _textEditor;
         #endregion
 
         #region Constructors
-        public CsvTextEditorSearchService(TextEditor textEditor)
+        public CsvTextEditorFindReplaceSerivce(TextEditor textEditor)
         {
             Argument.IsNotNull(() => textEditor);
 
@@ -31,6 +31,9 @@ namespace Orc.CsvTextEditor.Services
         #region Methods
         public bool FindNext(string textToFind, FindReplaceSettings settings)
         {
+            Argument.IsNotNull(() => textToFind);
+            Argument.IsNotNull(() => settings);
+
             var regex = GetRegEx(textToFind, settings);
             var start = regex.Options.HasFlag(RegexOptions.RightToLeft) ?
                 _textEditor.SelectionStart : _textEditor.SelectionStart + _textEditor.SelectionLength;
@@ -55,6 +58,10 @@ namespace Orc.CsvTextEditor.Services
 
         public bool Replace(string textToFind, string textToReplace, FindReplaceSettings settings)
         {
+            Argument.IsNotNull(() => textToFind);
+            Argument.IsNotNull(() => textToReplace);
+            Argument.IsNotNull(() => settings);
+
             var regex = GetRegEx(textToFind, settings);
             var input = _textEditor.Text.Substring(_textEditor.SelectionStart, _textEditor.SelectionLength);
             var match = regex.Match(input);
@@ -71,6 +78,10 @@ namespace Orc.CsvTextEditor.Services
 
         public void ReplaceAll(string textToFind, string textToReplace, FindReplaceSettings settings)
         {
+            Argument.IsNotNull(() => textToFind);
+            Argument.IsNotNull(() => textToReplace);
+            Argument.IsNotNull(() => settings);
+
             if (MessageBox.Show($"Are you sure you want to Replace All occurences of \"{textToFind}\" with \"{textToReplace}\"?",
                 "Replace All", MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
             {
@@ -92,6 +103,9 @@ namespace Orc.CsvTextEditor.Services
 
         private Regex GetRegEx(string textToFind, FindReplaceSettings settings, bool isLeftToRight = false)
         {
+            Argument.IsNotNull(() => textToFind);
+            Argument.IsNotNull(() => settings);
+
             var options = RegexOptions.None;
             if (settings.IsSearchUp && !isLeftToRight)
             {

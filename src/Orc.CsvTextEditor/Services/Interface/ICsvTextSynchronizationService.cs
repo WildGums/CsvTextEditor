@@ -13,7 +13,7 @@ namespace Orc.CsvTextEditor.Services
     {
         #region Properties
         bool IsSynchronizing { get; }
-        IDisposable Synchronizing();
+        IDisposable SynchronizeInScope();
         #endregion
     }
 }

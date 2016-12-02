@@ -28,6 +28,7 @@ namespace CsvTextEditor.ViewModels
         public MainViewModel(IProjectManager projectManager, IDispatcherService dispatcherService)
         {
             Argument.IsNotNull(() => projectManager);
+            Argument.IsNotNull(() => dispatcherService);
 
             _projectManager = projectManager;
             _dispatcherService = dispatcherService;
@@ -39,23 +40,23 @@ namespace CsvTextEditor.ViewModels
         public Project Project { get; set; }
 
         #region Methods
-        protected override async Task InitializeAsync()
+        protected override Task InitializeAsync()
         {
-            await base.InitializeAsync();
-
             _projectManager.ProjectActivationAsync += OnProjectActivationAsync;
+
+            return base.InitializeAsync();
         }
 
         private async Task OnProjectActivationAsync(object sender, ProjectUpdatingCancelEventArgs e)
         {
-            _dispatcherService.Invoke(() => Project = e.NewProject as Project, true);
+            _dispatcherService.Invoke(() => Project = (Project)e.NewProject, true);
         }
 
-        protected override async Task CloseAsync()
+        protected override Task CloseAsync()
         {
-            await base.CloseAsync();
-
             _projectManager.ProjectActivationAsync -= OnProjectActivationAsync;
+
+            return base.CloseAsync();
         }
         #endregion
     }

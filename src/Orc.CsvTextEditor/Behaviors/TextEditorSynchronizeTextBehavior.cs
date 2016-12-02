@@ -13,15 +13,15 @@ namespace Orc.CsvTextEditor
     using Catel.Windows.Interactivity;
     using Services;
 
-    public class TextEditorSynchronizeTextBehavior : BehaviorBase<CsvTextEditorControl>
+    internal class TextEditorSynchronizeTextBehavior : BehaviorBase<CsvTextEditorControl>
     {
         #region Fields
         private ICsvTextSynchronizationService _csvTextSynchronizationService;
         #endregion
 
-        protected override void OnAttached()
+        protected override void OnAssociatedObjectLoaded()
         {
-            base.OnAttached();
+            base.OnAssociatedObjectLoaded();
 
             var textEditorControl = AssociatedObject;
 
@@ -29,10 +29,8 @@ namespace Orc.CsvTextEditor
             textEditorControl.PropertyChanged += OnTextEditorControlPropertyChanged;
         }
 
-        protected override void OnDetaching()
+        protected override void OnAssociatedObjectUnloaded()
         {
-            base.OnDetaching();
-
             var textEditorControl = AssociatedObject;
 
             _csvTextSynchronizationService = null;
@@ -44,9 +42,10 @@ namespace Orc.CsvTextEditor
             {
                 return;
             }
-
             
             textEditor.TextChanged -= OnTextChanged;
+
+            base.OnAssociatedObjectUnloaded();
         }
 
         private void OnTextChanged(object sender, EventArgs eventArgs)
@@ -57,7 +56,7 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-            using (_csvTextSynchronizationService.Synchronizing())
+            using (_csvTextSynchronizationService.SynchronizeInScope())
             {
                 AssociatedObject.Text = textEditor.Text;
             }

@@ -50,7 +50,7 @@ namespace CsvTextEditor
             public const string Paste = "Edit.Paste";
 
             public const string FindReplace = "Edit.FindReplace";
-            //public static readonly InputGesture FindReplaceInputGesture = new InputGesture(Key.F, ModifierKeys.Control);
+            public static readonly InputGesture FindReplaceInputGesture = new InputGesture(Key.F, ModifierKeys.Control);
 
             public const string DuplicateLine = "Edit.DuplicateLine";
             public static readonly InputGesture DuplicateLineInputGesture = new InputGesture(Key.D, ModifierKeys.Control);
