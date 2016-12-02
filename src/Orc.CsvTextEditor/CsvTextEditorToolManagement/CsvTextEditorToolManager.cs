@@ -7,6 +7,7 @@
 
 namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Catel;
@@ -64,6 +65,8 @@ namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
                 tool.Initialize(textEditor, scope);
             }
 
+            _tools.Add(tool);
+            tool.Closed += OnToolClosed;
             tool.Open();
         }
 
@@ -75,8 +78,7 @@ namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
                 return;
             }
 
-            _tools.Remove(tool);
-            tool.Close();
+            RemoveTool(tool);
         }
 
         public void RemoveTool<T>()
@@ -88,8 +90,29 @@ namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
                 return;
             }
 
+            RemoveTool(tool);
+        }
+
+        public void RemoveTool(ICsvTextEditorTool tool)
+        {
+            Argument.IsNotNull(() => tool);
+
+            tool.Closed -= OnToolClosed;
+
             _tools.Remove(tool);
             tool.Close();
+        }
+
+        private void OnToolClosed(object sender, EventArgs eventArgs)
+        {
+            var tool = sender as ICsvTextEditorTool;
+            if (tool == null)
+            {
+                return;
+            }
+
+            tool.Closed -= OnToolClosed;
+            _tools.Remove(tool);
         }
         #endregion
     }

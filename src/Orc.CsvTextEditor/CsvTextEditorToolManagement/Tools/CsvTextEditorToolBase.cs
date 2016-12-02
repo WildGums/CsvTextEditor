@@ -7,6 +7,7 @@
 
 namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
 {
+    using System;
     using System.Collections.Generic;
     using ICSharpCode.AvalonEdit;
 
@@ -25,11 +26,10 @@ namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
 
         #region Properties
         protected TextEditor TexEditor { get; private set; }
+        public string Name => "CsvTextEditor.FindReplaceTool";
         #endregion
 
         #region Methods
-        public string Name => "CsvTextEditor.FindReplaceTool";
-
         public bool IsInitialized(object scope = null)
         {
             return _initializedInScopes.Contains(scope);
@@ -46,8 +46,42 @@ namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
 
             _initializedInScopes.Add(scope);
         }
+
+        public event EventHandler<EventArgs> Closed;
         #endregion
 
+        protected void RaiseClosedEvent()
+        {
+            Closed?.Invoke(this, EventArgs.Empty);
+        }
+
         public abstract void OnInitialize(object scope = null);
+
+        protected bool Equals(CsvTextEditorToolBase other)
+        {
+            return Equals(Name, other.Name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+            return Equals((CsvTextEditorToolBase) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (TexEditor != null ? TexEditor.GetHashCode() : 0);
+        }
     }
 }

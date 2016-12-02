@@ -19,6 +19,7 @@ namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
         void AddTool(ICsvTextEditorTool tool);
         void AddTool<T>() where T : ICsvTextEditorTool;
         void RemoveTool<T>() where T : ICsvTextEditorTool;
+        void RemoveTool(ICsvTextEditorTool tool);
         void RemoveToolByName(string toolName);
     }
 }

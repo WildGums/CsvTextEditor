@@ -7,9 +7,12 @@
 
 namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
 {
+    using System.Threading.Tasks;
     using Catel;
     using Catel.IoC;
+    using Catel.MVVM;
     using Catel.Services;
+    using Catel.Threading;
     using Services;
 
     public class FindReplaceTextEditorTool : CsvTextEditorToolBase
@@ -43,14 +46,22 @@ namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
             _findReplaceViewModel = new FindReplaceDialogViewModel(_csvTextEditorFindReplaceSerivce, _csvTextEditorService);
 
             _uiVisualizerService.ShowAsync(_findReplaceViewModel);
+
+            _findReplaceViewModel.ClosedAsync += OnClosedAsync;
         }
 
         public override void Close()
         {
-            _findReplaceViewModel?.CloseViewModelAsync(null).RunSynchronously();
+            if (_findReplaceViewModel == null)
+            {
+                return;
+            }
+
+            _findReplaceViewModel.CloseViewModelAsync(null).RunSynchronously();
+            _findReplaceViewModel.ClosedAsync -= OnClosedAsync;
         }
 
-        public override void OnInitialize(object scope)
+        public override void OnInitialize(object scope = null)
         {
             if (!_serviceLocator.IsTypeRegistered<ICsvTextEditorFindReplaceSerivce>(scope))
             {
@@ -59,8 +70,17 @@ namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
                 _csvTextEditorFindReplaceSerivce = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorFindReplaceSerivce>(textEditor);
                 _serviceLocator.RegisterInstance(_csvTextEditorFindReplaceSerivce, scope);
             }
+            else
+            {
+                _csvTextEditorFindReplaceSerivce = _serviceLocator.ResolveType<ICsvTextEditorFindReplaceSerivce>(scope);
+            }
 
             _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(scope);
+        }
+
+        private Task OnClosedAsync(object sender, ViewModelClosedEventArgs args)
+        {
+            return TaskHelper.RunAndWaitAsync(() => RaiseClosedEvent());
         }
     }
 }
