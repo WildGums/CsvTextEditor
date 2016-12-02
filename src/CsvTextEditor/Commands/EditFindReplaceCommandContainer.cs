@@ -7,25 +7,36 @@
 
 namespace CsvTextEditor
 {
+    using Catel;
     using Catel.IoC;
     using Catel.MVVM;
+    using Models;
+    using Orc.CsvTextEditor.CsvTextEditorToolManagement;
     using Orc.ProjectManagement;
 
     public class EditFindReplaceCommandContainer : EditProjectCommandContainerBase
     {
+        private readonly IServiceLocator _serviceLocator;
+        private ICsvTextEditorToolManager _csvEditorToolManager;
+
         #region Constructors
         public EditFindReplaceCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IServiceLocator serviceLocator)
             : base(Commands.Edit.FindReplace, commandManager, projectManager, serviceLocator)
         {
+            Argument.IsNotNull(() => serviceLocator);
+
+            _serviceLocator = serviceLocator;
         }
         #endregion
 
         #region Methods
         protected override void Execute(object parameter)
         {
-            CsvTextEditorService.ShowFindReplaceDialog();
+            var activeProject = _projectManager.ActiveProject;
 
-            base.Execute(parameter);
+            _csvEditorToolManager = _serviceLocator.ResolveType<ICsvTextEditorToolManager>(activeProject);
+
+            _csvEditorToolManager.AddTool<FindReplaceTextEditorTool>();
         }
         #endregion
     }

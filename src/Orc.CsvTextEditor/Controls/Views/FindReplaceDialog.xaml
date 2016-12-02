@@ -1,11 +1,12 @@
 ﻿<catel:DataWindow x:Class="Orc.CsvTextEditor.FindReplaceDialog"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:catel="http://catel.codeplex.com"
-        xmlns:converters="clr-namespace:Orc.CsvTextEditor.Converters"
-        WindowStartupLocation="CenterOwner"
-        WindowStyle="ToolWindow"
-        ShowInTaskbar="False">
+                  x:ClassModifier="internal"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:catel="http://catel.codeplex.com"
+                  xmlns:converters="clr-namespace:Orc.CsvTextEditor.Converters"
+                  WindowStartupLocation="CenterOwner"
+                  WindowStyle="ToolWindow"
+                  ShowInTaskbar="False">
     <catel:DataWindow.Resources>
         <converters:TextToTextArrayMultiValueConverter x:Key="TextToTextArrayMultiValueConverter"/>
     </catel:DataWindow.Resources>

@@ -32,7 +32,6 @@
                 <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="Shift+Tab" Command="{Binding GotoPreviousColumn}"/>
                 <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+Y" Command="{Binding Redo}"/>
                 <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+Z" Command="{Binding Undo}"/>
-                <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+F" Command="{Binding ShowFindReplaceDialog}"/>
 
                 <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="Enter" Command="{Binding AddLine}"/>
                 <csvTextEditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+L" Command="{Binding RemoveLine}"/>

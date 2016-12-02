@@ -38,8 +38,6 @@ namespace Orc.CsvTextEditor
             Undo = new Command(() => _csvTextEditorService.Undo(), () => _csvTextEditorService.CanUndo);
             Redo = new Command(() => _csvTextEditorService.Redo(), () => _csvTextEditorService.CanRedo);
 
-            ShowFindReplaceDialog = new Command(() => _csvTextEditorService.ShowFindReplaceDialog());
-
             AddLine = new Command(() => _csvTextEditorService.AddLine());
             RemoveLine = new Command(() => _csvTextEditorService.RemoveLine());
             DuplicateLine = new Command(() => _csvTextEditorService.DuplicateLine());
