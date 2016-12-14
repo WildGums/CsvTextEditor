@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
+namespace Orc.CsvTextEditor
 {
     using System.Threading.Tasks;
     using Catel;
@@ -61,21 +61,10 @@ namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
             _findReplaceViewModel.ClosedAsync -= OnClosedAsync;
         }
 
-        public override void OnInitialize(object scope = null)
+        public override void OnInitialize(ICsvTextEditorService csvTextEditorService)
         {
-            if (!_serviceLocator.IsTypeRegistered<ICsvTextEditorFindReplaceSerivce>(scope))
-            {
-                var textEditor = TexEditor;
-
-                _csvTextEditorFindReplaceSerivce = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorFindReplaceSerivce>(textEditor);
-                _serviceLocator.RegisterInstance(_csvTextEditorFindReplaceSerivce, scope);
-            }
-            else
-            {
-                _csvTextEditorFindReplaceSerivce = _serviceLocator.ResolveType<ICsvTextEditorFindReplaceSerivce>(scope);
-            }
-
-            _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(scope);
+            _csvTextEditorFindReplaceSerivce = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorFindReplaceSerivce>(TexEditor);
+            _csvTextEditorService = csvTextEditorService;
         }
 
         private Task OnClosedAsync(object sender, ViewModelClosedEventArgs args)

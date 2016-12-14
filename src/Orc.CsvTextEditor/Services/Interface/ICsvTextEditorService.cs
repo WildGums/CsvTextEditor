@@ -8,10 +8,13 @@
 namespace Orc.CsvTextEditor.Services
 {
     using System;
+    using System.Collections.Generic;
 
     public interface ICsvTextEditorService
     {
         #region Properties
+        IEnumerable<ICsvTextEditorTool> Tools { get; } 
+
         bool IsDirty { get; set; }
         bool HasSelection { get; }
         bool CanRedo { get; }
@@ -38,6 +41,9 @@ namespace Orc.CsvTextEditor.Services
         void GotoPreviousColumn();
 
         void RefreshView();
+
+        void AddTool(ICsvTextEditorTool tool);
+        void RemoveTool(ICsvTextEditorTool tool);
 
         event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
         event EventHandler<EventArgs> TextChanged;

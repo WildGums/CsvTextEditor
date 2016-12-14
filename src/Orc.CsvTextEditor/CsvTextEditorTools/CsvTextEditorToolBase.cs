@@ -5,23 +5,16 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
+namespace Orc.CsvTextEditor
 {
     using System;
-    using System.Collections.Generic;
     using ICSharpCode.AvalonEdit;
+    using Services;
 
     public abstract class CsvTextEditorToolBase : ICsvTextEditorTool
     {
         #region Fields
-        private readonly HashSet<object> _initializedInScopes;
-        #endregion
-
-        #region Constructors
-        public CsvTextEditorToolBase()
-        {
-            _initializedInScopes = new HashSet<object>();
-        }
+        public bool IsInitialized { get; private set; } = false;
         #endregion
 
         #region Properties
@@ -30,21 +23,17 @@ namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
         #endregion
 
         #region Methods
-        public bool IsInitialized(object scope = null)
-        {
-            return _initializedInScopes.Contains(scope);
-        }
 
         public abstract void Open();
         public abstract void Close();
 
-        public void Initialize(TextEditor textEditor, object scope)
+        public void Initialize(TextEditor textEditor, ICsvTextEditorService csvTextEditorService)
         {
             TexEditor = textEditor;
 
-            OnInitialize(scope);
+            OnInitialize(csvTextEditorService);
 
-            _initializedInScopes.Add(scope);
+            IsInitialized = true;
         }
 
         public event EventHandler<EventArgs> Closed;
@@ -55,7 +44,7 @@ namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
             Closed?.Invoke(this, EventArgs.Empty);
         }
 
-        public abstract void OnInitialize(object scope = null);
+        public abstract void OnInitialize(ICsvTextEditorService csvTextEditorService);
 
         protected bool Equals(CsvTextEditorToolBase other)
         {
@@ -81,7 +70,7 @@ namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
 
         public override int GetHashCode()
         {
-            return (TexEditor != null ? TexEditor.GetHashCode() : 0);
+            return TexEditor?.GetHashCode() ?? 0;
         }
     }
 }

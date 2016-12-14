@@ -10,7 +10,6 @@ namespace Orc.CsvTextEditor
     using System.ComponentModel;
     using Catel.IoC;
     using Catel.Windows.Interactivity;
-    using CsvTextEditorToolManagement;
     using Services;
 
     internal class RegisterCstTextEditorControlsServicesBehavior : BehaviorBase<CsvTextEditorControl>
@@ -73,12 +72,6 @@ namespace Orc.CsvTextEditor
             if (!_serviceLocator.IsTypeRegistered<ICsvTextSynchronizationService>(scope))
             {
                 var csvTextSynchronizationService = (ICsvTextSynchronizationService) _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextSynchronizationService>();
-                _serviceLocator.RegisterInstance(csvTextSynchronizationService, scope);
-            }
-
-            if (!_serviceLocator.IsTypeRegistered<ICsvTextEditorToolManager>(scope))
-            {
-                var csvTextSynchronizationService = (ICsvTextEditorToolManager) _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorToolManager>(textEditorControl);
                 _serviceLocator.RegisterInstance(csvTextSynchronizationService, scope);
             }
         }
