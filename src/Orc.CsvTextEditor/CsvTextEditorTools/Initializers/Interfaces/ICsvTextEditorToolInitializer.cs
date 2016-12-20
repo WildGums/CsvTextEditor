@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ICsvTextEditorTool.cs" company="WildGums">
+// <copyright file="ICsvTextEditorToolInitializer.cs" company="WildGums">
 //   Copyright (c) 2008 - 2016 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -7,19 +7,11 @@
 
 namespace Orc.CsvTextEditor
 {
-    using System;
+    using ICSharpCode.AvalonEdit;
+    using Services;
 
-    public interface ICsvTextEditorTool
+    public interface ICsvTextEditorServiceInitializer
     {
-        #region Properties
-        string Name { get; }
-        bool IsOpened { get; }
-        #endregion
-
-        void Open();
-        void Close();
-
-        event EventHandler<EventArgs> Opened;
-        event EventHandler<EventArgs> Closed;
+        void Initialize(TextEditor textEditor, ICsvTextEditorService textEditorService);
     }
 }

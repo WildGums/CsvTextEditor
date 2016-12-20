@@ -8,69 +8,54 @@
 namespace Orc.CsvTextEditor
 {
     using System;
+    using Catel;
     using ICSharpCode.AvalonEdit;
     using Services;
 
     public abstract class CsvTextEditorToolBase : ICsvTextEditorTool
     {
-        #region Fields
-        public bool IsInitialized { get; private set; } = false;
+        #region Constructors
+        public CsvTextEditorToolBase(TextEditor textEditor, ICsvTextEditorService csvTextEditorService)
+        {
+            Argument.IsNotNull(() => textEditor);
+            Argument.IsNotNull(() => csvTextEditorService);
+
+            TextEditor = textEditor;
+            CsvTextEditorService = csvTextEditorService;
+        }
         #endregion
 
         #region Properties
-        protected TextEditor TexEditor { get; private set; }
-        public string Name => "CsvTextEditor.FindReplaceTool";
+        protected TextEditor TextEditor { get; }
+        protected ICsvTextEditorService CsvTextEditorService { get; private set; }
         #endregion
 
         #region Methods
+        public abstract string Name { get; }
+        public bool IsOpened { get; private set; }
 
-        public abstract void Open();
-        public abstract void Close();
-
-        public void Initialize(TextEditor textEditor, ICsvTextEditorService csvTextEditorService)
+        public void Open()
         {
-            TexEditor = textEditor;
+            if (IsOpened)
+            {
+                return;
+            }
 
-            OnInitialize(csvTextEditorService);
+            OnOpen();
 
-            IsInitialized = true;
+            IsOpened = true;
+            Opened?.Invoke(this, EventArgs.Empty);
         }
+        public abstract void Close();
+        protected abstract void OnOpen();
 
         public event EventHandler<EventArgs> Closed;
+        public event EventHandler<EventArgs> Opened;
         #endregion
 
         protected void RaiseClosedEvent()
         {
             Closed?.Invoke(this, EventArgs.Empty);
-        }
-
-        public abstract void OnInitialize(ICsvTextEditorService csvTextEditorService);
-
-        protected bool Equals(CsvTextEditorToolBase other)
-        {
-            return Equals(Name, other.Name);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-            return Equals((CsvTextEditorToolBase) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return TexEditor?.GetHashCode() ?? 0;
         }
     }
 }

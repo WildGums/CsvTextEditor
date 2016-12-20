@@ -13,7 +13,7 @@ namespace Orc.CsvTextEditor.Services
     public interface ICsvTextEditorService
     {
         #region Properties
-        IEnumerable<ICsvTextEditorTool> Tools { get; } 
+        IReadOnlyList<ICsvTextEditorTool> Tools { get; } 
 
         bool IsDirty { get; set; }
         bool HasSelection { get; }

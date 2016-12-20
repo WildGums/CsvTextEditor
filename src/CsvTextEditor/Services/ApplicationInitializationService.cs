@@ -17,6 +17,7 @@ namespace CsvTextEditor.Services
     using Catel.MVVM;
     using Catel.Threading;
     using Catel.Windows.Controls;
+    using Orc.CsvTextEditor;
     using Orc.ProjectManagement;
     using Orchestra.Markup;
     using Orchestra.Services;

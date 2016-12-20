@@ -25,7 +25,7 @@ namespace Orc.CsvTextEditor.Services
     {
         #region Fields
         private readonly ICommandManager _commandManager;
-        public IEnumerable<ICsvTextEditorTool> Tools => _tools.AsEnumerable();
+        public IReadOnlyList<ICsvTextEditorTool> Tools => _tools;
 
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
@@ -40,10 +40,11 @@ namespace Orc.CsvTextEditor.Services
         #endregion
 
         #region Constructors
-        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager)
+        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager, ICsvTextEditorServiceInitializer initializer)
         {
             Argument.IsNotNull(() => textEditor);
             Argument.IsNotNull(() => commandManager);
+            Argument.IsNotNull(() => initializer);
 
             _textEditor = textEditor;
             _commandManager = commandManager;
@@ -70,6 +71,8 @@ namespace Orc.CsvTextEditor.Services
             _textEditor.TextArea.TextView.LineTransformers.Add(_highlightAllOccurencesOfSelectedWordTransformer);
 
             _textEditor.TextArea.TextView.LineTransformers.Add(new FirstLineAlwaysBoldTransformer());
+
+            initializer.Initialize(textEditor, this);
         }
         #endregion
 
@@ -93,21 +96,12 @@ namespace Orc.CsvTextEditor.Services
                 return;
             }
 
-            if (!tool.IsInitialized)
-            {
-                tool.Initialize(_textEditor, this);
-            }
-
             _tools.Add(tool);
-            tool.Closed += OnToolClosed;
-            tool.Open();
         }
 
         public void RemoveTool(ICsvTextEditorTool tool)
         {
             Argument.IsNotNull(() => tool);
-
-            tool.Closed -= OnToolClosed;
 
             _tools.Remove(tool);
             tool.Close();
@@ -538,18 +532,6 @@ namespace Orc.CsvTextEditor.Services
             _highlightAllOccurencesOfSelectedWordTransformer.Selection = _textEditor.TextArea.Selection;
 
             RefreshView();
-        }
-
-        private void OnToolClosed(object sender, EventArgs eventArgs)
-        {
-            var tool = sender as ICsvTextEditorTool;
-            if (tool == null)
-            {
-                return;
-            }
-
-            tool.Closed -= OnToolClosed;
-            _tools.Remove(tool);
         }
     }
 }

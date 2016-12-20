@@ -27,6 +27,7 @@ public static class ModuleInitializer
     {
         var serviceLocator = ServiceLocator.Default;
 
+        serviceLocator.RegisterTypeIfNotYetRegistered<ICsvTextEditorServiceInitializer, CsvTextEditorServiceInitializer>();
         serviceLocator.RegisterType<ICsvTextEditorService, CsvTextEditorService>();
         serviceLocator.RegisterType<ICsvTextSynchronizationService, CsvTextSynchronizationService>();
 

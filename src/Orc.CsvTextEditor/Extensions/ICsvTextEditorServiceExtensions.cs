@@ -9,34 +9,34 @@ namespace Orc.CsvTextEditor
 {
     using System.Linq;
     using Catel;
-    using Catel.IoC;
     using Services;
 
     public static class ICsvTextEditorServiceExtensions
     {
-        public static void AddTool<T>(this ICsvTextEditorService csvTextEditorService)
+        public static void ShowTool<T>(this ICsvTextEditorService csvTextEditorService)
             where T : ICsvTextEditorTool
         {
             Argument.IsNotNull(() => csvTextEditorService);
 
-            var typeFactory = ServiceLocator.Default.ResolveType<ITypeFactory>();
-            var tool = typeFactory.CreateInstanceWithParametersAndAutoCompletion<T>();
-            csvTextEditorService.AddTool(tool);
+            var tool = csvTextEditorService.Tools.OfType<T>().FirstOrDefault();
+            tool?.Open();
         }
 
-        public static void RemoveToolByName(this ICsvTextEditorService csvTextEditorService, string toolName)
+        public static void ShowTool(this ICsvTextEditorService csvTextEditorService, string toolName)
         {
             Argument.IsNotNull(() => csvTextEditorService);
-            
+
+            var tool = csvTextEditorService.GetToolByName(toolName);
+
+            tool?.Open();
+        }
+
+        public static ICsvTextEditorTool GetToolByName(this ICsvTextEditorService csvTextEditorService, string toolName)
+        {
+            Argument.IsNotNull(() => csvTextEditorService);
+
             var tools = csvTextEditorService.Tools;
-
-            var tool = tools.FirstOrDefault(x => x.Name == toolName);
-            if (tool == null)
-            {
-                return;
-            }
-
-            csvTextEditorService.RemoveTool(tool);
+            return tools.FirstOrDefault(x => x.Name == toolName);
         }
     }
 }
