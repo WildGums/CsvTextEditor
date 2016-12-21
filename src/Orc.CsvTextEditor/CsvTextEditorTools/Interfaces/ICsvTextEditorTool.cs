@@ -5,22 +5,21 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
+namespace Orc.CsvTextEditor
 {
     using System;
-    using ICSharpCode.AvalonEdit;
 
     public interface ICsvTextEditorTool
     {
         #region Properties
         string Name { get; }
+        bool IsOpened { get; }
         #endregion
 
-        bool IsInitialized(object scope = null);
         void Open();
         void Close();
-        void Initialize(TextEditor textEditor, object scope = null);
 
+        event EventHandler<EventArgs> Opened;
         event EventHandler<EventArgs> Closed;
     }
 }

@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
+namespace Orc.CsvTextEditor
 {
     using System.Threading.Tasks;
     using Catel;
@@ -13,37 +13,39 @@ namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
     using Catel.MVVM;
     using Catel.Services;
     using Catel.Threading;
+    using ICSharpCode.AvalonEdit;
     using Services;
 
     public class FindReplaceTextEditorTool : CsvTextEditorToolBase
     {
         #region Fields
-        private readonly IServiceLocator _serviceLocator;
-        private readonly ITypeFactory _typeFactory;
+        private readonly ICsvTextEditorFindReplaceSerivce _csvTextEditorFindReplaceSerivce;
         private readonly IUIVisualizerService _uiVisualizerService;
-        private ICsvTextEditorFindReplaceSerivce _csvTextEditorFindReplaceSerivce;
-        private ICsvTextEditorService _csvTextEditorService;
 
         private FindReplaceDialogViewModel _findReplaceViewModel;
         #endregion
 
         #region Constructors
-        public FindReplaceTextEditorTool(IUIVisualizerService uiVisualizerService,
-            IServiceLocator serviceLocator, ITypeFactory typeFactory)
+        public FindReplaceTextEditorTool(TextEditor textEditor, ICsvTextEditorService csvTextEditorService,
+            IUIVisualizerService uiVisualizerService, ITypeFactory typeFactory)
+            : base(textEditor, csvTextEditorService)
         {
             Argument.IsNotNull(() => uiVisualizerService);
-            Argument.IsNotNull(() => serviceLocator);
             Argument.IsNotNull(() => typeFactory);
 
             _uiVisualizerService = uiVisualizerService;
-            _serviceLocator = serviceLocator;
-            _typeFactory = typeFactory;
+
+            _csvTextEditorFindReplaceSerivce = typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorFindReplaceService>(TextEditor);
         }
         #endregion
 
-        public override void Open()
+        #region Properties
+        public override string Name => "CsvTextEditor.FindReplaceTextEditorTool";
+        #endregion
+
+        protected override void OnOpen()
         {
-            _findReplaceViewModel = new FindReplaceDialogViewModel(_csvTextEditorFindReplaceSerivce, _csvTextEditorService);
+            _findReplaceViewModel = new FindReplaceDialogViewModel(_csvTextEditorFindReplaceSerivce, CsvTextEditorService);
 
             _uiVisualizerService.ShowAsync(_findReplaceViewModel);
 
@@ -60,24 +62,7 @@ namespace Orc.CsvTextEditor.CsvTextEditorToolManagement
             _findReplaceViewModel.CloseViewModelAsync(null).RunSynchronously();
             _findReplaceViewModel.ClosedAsync -= OnClosedAsync;
         }
-
-        public override void OnInitialize(object scope = null)
-        {
-            if (!_serviceLocator.IsTypeRegistered<ICsvTextEditorFindReplaceSerivce>(scope))
-            {
-                var textEditor = TexEditor;
-
-                _csvTextEditorFindReplaceSerivce = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorFindReplaceSerivce>(textEditor);
-                _serviceLocator.RegisterInstance(_csvTextEditorFindReplaceSerivce, scope);
-            }
-            else
-            {
-                _csvTextEditorFindReplaceSerivce = _serviceLocator.ResolveType<ICsvTextEditorFindReplaceSerivce>(scope);
-            }
-
-            _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(scope);
-        }
-
+        
         private Task OnClosedAsync(object sender, ViewModelClosedEventArgs args)
         {
             return TaskHelper.RunAndWaitAsync(() => RaiseClosedEvent());

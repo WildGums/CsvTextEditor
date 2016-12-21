@@ -204,7 +204,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Behavior\" />
-    <Folder Include="CsvTextEditorToolManagement\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orc.CsvTextEditor\Orc.CsvTextEditor.csproj">

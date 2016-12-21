@@ -8,12 +8,13 @@
 namespace Orc.CsvTextEditor.Services
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Windows;
     using System.Xml;
     using Catel;
     using Catel.IoC;
     using Catel.MVVM;
-    using Catel.Services;
     using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Highlighting;
@@ -24,29 +25,31 @@ namespace Orc.CsvTextEditor.Services
     {
         #region Fields
         private readonly ICommandManager _commandManager;
+        public IReadOnlyList<ICsvTextEditorTool> Tools => _tools;
 
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
         private readonly TextEditor _textEditor;
-        private readonly IUIVisualizerService _uiVisualizerService;
 
         private bool _isInCustomUpdate = false;
         private bool _isInRedoUndo = false;
 
         private int _previousCaretColumn;
         private int _previousCaretLine;
+        private readonly List<ICsvTextEditorTool> _tools;
         #endregion
 
         #region Constructors
-        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager, IUIVisualizerService uiVisualizerService)
+        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager, ICsvTextEditorServiceInitializer initializer)
         {
             Argument.IsNotNull(() => textEditor);
             Argument.IsNotNull(() => commandManager);
-            Argument.IsNotNull(() => uiVisualizerService);
+            Argument.IsNotNull(() => initializer);
 
             _textEditor = textEditor;
             _commandManager = commandManager;
-            _uiVisualizerService = uiVisualizerService;
+
+            _tools = new List<ICsvTextEditorTool>();
 
             // Need to make these options accessible to the user in the settings window
             _textEditor.ShowLineNumbers = true;
@@ -68,6 +71,8 @@ namespace Orc.CsvTextEditor.Services
             _textEditor.TextArea.TextView.LineTransformers.Add(_highlightAllOccurencesOfSelectedWordTransformer);
 
             _textEditor.TextArea.TextView.LineTransformers.Add(new FirstLineAlwaysBoldTransformer());
+
+            initializer.Initialize(textEditor, this);
         }
         #endregion
 
@@ -81,6 +86,26 @@ namespace Orc.CsvTextEditor.Services
         #region Methods
         public event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
         public event EventHandler<EventArgs> TextChanged;
+
+        public void AddTool(ICsvTextEditorTool tool)
+        {
+            Argument.IsNotNull(() => tool);
+
+            if (_tools.Contains(tool))
+            {
+                return;
+            }
+
+            _tools.Add(tool);
+        }
+
+        public void RemoveTool(ICsvTextEditorTool tool)
+        {
+            Argument.IsNotNull(() => tool);
+
+            _tools.Remove(tool);
+            tool.Close();
+        }
 
         public void Copy()
         {

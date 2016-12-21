@@ -11,7 +11,6 @@ using Catel.MVVM;
 using Catel.Services;
 using Orc.CsvTextEditor;
 using Orc.CsvTextEditor.Services;
-using Orc.CsvTextEditor.CsvTextEditorToolManagement;
 
 /// <summary>
 /// Used by the ModuleInit. All code inside the Initialize method is ran as soon as the assembly is loaded.
@@ -28,9 +27,9 @@ public static class ModuleInitializer
     {
         var serviceLocator = ServiceLocator.Default;
 
+        serviceLocator.RegisterTypeIfNotYetRegistered<ICsvTextEditorServiceInitializer, CsvTextEditorServiceInitializer>();
         serviceLocator.RegisterType<ICsvTextEditorService, CsvTextEditorService>();
         serviceLocator.RegisterType<ICsvTextSynchronizationService, CsvTextSynchronizationService>();
-        serviceLocator.RegisterType<ICsvTextEditorToolManager, CsvTextEditorToolManager>();
 
         var viewModelLocator = serviceLocator.ResolveType<IViewModelLocator>();
         viewModelLocator.Register<FindReplaceDialog, FindReplaceDialogViewModel>();
