@@ -8,7 +8,9 @@
 namespace Orc.CsvTextEditor
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using Catel;
 
     public static class StringExtensions
@@ -42,6 +44,60 @@ namespace Orc.CsvTextEditor
 
             return text;
         }
+
+        public static string GetWordFromOffset(this string text, int offset)
+        {
+            var textLength = text.Length;
+            if (offset < 0 || offset >= textLength)
+            {
+                return string.Empty;
+            }
+
+            var i = offset;
+            while (i >= 0 && char.IsLetterOrDigit(text[i]))
+            {
+                i--;
+            }
+
+            var startOffset = i + 1;
+
+            i = offset;
+            while (i < textLength && char.IsLetterOrDigit(text[i]))
+            {
+                i++;
+            }
+
+            var endOffset = i;
+
+            var length = endOffset - startOffset;
+            return length > 0 ? text.Substring(startOffset, length) : string.Empty;
+        }
+
+        public static List<string> GetColumnWords(this string text, int column, int[][] csvSceme)
+        {
+            Argument.IsNotNull(nameof(text), text);
+
+            var columnCount = csvSceme[0].Length;
+            
+            var columnWords = new List<string>();
+            var lineStart = 0;
+            foreach (var line in csvSceme)
+            {
+                var columnWidth = line[column] - 1;
+                var columnStart = line.Take(column).Sum() + lineStart;
+
+                var subText = text.Substring(columnStart, columnWidth);
+
+                var words = subText.Split(new [] {" "}, StringSplitOptions.RemoveEmptyEntries);
+                columnWords.AddRange(words);
+
+                var lineText = text.Substring(lineStart, line.Sum());
+
+                lineStart = line.Sum() + 1;
+            }
+
+            return columnWords;
+        } 
 
         public static string InsertCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount, string newLine)
         {

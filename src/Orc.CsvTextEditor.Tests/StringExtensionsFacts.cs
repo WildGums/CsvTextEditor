@@ -14,6 +14,17 @@ namespace Orc.CsvTextEditor.Tests
     [TestFixture]
     public class StringExtensionsFacts
     {
+        [TestCase("here, some; wor;ds to test", 0, "here")]
+        [TestCase("here, some; wor;ds to test", 5, "")]
+        [TestCase("here, some; wor;ds to test", 27, "")]
+        [TestCase("here, some; wor;ds to test", -1, "")]
+        public void CorrectlyGetWordFromOffset(string text, int positionStart, string expectedResult)
+        {
+            var result = text.GetWordFromOffset(positionStart);
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
         [TestCase("01,34,67,9\n12,34,56,78", 1, 4, "\n", "0,,67,9\n12,34,56,78")]
         [TestCase("01,34,67,9\n12,34,56,78", 0, 4, "\n", ",4,67,9\n12,34,56,78")]
         [TestCase("01,34,67,9\n12,34,56,78", 1, 14, "\n", "0,,,\n,4,56,78")]
