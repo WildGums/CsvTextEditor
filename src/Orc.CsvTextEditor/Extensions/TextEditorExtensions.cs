@@ -52,6 +52,8 @@ namespace Orc.CsvTextEditor
             var lines = textDocument.Lines;
 
             var data = new List<ICompletionData>();
+            autocompletionText = autocompletionText.ToLower();
+            
             for (var i = 1; i < lines.Count; i++)
             {
                 var line = lines[i];
@@ -72,7 +74,6 @@ namespace Orc.CsvTextEditor
                 var words = columnChunk.Split(null);
                 var currentWord = text.GetWordFromOffset(offset - 1);
 
-                autocompletionText = autocompletionText.ToLower();
                 foreach (var word in words)
                 {
                     if (string.Equals(currentWord, word))
