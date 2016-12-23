@@ -46,6 +46,8 @@ namespace Orc.CsvTextEditor
 
         public static string GetWordFromOffset(this string text, int offset)
         {
+            Argument.IsNotNull(() => text);
+
             var textLength = text.Length;
             if (offset < 0 || offset >= textLength)
             {

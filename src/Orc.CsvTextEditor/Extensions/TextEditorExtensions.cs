@@ -43,10 +43,10 @@ namespace Orc.CsvTextEditor
 
         public static List<ICompletionData> GetCompletionDataForText(this TextEditor textEditor, string autocompletionText, int columnIndex, int[][] scheme)
         {
+            Argument.IsNotNull(() => textEditor);
+
             var textDocument = textEditor.Document;
             var offset = textEditor.CaretOffset;
-
-            var affectedLocation = textDocument.GetLocation(offset);
 
             var text = textEditor.Text;
             var lines = textDocument.Lines;
@@ -71,6 +71,8 @@ namespace Orc.CsvTextEditor
                 var columnChunk = text.Substring(columnOffset, columnWidth);
                 var words = columnChunk.Split(null);
                 var currentWord = text.GetWordFromOffset(offset - 1);
+
+                autocompletionText = autocompletionText.ToLower();
                 foreach (var word in words)
                 {
                     if (string.Equals(currentWord, word))
@@ -83,7 +85,7 @@ namespace Orc.CsvTextEditor
                         continue;
                     }
 
-                    if (word.ToLower().StartsWith(autocompletionText.ToLower()))
+                    if (word.ToLower().StartsWith(autocompletionText))
                     {
                         data.Add(new CsvColumnCompletionData(word));
                     }

@@ -17,7 +17,7 @@ namespace Orc.CsvTextEditor
         #region Constructors
         public CsvColumnCompletionData(string text)
         {
-            this.Text = text;
+            Text = text;
         }
         #endregion
 

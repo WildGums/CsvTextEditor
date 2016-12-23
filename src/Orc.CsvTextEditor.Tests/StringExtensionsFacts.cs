@@ -14,10 +14,10 @@ namespace Orc.CsvTextEditor.Tests
     [TestFixture]
     public class StringExtensionsFacts
     {
-        [TestCase("here, some; wor;ds to test", 0, "here")]
-        [TestCase("here, some; wor;ds to test", 5, "")]
-        [TestCase("here, some; wor;ds to test", 27, "")]
-        [TestCase("here, some; wor;ds to test", -1, "")]
+        [TestCase("here, some; words to test", 0, "here")]
+        [TestCase("here, some; words to test", 5, "")]
+        [TestCase("here, some; words to test", 26, "")]
+        [TestCase("here, some; words to test", -1, "")]
         public void CorrectlyGetWordFromOffset(string text, int positionStart, string expectedResult)
         {
             var result = text.GetWordFromOffset(positionStart);
