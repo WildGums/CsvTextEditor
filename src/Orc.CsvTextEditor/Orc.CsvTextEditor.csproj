@@ -87,6 +87,7 @@
     <Compile Include="Controls\Views\CsvTextEditorControl.xaml.cs">
       <DependentUpon>CsvTextEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\CsvColumnCompletionData.cs" />
     <Compile Include="VisualElementGenerators\Elements\EmptyVisualLineElement.cs" />
     <Compile Include="Models\FindReplaceSettings.cs" />
     <Compile Include="VisualElementGenerators\TabSpaceElementGenerator.cs" />

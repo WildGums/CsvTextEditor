@@ -11,11 +11,14 @@ namespace Orc.CsvTextEditor.Services
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Input;
     using System.Xml;
     using Catel;
+    using Catel.Collections;
     using Catel.IoC;
     using Catel.MVVM;
     using ICSharpCode.AvalonEdit;
+    using ICSharpCode.AvalonEdit.CodeCompletion;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Highlighting;
     using ICSharpCode.AvalonEdit.Highlighting.Xshd;
@@ -25,18 +28,18 @@ namespace Orc.CsvTextEditor.Services
     {
         #region Fields
         private readonly ICommandManager _commandManager;
-        public IReadOnlyList<ICsvTextEditorTool> Tools => _tools;
 
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
         private readonly TextEditor _textEditor;
+        private readonly List<ICsvTextEditorTool> _tools;
+        private CompletionWindow _completionWindow;
 
         private bool _isInCustomUpdate = false;
         private bool _isInRedoUndo = false;
 
         private int _previousCaretColumn;
         private int _previousCaretLine;
-        private readonly List<ICsvTextEditorTool> _tools;
         #endregion
 
         #region Constructors
@@ -67,6 +70,8 @@ namespace Orc.CsvTextEditor.Services
             _textEditor.TextArea.Caret.PositionChanged += OnCaretPositionChanged;
             _textEditor.TextChanged += OnTextChanged;
 
+            textEditor.TextArea.TextEntering += OnTextEntering;
+
             _highlightAllOccurencesOfSelectedWordTransformer = new HighlightAllOccurencesOfSelectedWordTransformer();
             _textEditor.TextArea.TextView.LineTransformers.Add(_highlightAllOccurencesOfSelectedWordTransformer);
 
@@ -77,6 +82,7 @@ namespace Orc.CsvTextEditor.Services
         #endregion
 
         #region Properties
+        public IReadOnlyList<ICsvTextEditorTool> Tools => _tools;
         public bool IsDirty { get; set; }
         public bool HasSelection => _textEditor.SelectionLength > 0;
         public bool CanRedo => _textEditor.CanRedo;
@@ -401,6 +407,42 @@ namespace Orc.CsvTextEditor.Services
             _textEditor.TextArea.TextView.Redraw();
         }
         #endregion
+
+        private void OnTextEntering(object sender, TextCompositionEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(e.Text))
+            {
+                _completionWindow?.Close();
+                return;
+            }
+
+            if (_completionWindow != null)
+            {
+                return;
+            }
+
+            var columnIndex = GetCurrentColumnIndex();
+            var data = _textEditor.GetCompletionDataForText(e.Text, columnIndex, _elementGenerator.Lines);
+
+            if (!data.Any())
+            {
+                return;
+            }
+
+            _completionWindow = new CompletionWindow(_textEditor.TextArea);
+            _completionWindow.CompletionList.CompletionData.AddRange(data);
+            _completionWindow.Show();
+            _completionWindow.Closed += (o, args) => _completionWindow = null;
+        }
+
+        private int GetCurrentColumnIndex()
+        {
+            var textDocument = _textEditor.Document;
+            var offset = _textEditor.CaretOffset;
+            var affectedLocation = textDocument.GetLocation(offset);
+            var columnNumberWithOffset = _elementGenerator.GetColumn(affectedLocation);
+            return columnNumberWithOffset.ColumnNumber;
+        }
 
         private void RefreshHighlightings()
         {

@@ -7,9 +7,11 @@
 
 namespace Orc.CsvTextEditor
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Catel;
     using ICSharpCode.AvalonEdit;
+    using ICSharpCode.AvalonEdit.CodeCompletion;
 
     public static class TextEditorExtensions
     {
@@ -37,6 +39,61 @@ namespace Orc.CsvTextEditor
             var maxCaretOffset = textDocument.TextLength;
             var newCaretOffset = offset + columnOffset;
             textEditor.CaretOffset = maxCaretOffset > newCaretOffset ? newCaretOffset : maxCaretOffset;
+        }
+
+        public static List<ICompletionData> GetCompletionDataForText(this TextEditor textEditor, string autocompletionText, int columnIndex, int[][] scheme)
+        {
+            Argument.IsNotNull(() => textEditor);
+
+            var textDocument = textEditor.Document;
+            var offset = textEditor.CaretOffset;
+
+            var text = textEditor.Text;
+            var lines = textDocument.Lines;
+
+            var data = new List<ICompletionData>();
+            autocompletionText = autocompletionText.ToLower();
+            
+            for (var i = 1; i < lines.Count; i++)
+            {
+                var line = lines[i];
+                if (line.Length == 0)
+                {
+                    continue;
+                }
+
+                var lineScheme = scheme[i];
+
+                var columnWidth = lineScheme[columnIndex] - 1;
+                var columnStart = lineScheme.Take(columnIndex).Sum();
+
+                var lineOffset = line.Offset;
+                var columnOffset = lineOffset + columnStart;
+
+                var columnChunk = text.Substring(columnOffset, columnWidth);
+                var words = columnChunk.Split(null);
+                var currentWord = text.GetWordFromOffset(offset - 1);
+
+                foreach (var word in words)
+                {
+                    if (string.Equals(currentWord, word))
+                    {
+                        continue;
+                    }
+
+                    if (data.Any(x => string.Equals(x.Text, word)))
+                    {
+                        continue;
+                    }
+
+                    if (word.ToLower().StartsWith(autocompletionText))
+                    {
+                        data.Add(new CsvColumnCompletionData(word));
+                    }
+                }
+            }
+
+            return data;
         }
     }
 }

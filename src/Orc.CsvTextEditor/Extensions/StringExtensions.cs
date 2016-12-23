@@ -8,6 +8,7 @@
 namespace Orc.CsvTextEditor
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Catel;
 
@@ -41,6 +42,36 @@ namespace Orc.CsvTextEditor
                 .Insert(positionStart, replacementText);
 
             return text;
+        }
+
+        public static string GetWordFromOffset(this string text, int offset)
+        {
+            Argument.IsNotNull(() => text);
+
+            var textLength = text.Length;
+            if (offset < 0 || offset >= textLength)
+            {
+                return string.Empty;
+            }
+
+            var i = offset;
+            while (i >= 0 && char.IsLetterOrDigit(text[i]))
+            {
+                i--;
+            }
+
+            var startOffset = i + 1;
+
+            i = offset;
+            while (i < textLength && char.IsLetterOrDigit(text[i]))
+            {
+                i++;
+            }
+
+            var endOffset = i;
+
+            var length = endOffset - startOffset;
+            return length > 0 ? text.Substring(startOffset, length) : string.Empty;
         }
 
         public static string InsertCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount, string newLine)

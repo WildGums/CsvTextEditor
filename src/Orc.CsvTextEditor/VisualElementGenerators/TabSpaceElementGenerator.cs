@@ -23,7 +23,7 @@ namespace Orc.CsvTextEditor
         public int[][] Lines
         {
             get { return _lines; }
-            set
+            private set
             {
                 if (Equals(value, _lines))
                 {
