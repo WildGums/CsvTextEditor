@@ -549,7 +549,7 @@ namespace Orc.CsvTextEditor.Services
             var currentTextLocation = textDocument.GetLocation(offset);
             var columnNumberWithOffset = _elementGenerator.GetColumn(currentTextLocation);
             var column = columnNumberWithOffset.ColumnNumber + 1;
-            var line = currentTextLocation.Line + 1;
+            var line = currentTextLocation.Line;
 
             if (_previousCaretColumn != column || _previousCaretLine != line)
             {
