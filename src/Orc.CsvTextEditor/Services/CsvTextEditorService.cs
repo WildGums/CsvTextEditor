@@ -336,8 +336,14 @@ namespace Orc.CsvTextEditor.Services
             document.Changed -= OnTextDocumentChanged;
 
             UpdateText(text);
-
-            _textEditor.Document.UndoStack.ClearAll();
+            try
+            {
+                _textEditor.Document.UndoStack.ClearAll();
+            }
+            catch (Exception)
+            {
+               // throw ex; 
+            }
 
             document.Changed += OnTextDocumentChanged;
 

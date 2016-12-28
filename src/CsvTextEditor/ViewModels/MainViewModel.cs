@@ -39,6 +39,11 @@ namespace CsvTextEditor.ViewModels
         [Expose(nameof(Models.Project.Text))]
         public Project Project { get; set; }
 
+        private void OnTextChanged()
+        {
+            var text = Project?.Text;
+        }
+
         #region Methods
         protected override Task InitializeAsync()
         {

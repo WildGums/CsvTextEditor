@@ -24,8 +24,13 @@ namespace Orc.CsvTextEditor
             base.OnAssociatedObjectLoaded();
 
             var textEditorControl = AssociatedObject;
+            var textEditor = AssociatedObject?.TextEditor;
+            if (textEditor == null)
+            {
+                return;
+            }
 
-            textEditorControl.Initialized += OnInitialized;
+            textEditor.TextChanged += OnTextChanged;
             textEditorControl.PropertyChanged += OnTextEditorControlPropertyChanged;
         }
 
@@ -34,7 +39,6 @@ namespace Orc.CsvTextEditor
             var textEditorControl = AssociatedObject;
 
             _csvTextSynchronizationService = null;
-            textEditorControl.Initialized -= OnInitialized;
             textEditorControl.PropertyChanged -= OnTextEditorControlPropertyChanged;
 
             var textEditor = AssociatedObject?.TextEditor;
@@ -50,6 +54,11 @@ namespace Orc.CsvTextEditor
 
         private void OnTextChanged(object sender, EventArgs eventArgs)
         {
+            if (_csvTextSynchronizationService?.IsSynchronizing ?? true)
+            {
+                return;
+            }
+
             var textEditor = AssociatedObject?.TextEditor;
             if (textEditor == null)
             {
@@ -60,17 +69,6 @@ namespace Orc.CsvTextEditor
             {
                 AssociatedObject.Text = textEditor.Text;
             }
-        }
-
-        private void OnInitialized(object sender, EventArgs eventArgs)
-        {
-            var textEditor = AssociatedObject?.TextEditor;
-            if (textEditor == null)
-            {
-                return;
-            }
-
-            textEditor.TextChanged += OnTextChanged;
         }
 
         private void OnTextEditorControlPropertyChanged(object sender, PropertyChangedEventArgs args)
