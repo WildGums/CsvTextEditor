@@ -14,6 +14,16 @@ namespace Orc.CsvTextEditor.Tests
     [TestFixture]
     public class StringExtensionsFacts
     {
+        [TestCase("this is\r\n trimEnd test\r\n\r\n", "\r\n", "this is\r\n trimEnd test")]
+        [TestCase("this is\n trimEnd test\n\n", "\n", "this is\n trimEnd test")]
+        [TestCase("\n\n\n\n", "\n", "")]
+        public void CorrectlyTrimEndOfText(string text, string trimStr, string expectedResult)
+        {
+            var result = text.TrimEnd(trimStr);
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
         [TestCase("here, some; words to test", 0, "here")]
         [TestCase("here, some; words to test", 5, "")]
         [TestCase("here, some; words to test", 26, "")]
