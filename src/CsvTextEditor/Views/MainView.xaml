@@ -9,8 +9,33 @@
                    mc:Ignorable="d"
                    d:DesignHeight="300"
                    d:DesignWidth="300">
-    <Grid >
-        <csvTextEditor:CsvTextEditorControl Text="{Binding Text, Mode=TwoWay}"
+    <catel:StackGrid>
+        <catel:StackGrid.RowDefinitions>
+            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="0.3*"/>
+        </catel:StackGrid.RowDefinitions>
+
+        <csvTextEditor:CsvTextEditorControl x:Name="CsvTextEditorControl"
+                                            Text="{Binding Text, Mode=TwoWay}"
                                             Scope="{Binding Project, Mode=OneWay}"/>
-    </Grid>
+        
+        <Border Background="LightGray">
+            <TextBlock FontWeight="Bold" Text="Result csv:" HorizontalAlignment="Left"/>
+        </Border>
+        
+        <ScrollViewer>
+            <RichTextBox VerticalAlignment="Top" 
+                         AcceptsReturn="True">
+                <RichTextBox.Document>
+                    <FlowDocument>
+                        <Paragraph>
+                            <Run Text="{Binding ElementName=CsvTextEditorControl, Path=Text, UpdateSourceTrigger=PropertyChanged, IsAsync=True}"></Run>
+                        </Paragraph>
+                    </FlowDocument>
+                </RichTextBox.Document>
+            </RichTextBox>
+        </ScrollViewer>
+
+    </catel:StackGrid>
 </catel:UserControl>

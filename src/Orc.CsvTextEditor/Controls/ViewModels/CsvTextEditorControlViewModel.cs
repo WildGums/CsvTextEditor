@@ -76,7 +76,10 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-            _csvTextEditorService.Initialize(Text);
+            using (_csvTextSynchronizationService.SynchronizeInScope())
+            {
+                _csvTextEditorService.Initialize(Text);
+            }
         }
 
         private void OnScopeChanged()

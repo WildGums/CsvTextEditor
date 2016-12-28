@@ -41,7 +41,7 @@ namespace Orc.CsvTextEditor
             textEditor.CaretOffset = maxCaretOffset > newCaretOffset ? newCaretOffset : maxCaretOffset;
         }
 
-        public static List<ICompletionData> GetCompletionDataForText(this TextEditor textEditor, string autocompletionText, int columnIndex, int[][] scheme)
+        public static IList<ICompletionData> GetCompletionDataForText(this TextEditor textEditor, string autocompletionText, int columnIndex, int[][] scheme)
         {
             Argument.IsNotNull(() => textEditor);
 
@@ -51,7 +51,7 @@ namespace Orc.CsvTextEditor
             var text = textEditor.Text;
             var lines = textDocument.Lines;
 
-            var data = new List<ICompletionData>();
+            var data = new SortedList<string, ICompletionData>();
             autocompletionText = autocompletionText.ToLower();
             
             for (var i = 1; i < lines.Count; i++)
@@ -81,19 +81,19 @@ namespace Orc.CsvTextEditor
                         continue;
                     }
 
-                    if (data.Any(x => string.Equals(x.Text, word)))
+                    if (data.ContainsKey(word))
                     {
                         continue;
                     }
 
                     if (word.ToLower().StartsWith(autocompletionText))
                     {
-                        data.Add(new CsvColumnCompletionData(word));
+                        data.Add(word, new CsvColumnCompletionData(word));
                     }
                 }
             }
 
-            return data;
+            return data.Values;
         }
     }
 }

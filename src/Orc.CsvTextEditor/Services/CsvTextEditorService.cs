@@ -335,6 +335,7 @@ namespace Orc.CsvTextEditor.Services
             var document = _textEditor.Document;
             document.Changed -= OnTextDocumentChanged;
 
+            text = AdjustText(text);
             UpdateText(text);
 
             _textEditor.Document.UndoStack.ClearAll();
@@ -523,8 +524,6 @@ namespace Orc.CsvTextEditor.Services
 
         private void UpdateText(string text)
         {
-            text = text ?? string.Empty;
-
             _elementGenerator.Refresh(text);
 
             _isInCustomUpdate = true;
@@ -535,6 +534,14 @@ namespace Orc.CsvTextEditor.Services
             }
 
             _isInCustomUpdate = false;
+        }
+
+        private string AdjustText(string text)
+        {
+            text = text ?? string.Empty;
+
+            var newLineSymbol = text.GetNewLineSymbol();
+            return text.TrimEnd(newLineSymbol); 
         }
 
         private void OnTextChanged(object sender, EventArgs eventArgs)
@@ -549,7 +556,7 @@ namespace Orc.CsvTextEditor.Services
             var currentTextLocation = textDocument.GetLocation(offset);
             var columnNumberWithOffset = _elementGenerator.GetColumn(currentTextLocation);
             var column = columnNumberWithOffset.ColumnNumber + 1;
-            var line = currentTextLocation.Line + 1;
+            var line = currentTextLocation.Line;
 
             if (_previousCaretColumn != column || _previousCaretLine != line)
             {

@@ -242,7 +242,7 @@ namespace Orc.CsvTextEditor
             return text.Contains("\n") ? "\n" : "\r\n";
         }
 
-        private static string TrimEnd(this string text, string trimString)
+        public static string TrimEnd(this string text, string trimString)
         {
             Argument.IsNotNull(nameof(text), text);
 
