@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace CsvTextEditor.Test
+namespace CsvTextEditor.Tests
 {
     using NUnit.Framework;
 
