@@ -55,9 +55,8 @@
     <Reference Include="Catel.MVVM, Version=4.5.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Catel.MVVM.4.5.4\lib\net46\Catel.MVVM.dll</HintPath>
     </Reference>
-    <Reference Include="ControlzEx, Version=2.1.2.3, Culture=neutral, PublicKeyToken=f08b075e934b7045, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\ControlzEx.2.1.2.3\lib\net45\ControlzEx.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="ControlzEx, Version=2.1.4.13, Culture=neutral, PublicKeyToken=f08b075e934b7045, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\ControlzEx.2.1.4.13\lib\net45\ControlzEx.dll</HintPath>
     </Reference>
     <Reference Include="Fluent, Version=4.0.3.394, Culture=neutral, PublicKeyToken=3e436e32a8c5546f, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Fluent.Ribbon.4.0.3.394\lib\net45\Fluent.dll</HintPath>
@@ -66,25 +65,24 @@
     <Reference Include="Orc.Controls, Version=1.3.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Orc.Controls.1.3.5\lib\net46\Orc.Controls.dll</HintPath>
     </Reference>
-    <Reference Include="Orc.FileSystem, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.FileSystem.1.1.1\lib\net46\Orc.FileSystem.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Orc.FileSystem, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\Orc.FileSystem.1.2.0-unstable0005\lib\net46\Orc.FileSystem.dll</HintPath>
     </Reference>
     <Reference Include="Orc.ProjectManagement, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Orc.ProjectManagement.1.2.0\lib\net46\Orc.ProjectManagement.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Orchestra.Core, Version=2.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orchestra.Core.2.4.1\lib\net46\Orchestra.Core.dll</HintPath>
+    <Reference Include="Orchestra.Core, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\Orchestra.Core.2.5.0-unstable0017\lib\net46\Orchestra.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Orchestra.Shell.Ribbon.Fluent, Version=2.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orchestra.Shell.Ribbon.Fluent.2.4.1\lib\net46\Orchestra.Shell.Ribbon.Fluent.dll</HintPath>
+    <Reference Include="Orchestra.Shell.Ribbon.Fluent, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\Orchestra.Shell.Ribbon.Fluent.2.5.0-unstable0017\lib\net46\Orchestra.Shell.Ribbon.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Catel.MVVM.4.5.4\lib\net46\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\..\lib\ControlzEx.2.1.4.13\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
