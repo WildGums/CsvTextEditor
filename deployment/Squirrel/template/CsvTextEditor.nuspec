@@ -1,0 +1,23 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>CsvTextEditor</id>
+    <version>[VERSION]</version>
+    <title>Log Viewer</title>
+    <authors>WildGums</authors>
+    <owners>WildGums</owners>
+
+	<description>
+        Csv Text Editor.
+	</description>
+	<summary>
+	</summary>
+
+	<tags></tags>
+
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <copyright>Copyright WildGums 2013 - 2017</copyright>
+
+	<language>en-US</language>
+  </metadata>
+</package>

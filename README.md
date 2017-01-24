@@ -51,7 +51,7 @@ We would also welcome a PR that allowed CsvTextEditor to handle more cases.
 - Automatically highlight True/False values
 - Word hints are displayed as you type based on words that are already in the same column
 
-![CsvTextEditor screenshot](images/CsvTextEditor.png)
+![CsvTextEditor screenshot](doc/images/CsvTextEditor.png)
 
 ## License
 
