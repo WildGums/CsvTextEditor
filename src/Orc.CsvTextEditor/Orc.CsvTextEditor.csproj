@@ -69,6 +69,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionAssemblyInfo.cs">
+      <Link>Properties\SolutionAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Behaviors\DisableDropBehavior.cs" />
     <Compile Include="Behaviors\RegisterCstTextEditorControlsServicesBehavior.cs" />
     <Compile Include="Behaviors\ReplaceCommandBindingBehavior.cs" />
