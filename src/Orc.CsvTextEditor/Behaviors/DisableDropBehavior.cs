@@ -22,7 +22,7 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-            textArea.AllowDrop = false;
+            textArea.SetCurrentValue(System.Windows.UIElement.AllowDropProperty, false);
         }
 
         protected override void OnAssociatedObjectUnloaded()
@@ -35,7 +35,7 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-            textArea.AllowDrop = true;
+            textArea.SetCurrentValue(System.Windows.UIElement.AllowDropProperty, true);
         }
     }
 }

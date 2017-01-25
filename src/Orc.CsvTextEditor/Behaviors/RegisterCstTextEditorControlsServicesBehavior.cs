@@ -47,7 +47,9 @@ namespace Orc.CsvTextEditor
 
         private void OnTextEditorControlPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
+#pragma warning disable WPF1014
             if (args.HasPropertyChanged(nameof(AssociatedObject.Scope)))
+#pragma warning restore WPF1014
             {
                 UpdateServiceRegistration();
             }

@@ -31,12 +31,12 @@ namespace CsvTextEditor
             _commandManager = commandManager;
             _projectManager = projectManager;
 
-            _projectManager.ProjectActivatedAsync += OnProjectActivated;
+            _projectManager.ProjectActivatedAsync += OnProjectActivatedAsync;
         }
         #endregion
 
         #region Methods
-        private Task OnProjectActivated(object sender, ProjectUpdatedEventArgs e)
+        private Task OnProjectActivatedAsync(object sender, ProjectUpdatedEventArgs e)
         {
             ProjectActivated((Project)e.OldProject, (Project)e.NewProject);
 

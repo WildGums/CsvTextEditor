@@ -456,7 +456,7 @@ namespace Orc.CsvTextEditor.Services
 
                 using (var reader = new XmlTextReader(s))
                 {
-                    _textEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+                    _textEditor.SetCurrentValue(TextEditor.SyntaxHighlightingProperty, HighlightingLoader.Load(reader, HighlightingManager.Instance));
                 }
             }
         }
