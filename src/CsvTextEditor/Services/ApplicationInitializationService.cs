@@ -22,6 +22,9 @@ namespace CsvTextEditor.Services
     using Orchestra.Markup;
     using Orchestra.Services;
     using ProjectManagement;
+    using Orc.Squirrel;
+    using MethodTimer;
+    using Settings = CsvTextEditor.Settings;
 
     public class ApplicationInitializationService : ApplicationInitializationServiceBase
     {
@@ -44,14 +47,16 @@ namespace CsvTextEditor.Services
         #endregion
 
         #region Methods
-        public override Task InitializeBeforeCreatingShellAsync()
+        public override async Task InitializeBeforeCreatingShellAsync()
         {
             RegisterTypes();
             InitializeFonts();
             InitializeCommands();
-            ImprovePerformance();
 
-            return TaskHelper.Completed;
+            await TaskHelper.RunAndWaitAsync(new Func<Task>[] {
+                ImprovePerformanceAsync,
+                CheckForUpdatesAsync
+            });
         }
 
         public override async Task InitializeAfterCreatingShellAsync()
@@ -61,6 +66,7 @@ namespace CsvTextEditor.Services
 
         private void RegisterTypes()
         {
+            _serviceLocator.RegisterType<IManageUserDataService, ManageUserDataService>();
             _serviceLocator.RegisterType<IProjectSerializerSelector, ProjectSerializerSelector>();
         }
 
@@ -73,7 +79,8 @@ namespace CsvTextEditor.Services
             FontImage.DefaultBrush = new SolidColorBrush(Color.FromArgb(255, 87, 87, 87));
         }
 
-        private static void ImprovePerformance()
+        [Time]
+        private async Task ImprovePerformanceAsync()
         {
             Log.Info("Improving performance");
 
@@ -98,7 +105,26 @@ namespace CsvTextEditor.Services
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "DuplicateLine");
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "FindReplace");
 
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Settings), "General");
+
             _commandManager.CreateCommandWithGesture(typeof(Commands.Help), "About");
+        }
+
+        [Time]
+        private async Task CheckForUpdatesAsync()
+        {
+            Log.Info("Checking for updates");
+
+            var maximumReleaseDate = DateTime.MaxValue;
+
+            var updateService = _serviceLocator.ResolveType<IUpdateService>();
+            updateService.Initialize(Settings.Application.AutomaticUpdates.AvailableChannels, Settings.Application.AutomaticUpdates.DefaultChannel,
+                Settings.Application.AutomaticUpdates.CheckForUpdatesDefaultValue);
+
+#pragma warning disable 4014
+            // Not dot await, it's a background thread
+            updateService.HandleUpdatesAsync(maximumReleaseDate);
+#pragma warning restore 4014
         }
         #endregion
     }

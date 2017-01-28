@@ -61,6 +61,15 @@
                                    Command="{catel:CommandManagerBinding Edit.FindReplace}" />
                 </fluent:RibbonGroupBox>
 
+                <fluent:RibbonGroupBox Header="Settings">
+                    <fluent:Button Header="Settings" LargeIcon="/CsvTextEditor;component\Resources\Images\settings.png"
+                                   Command="{catel:CommandManagerBinding Settings.General}" Size="Large" />
+                    <fluent:SplitButton Header="Shortcuts" LargeIcon="/CsvTextEditor;component\Resources\Images\shortcuts.png"
+                                        Command="{Binding ShowKeyboardMappings}" Size="Large">
+                        <orchestra:KeyboardMappingsOverviewView />
+                    </fluent:SplitButton>
+                </fluent:RibbonGroupBox>
+
             </fluent:RibbonTabItem>
         </fluent:Ribbon.Tabs>
     </fluent:Ribbon>

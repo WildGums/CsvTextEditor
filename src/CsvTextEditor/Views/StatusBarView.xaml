@@ -6,6 +6,7 @@
                    xmlns:local="clr-namespace:CsvTextEditor.Views"
                    xmlns:catel="http://catel.codeplex.com"
                    xmlns:orchestra="https://github.com/orcomp/orchestra"
+                   xmlns:csvtexteditor="clr-namespace:CsvTextEditor"
                    mc:Ignorable="d"
                    d:DesignHeight="300"
                    d:DesignWidth="300">
@@ -33,9 +34,30 @@
 
                 <TextBlock Text="Line "/>
                 <TextBlock Text="{Binding Line}"/>
-                
+
                 <TextBlock Text="Column "/>
                 <TextBlock Text="{Binding Column}"/>
+
+                <Separator Margin="3,0,3,0" Width="{Binding ElementName=stackPanel, Path=ActualHeight}">
+                    <Separator.LayoutTransform>
+                        <RotateTransform Angle="90" />
+                    </Separator.LayoutTransform>
+                </Separator>
+            </StackPanel>
+
+            <StackPanel Visibility="{Binding IsUpdatedInstalled, Converter={StaticResource BooleanToCollapsingVisibilityConverter}}">
+                <Image Width="16" Height="16" Source="{orchestra:FontImage {x:Static csvtexteditor:FontAwesome.Download}}" 
+                    ToolTip="Update is installed, restart to enable new features" />
+
+                <Separator  Margin="3,0,3,0" Width="{Binding ElementName=stackPanel, Path=ActualHeight}">
+                    <Separator.LayoutTransform>
+                        <RotateTransform Angle="90" />
+                    </Separator.LayoutTransform>
+                </Separator>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Text="{Binding ReceivingAutomaticUpdates}" />
 
                 <Separator Margin="3,0,3,0" Width="{Binding ElementName=stackPanel, Path=ActualHeight}">
                     <Separator.LayoutTransform>

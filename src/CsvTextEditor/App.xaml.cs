@@ -16,6 +16,7 @@ namespace CsvTextEditor
     using Catel.Logging;
     using Orchestra.Services;
     using Orchestra.Views;
+    using Orc.Squirrel;
 
     /// <summary>
     ///     Interaction logic for App.xaml
@@ -44,6 +45,8 @@ namespace CsvTextEditor
 #if DEBUG
             LogManager.AddDebugListener(true);
 #endif
+
+            SquirrelHelper.HandleSquirrelAutomatically();
 
             var serviceLocator = ServiceLocator.Default;
             var shellService = serviceLocator.ResolveType<IShellService>();

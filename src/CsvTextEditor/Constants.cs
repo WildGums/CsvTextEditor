@@ -7,8 +7,29 @@
 
 namespace CsvTextEditor
 {
+    using Orc.Squirrel;
     using System.Windows.Input;
     using InputGesture = Catel.Windows.Input.InputGesture;
+
+    public static class Settings
+    {
+        public static class Application
+        {
+            public static class AutomaticUpdates
+            {
+                public const bool CheckForUpdatesDefaultValue = false;
+
+                public static readonly UpdateChannel[] AvailableChannels =
+                {
+                    new UpdateChannel("Stable", "http://downloads.sesolutions.net.au/csvtexteditor/stable"),
+                    new UpdateChannel("Beta", "http://downloads.sesolutions.net.au/csvtexteditor/beta"),
+                    new UpdateChannel("Alpha", "http://downloads.sesolutions.net.au/csvtexteditor/alpha")
+                };
+
+                public static readonly UpdateChannel DefaultChannel = AvailableChannels[0];
+            }
+        }
+    }
 
     public static class Commands
     {
@@ -57,6 +78,12 @@ namespace CsvTextEditor
 
             public const string DeleteLine = "Edit.DeleteLine";
             public static readonly InputGesture DeleteLineInputGesture = new InputGesture(Key.L, ModifierKeys.Control);
+        }
+
+        public static class Settings
+        {
+            public const string General = "Settings.General";
+            public static readonly InputGesture GeneralInputGesture = new InputGesture(Key.S, ModifierKeys.Alt | ModifierKeys.Control);
         }
     }
 }
