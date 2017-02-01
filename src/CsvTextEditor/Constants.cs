@@ -17,7 +17,7 @@ namespace CsvTextEditor
         {
             public static class AutomaticUpdates
             {
-                public const bool CheckForUpdatesDefaultValue = false;
+                public const bool CheckForUpdatesDefaultValue = true;
 
                 public static readonly UpdateChannel[] AvailableChannels =
                 {
