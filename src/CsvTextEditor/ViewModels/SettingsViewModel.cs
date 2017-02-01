@@ -48,6 +48,22 @@ namespace CsvTextEditor.ViewModels
         public UpdateChannel UpdateChannel { get; set; }
         #endregion
 
+        #region Commands
+        public Command OpenApplicationDataDirectory { get; private set; }
+
+        private void OnOpenApplicationDataDirectoryExecute()
+        {
+            _manageUserDataService.OpenApplicationDataDirectory();
+        }
+
+        public Command BackupUserData { get; private set; }
+
+        private void OnBackupUserDataExecute()
+        {
+            _manageUserDataService.BackupUserData();
+        }
+        #endregion
+
         #region Methods
         protected override async Task InitializeAsync()
         {
@@ -65,22 +81,6 @@ namespace CsvTextEditor.ViewModels
             _updateService.CurrentChannel = UpdateChannel;
 
             return await base.SaveAsync();
-        }
-        #endregion
-
-        #region Commands
-        public Command OpenApplicationDataDirectory { get; private set; }
-
-        private void OnOpenApplicationDataDirectoryExecute()
-        {
-            _manageUserDataService.OpenApplicationDataDirectory();
-        }
-
-        public Command BackupUserData { get; private set; }
-
-        private void OnBackupUserDataExecute()
-        {
-            _manageUserDataService.BackupUserData();
         }
         #endregion
     }
