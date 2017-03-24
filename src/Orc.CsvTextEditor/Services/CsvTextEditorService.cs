@@ -10,6 +10,7 @@ namespace Orc.CsvTextEditor.Services
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Windows;
     using System.Windows.Input;
     using System.Xml;
@@ -17,6 +18,7 @@ namespace Orc.CsvTextEditor.Services
     using Catel.Collections;
     using Catel.IoC;
     using Catel.MVVM;
+    using Catel.Services;
     using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.CodeCompletion;
     using ICSharpCode.AvalonEdit.Document;
@@ -28,27 +30,32 @@ namespace Orc.CsvTextEditor.Services
     {
         #region Fields
         private readonly ICommandManager _commandManager;
+        private readonly IDispatcherService _dispatcherService;
 
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
         private readonly TextEditor _textEditor;
         private readonly List<ICsvTextEditorTool> _tools;
         private CompletionWindow _completionWindow;
-
+        
         private bool _isInCustomUpdate = false;
         private bool _isInRedoUndo = false;
 
         private int _previousCaretColumn;
         private int _previousCaretLine;
+
+        private Timer _idleTimer;
         #endregion
 
         #region Constructors
-        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager, ICsvTextEditorServiceInitializer initializer)
+        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager, ICsvTextEditorServiceInitializer initializer, IDispatcherService dispatcherService)
         {
             Argument.IsNotNull(() => textEditor);
             Argument.IsNotNull(() => commandManager);
             Argument.IsNotNull(() => initializer);
+            Argument.IsNotNull(() => dispatcherService);
 
+            _dispatcherService = dispatcherService;
             _textEditor = textEditor;
             _commandManager = commandManager;
 
@@ -409,8 +416,33 @@ namespace Orc.CsvTextEditor.Services
         }
         #endregion
 
+        
         private void OnTextEntering(object sender, TextCompositionEventArgs e)
         {
+            var rowIndex = GetCurrentRowIndex();
+            var columnIndex = GetCurrentColumnIndex();
+
+            #region Delayed update of column width
+            const int delay = 3000; //ms
+
+            if (_idleTimer != null)
+            {
+                _idleTimer.Dispose();
+                _idleTimer = null;
+            }
+
+            _idleTimer = new Timer(state =>
+            {
+                _elementGenerator.StopEditCell();
+                _idleTimer.Dispose();
+                _dispatcherService.Invoke(RefreshView, true);
+            },
+            null, delay, 0);
+
+            _elementGenerator.StartEditCell(rowIndex, columnIndex);
+            #endregion
+
+
             if (string.IsNullOrWhiteSpace(e.Text))
             {
                 _completionWindow?.Close();
@@ -422,7 +454,6 @@ namespace Orc.CsvTextEditor.Services
                 return;
             }
 
-            var columnIndex = GetCurrentColumnIndex();
             var data = _textEditor.GetCompletionDataForText(e.Text, columnIndex, _elementGenerator.Lines);
 
             if (!data.Any())
@@ -434,6 +465,13 @@ namespace Orc.CsvTextEditor.Services
             _completionWindow.CompletionList.CompletionData.AddRange(data);
             _completionWindow.Show();
             _completionWindow.Closed += (o, args) => _completionWindow = null;
+        }
+
+        private int GetCurrentRowIndex()
+        {
+            var offset = _textEditor.CaretOffset;
+            var line = _textEditor.Document.GetLineByOffset(offset);
+            return line.LineNumber - 1;
         }
 
         private int GetCurrentColumnIndex()

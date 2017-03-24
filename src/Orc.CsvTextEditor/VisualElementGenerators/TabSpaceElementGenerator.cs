@@ -17,6 +17,11 @@ namespace Orc.CsvTextEditor
         #region Fields
         private int[][] _lines;
         private int _tabWidth;
+
+        private bool _editInProgress;
+        private int _activeRowIndex;
+        private int _activeLineIndex;
+        private int _activeCellRealLength;
         #endregion
 
         #region Properties
@@ -70,20 +75,55 @@ namespace Orc.CsvTextEditor
             var newWidth = oldWidth + length;
 
             columnWidthByLine[affectedLine][affectedColumn] = newWidth;
-            
+
+            int? changedWidth = null;
+           
+            // Increasing column
             if (length >= 0 && columnWidth[affectedColumn] <= newWidth)
             {
-                columnWidth[affectedColumn] = newWidth;
+                changedWidth = newWidth;
+            }
+
+            // Decreasing column
+            if (length <= 0 && columnWidth[affectedColumn] >= newWidth)
+            {
+                changedWidth = columnWidthByLine.Where(x => x.Length > affectedColumn).Select(x => x[affectedColumn]).Max();
+            }
+
+            if (changedWidth.HasValue)
+            {
+                if (_editInProgress && affectedLine == _activeRowIndex && affectedColumn == _activeLineIndex)
+                {
+                    _activeCellRealLength = changedWidth.Value;
+                }
+                else
+                {
+                    columnWidth[affectedColumn] = changedWidth.Value;
+                }
+
                 return true;
             }
 
-            if (length <= 0 && columnWidth[affectedColumn] >= newWidth)
-            {
-                columnWidth[affectedColumn] = columnWidthByLine.Where(x => x.Length > affectedColumn).Select(x => x[affectedColumn]).Max();
-                return true;
-            }
-            
             return false;
+        }
+
+      
+        public void StartEditCell(int rowIndex, int columnIndex)
+        {
+            if (_editInProgress && (_activeRowIndex != rowIndex || _activeLineIndex != columnIndex))
+            {
+                StopEditCell();
+            }
+
+            _editInProgress = true;
+            _activeLineIndex = columnIndex;
+            _activeRowIndex = rowIndex;
+        }
+
+        public void StopEditCell()
+        {
+            _editInProgress = false;
+            ColumnWidth[_activeLineIndex] = _activeCellRealLength;
         }
 
         public override VisualLineElement ConstructElement(int offset)
@@ -124,8 +164,13 @@ namespace Orc.CsvTextEditor
                 locationLine++;
             }
 
-            _tabWidth = ColumnWidth[columnNumberWithOffset.ColumnNumber] -
-                        Lines[locationLine - 1][columnNumberWithOffset.ColumnNumber];
+            var curCellWidth = _editInProgress && 
+                _activeRowIndex == locationLine - 1 && 
+                columnNumberWithOffset.ColumnNumber == _activeLineIndex 
+                ?
+                _activeCellRealLength : ColumnWidth[columnNumberWithOffset.ColumnNumber]; 
+
+            _tabWidth = curCellWidth - Lines[locationLine - 1][columnNumberWithOffset.ColumnNumber];
 
             return CurrentContext.Document.GetOffset(new TextLocation(locationLine, columnNumberWithOffset.OffsetInLine));
         }
