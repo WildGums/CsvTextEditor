@@ -45,6 +45,7 @@ namespace Orc.CsvTextEditor.Services
         private int _previousCaretLine;
 
         private Timer _idleTimer;
+        private const int _idleTimerInterval = 800; //ms
         #endregion
 
         #region Constructors
@@ -419,29 +420,7 @@ namespace Orc.CsvTextEditor.Services
         
         private void OnTextEntering(object sender, TextCompositionEventArgs e)
         {
-            var rowIndex = GetCurrentRowIndex();
             var columnIndex = GetCurrentColumnIndex();
-
-            #region Delayed update of column width
-            const int delay = 3000; //ms
-
-            if (_idleTimer != null)
-            {
-                _idleTimer.Dispose();
-                _idleTimer = null;
-            }
-
-            _idleTimer = new Timer(state =>
-            {
-                _elementGenerator.StopEditCell();
-                _idleTimer.Dispose();
-                _dispatcherService.Invoke(RefreshView, true);
-            },
-            null, delay, 0);
-
-            _elementGenerator.StartEditCell(rowIndex, columnIndex);
-            #endregion
-
 
             if (string.IsNullOrWhiteSpace(e.Text))
             {
@@ -465,13 +444,6 @@ namespace Orc.CsvTextEditor.Services
             _completionWindow.CompletionList.CompletionData.AddRange(data);
             _completionWindow.Show();
             _completionWindow.Closed += (o, args) => _completionWindow = null;
-        }
-
-        private int GetCurrentRowIndex()
-        {
-            var offset = _textEditor.CaretOffset;
-            var line = _textEditor.Document.GetLineByOffset(offset);
-            return line.LineNumber - 1;
         }
 
         private int GetCurrentColumnIndex()
@@ -512,6 +484,21 @@ namespace Orc.CsvTextEditor.Services
             if (_elementGenerator.RefreshLocation(affectedLocation, length))
             {
                 _textEditor.TextArea.TextView.Redraw();
+
+                // After user's input we have to restart idle timer
+                if (_idleTimer != null)
+                {
+                    _idleTimer.Dispose();
+                    _idleTimer = null;
+                }
+
+                _idleTimer = new Timer(state =>
+                {
+                    _elementGenerator.UnfreezeColumnResizing();
+                    _idleTimer.Dispose();
+                    _dispatcherService.Invoke(RefreshView, true);
+                },
+                null, _idleTimerInterval, 0);
             }
         }
 

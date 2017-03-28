@@ -9,6 +9,7 @@ namespace Orc.CsvTextEditor
 {
     using System;
     using System.Linq;
+    using System.Windows.Threading;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Rendering;
 
@@ -18,9 +19,9 @@ namespace Orc.CsvTextEditor
         private int[][] _lines;
         private int _tabWidth;
 
-        private bool _editInProgress;
+        private bool _freezeInProgress;
         private int _activeRowIndex;
-        private int _activeLineIndex;
+        private int _activeColumnIndex;
         private int _activeCellRealLength;
         #endregion
 
@@ -92,9 +93,14 @@ namespace Orc.CsvTextEditor
 
             if (changedWidth.HasValue)
             {
-                if (_editInProgress && affectedLine == _activeRowIndex && affectedColumn == _activeLineIndex)
+                FreezeColumnResizing(affectedLine, affectedColumn);
+
+                if (_freezeInProgress && affectedLine == _activeRowIndex && affectedColumn == _activeColumnIndex)
                 {
-                    _activeCellRealLength = changedWidth.Value;
+                    // FIXME: choose behavior
+                    _activeCellRealLength = 
+                        changedWidth.Value;     // Option 1
+                        //newWidth;             // Option 2
                 }
                 else
                 {
@@ -106,24 +112,23 @@ namespace Orc.CsvTextEditor
 
             return false;
         }
-
       
-        public void StartEditCell(int rowIndex, int columnIndex)
+        public void FreezeColumnResizing(int rowIndex, int columnIndex)
         {
-            if (_editInProgress && (_activeRowIndex != rowIndex || _activeLineIndex != columnIndex))
+            if (_freezeInProgress && (_activeRowIndex != rowIndex || _activeColumnIndex != columnIndex))
             {
-                StopEditCell();
+                UnfreezeColumnResizing();
             }
 
-            _editInProgress = true;
-            _activeLineIndex = columnIndex;
+            _freezeInProgress = true;
             _activeRowIndex = rowIndex;
+            _activeColumnIndex = columnIndex;
         }
 
-        public void StopEditCell()
+        public void UnfreezeColumnResizing()
         {
-            _editInProgress = false;
-            ColumnWidth[_activeLineIndex] = _activeCellRealLength;
+            _freezeInProgress = false;
+            ColumnWidth[_activeColumnIndex] = _activeCellRealLength;
         }
 
         public override VisualLineElement ConstructElement(int offset)
@@ -164,9 +169,9 @@ namespace Orc.CsvTextEditor
                 locationLine++;
             }
 
-            var curCellWidth = _editInProgress && 
+            var curCellWidth = this._freezeInProgress && 
                 _activeRowIndex == locationLine - 1 && 
-                columnNumberWithOffset.ColumnNumber == _activeLineIndex 
+                columnNumberWithOffset.ColumnNumber == _activeColumnIndex 
                 ?
                 _activeCellRealLength : ColumnWidth[columnNumberWithOffset.ColumnNumber]; 
 
