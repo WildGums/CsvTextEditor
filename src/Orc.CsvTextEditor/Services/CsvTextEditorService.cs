@@ -17,6 +17,7 @@ namespace Orc.CsvTextEditor.Services
     using Catel.Collections;
     using Catel.IoC;
     using Catel.MVVM;
+    using Catel.Services;
     using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.CodeCompletion;
     using ICSharpCode.AvalonEdit.Document;
@@ -28,6 +29,7 @@ namespace Orc.CsvTextEditor.Services
     {
         #region Fields
         private readonly ICommandManager _commandManager;
+        private readonly IDispatcherService _dispatcherService;
 
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
@@ -43,14 +45,17 @@ namespace Orc.CsvTextEditor.Services
         #endregion
 
         #region Constructors
-        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager, ICsvTextEditorServiceInitializer initializer)
+        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager, ICsvTextEditorServiceInitializer initializer,
+            IDispatcherService dispatcherService)
         {
             Argument.IsNotNull(() => textEditor);
             Argument.IsNotNull(() => commandManager);
             Argument.IsNotNull(() => initializer);
+            Argument.IsNotNull(() => dispatcherService);
 
             _textEditor = textEditor;
             _commandManager = commandManager;
+            _dispatcherService = dispatcherService;
 
             _tools = new List<ICsvTextEditorTool>();
 
@@ -84,6 +89,8 @@ namespace Orc.CsvTextEditor.Services
         #region Properties
         public IReadOnlyList<ICsvTextEditorTool> Tools => _tools;
         public bool IsDirty { get; set; }
+        public int LineCount => _textEditor?.Document?.LineCount ?? 0;
+        public bool IsAutocompleteEnabled { get; set; } = true;
         public bool HasSelection => _textEditor.SelectionLength > 0;
         public bool CanRedo => _textEditor.CanRedo;
         public bool CanUndo => _textEditor.CanUndo;
@@ -338,8 +345,7 @@ namespace Orc.CsvTextEditor.Services
             text = AdjustText(text);
             UpdateText(text);
 
-            _textEditor.Document.UndoStack.ClearAll();
-
+            document.UndoStack.ClearAll();
             document.Changed += OnTextDocumentChanged;
 
             RefreshHighlightings();
@@ -411,7 +417,15 @@ namespace Orc.CsvTextEditor.Services
 
         private void OnTextEntering(object sender, TextCompositionEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(e.Text))
+            if (IsAutocompleteEnabled)
+            {
+                PerformAutoComplete(e.Text);
+            }
+        }
+
+        private void PerformAutoComplete(string inputText)
+        {
+            if (string.IsNullOrWhiteSpace(inputText))
             {
                 _completionWindow?.Close();
                 return;
@@ -423,7 +437,7 @@ namespace Orc.CsvTextEditor.Services
             }
 
             var columnIndex = GetCurrentColumnIndex();
-            var data = _textEditor.GetCompletionDataForText(e.Text, columnIndex, _elementGenerator.Lines);
+            var data = _textEditor.GetCompletionDataForText(inputText, columnIndex, _elementGenerator.Lines);
 
             if (!data.Any())
             {
@@ -541,7 +555,7 @@ namespace Orc.CsvTextEditor.Services
             text = text ?? string.Empty;
 
             var newLineSymbol = text.GetNewLineSymbol();
-            return text.TrimEnd(newLineSymbol); 
+            return text.TrimEnd(newLineSymbol);
         }
 
         private void OnTextChanged(object sender, EventArgs eventArgs)

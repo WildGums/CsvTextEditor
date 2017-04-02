@@ -24,6 +24,7 @@ namespace CsvTextEditor.Services
     using ProjectManagement;
     using Orc.Squirrel;
     using MethodTimer;
+    using ProjectManagement.Watchers;
     using Settings = CsvTextEditor.Settings;
 
     public class ApplicationInitializationService : ApplicationInitializationServiceBase
@@ -52,6 +53,7 @@ namespace CsvTextEditor.Services
             RegisterTypes();
             InitializeFonts();
             InitializeCommands();
+            InitializeWatchers();
 
             await TaskHelper.RunAndWaitAsync(new Func<Task>[] {
                 ImprovePerformanceAsync,
@@ -108,6 +110,11 @@ namespace CsvTextEditor.Services
             _commandManager.CreateCommandWithGesture(typeof(Commands.Settings), "General");
 
             _commandManager.CreateCommandWithGesture(typeof(Commands.Help), "About");
+        }
+
+        private void InitializeWatchers()
+        {
+            _serviceLocator.RegisterTypeAndInstantiate<CsvTextEditorAutoCompleteProjectWatcher>();
         }
 
         [Time]
