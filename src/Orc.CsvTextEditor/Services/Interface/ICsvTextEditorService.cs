@@ -13,9 +13,10 @@ namespace Orc.CsvTextEditor.Services
     public interface ICsvTextEditorService
     {
         #region Properties
-        IReadOnlyList<ICsvTextEditorTool> Tools { get; } 
-
+        IReadOnlyList<ICsvTextEditorTool> Tools { get; }
         bool IsDirty { get; set; }
+        int LineCount { get; }
+        bool IsAutocompleteEnabled { get; set; }
         bool HasSelection { get; }
         bool CanRedo { get; }
         bool CanUndo { get; }

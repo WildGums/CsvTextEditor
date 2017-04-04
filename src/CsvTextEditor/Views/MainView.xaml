@@ -10,6 +10,6 @@
                    d:DesignWidth="300">
 
     <csvTextEditor:CsvTextEditorControl x:Name="CsvTextEditorControl"
-                                            Text="{Binding Text, Mode=TwoWay}"
-                                            Scope="{Binding Project, Mode=OneWay}"/>
+                                        Text="{Binding Text, Mode=TwoWay}"
+                                        Scope="{Binding Project, Mode=OneWay}"/>
 </catel:UserControl>

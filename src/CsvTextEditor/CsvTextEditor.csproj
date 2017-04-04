@@ -145,6 +145,7 @@
     <Compile Include="ProjectManagement\Serializers\ProjectReader.cs" />
     <Compile Include="ProjectManagement\Serializers\ProjectSerializerSelector.cs" />
     <Compile Include="ProjectManagement\Serializers\ProjectWriter.cs" />
+    <Compile Include="ProjectManagement\Watchers\CsvTextEditorAutoCompleteProjectWatcher.cs" />
     <Compile Include="Resources\Fonts\FontAwesome.cs" />
     <Compile Include="Services\ApplicationInitializationService.cs" />
     <Compile Include="Services\Interfaces\IManageUserDataService.cs" />
