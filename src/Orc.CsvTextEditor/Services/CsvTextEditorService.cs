@@ -483,7 +483,8 @@ namespace Orc.CsvTextEditor.Services
 
             if (_elementGenerator.RefreshLocation(affectedLocation, length))
             {
-                _textEditor.TextArea.TextView.Redraw();
+                // FIXME: commented, this dramatically affects performance: 
+                //_textEditor.TextArea.TextView.Redraw();
 
                 // After user's input we have to restart idle timer
                 if (_idleTimer != null)

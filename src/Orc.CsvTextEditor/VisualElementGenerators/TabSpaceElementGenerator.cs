@@ -97,10 +97,7 @@ namespace Orc.CsvTextEditor
 
                 if (_freezeInProgress && affectedLine == _activeRowIndex && affectedColumn == _activeColumnIndex)
                 {
-                    // FIXME: choose behavior
-                    _activeCellRealLength = 
-                        changedWidth.Value;     // Option 1
-                        //newWidth;             // Option 2
+                    _activeCellRealLength = changedWidth.Value;     
                 }
                 else
                 {
