@@ -49,7 +49,7 @@ namespace Orc.CsvTextEditor.Services
         #endregion
 
         #region Constructors
-        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager, ICsvTextEditorServiceInitializer initializer, IDispatcherService dispatcherService)
+        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager, ICsvTextEditorServiceInitializer initializer, 
             IDispatcherService dispatcherService)
         {
             Argument.IsNotNull(() => textEditor);
