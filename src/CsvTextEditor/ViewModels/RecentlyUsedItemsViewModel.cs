@@ -14,36 +14,31 @@ namespace CsvTextEditor.ViewModels
     using Catel.MVVM;
     using Catel.Services;
     using Orc.FileSystem;
-    using Orc.ProjectManagement;
     using Orchestra.Models;
     using Orchestra.Services;
 
     public class RecentlyUsedItemsViewModel : ViewModelBase
     {
         private readonly IRecentlyUsedItemsService _recentlyUsedItemsService;
-        private readonly IProjectManager _projectManager;
         private readonly IFileService _fileService;
         private readonly IMessageService _messageService;
         private readonly IProcessService _processService;
 
-        public RecentlyUsedItemsViewModel(IRecentlyUsedItemsService recentlyUsedItemsService, IProjectManager projectManager,
-            IFileService fileService, IMessageService messageService, IProcessService processService)
+        public RecentlyUsedItemsViewModel(IRecentlyUsedItemsService recentlyUsedItemsService, IFileService fileService, 
+            IMessageService messageService, IProcessService processService)
         {
             Argument.IsNotNull(() => recentlyUsedItemsService);
-            Argument.IsNotNull(() => projectManager);
             Argument.IsNotNull(() => fileService);
             Argument.IsNotNull(() => messageService);
             Argument.IsNotNull(() => processService);
 
             _recentlyUsedItemsService = recentlyUsedItemsService;
-            _projectManager = projectManager;
             _fileService = fileService;
             _messageService = messageService;
             _processService = processService;
 
             PinItem = new Command<string>(OnPinItemExecute);
             UnpinItem = new Command<string>(OnUnpinItemExecute);
-            OpenRecentlyUsedItem = new Command<string>(OnOpenRecentlyUsedItemExecute);
             OpenInExplorer = new Command<string>(OnOpenInExplorerExecute);
         }
 
@@ -67,15 +62,6 @@ namespace CsvTextEditor.ViewModels
             Argument.IsNotNullOrWhitespace(() => parameter);
 
             _recentlyUsedItemsService.UnpinItem(parameter);
-        }
-
-        public Command<string> OpenRecentlyUsedItem { get; private set; }
-
-        private void OnOpenRecentlyUsedItemExecute(string parameter)
-        {
-            Argument.IsNotNullOrWhitespace(() => parameter);
-
-            _projectManager.LoadAsync(parameter);
         }
 
         public Command<string> OpenInExplorer { get; private set; }

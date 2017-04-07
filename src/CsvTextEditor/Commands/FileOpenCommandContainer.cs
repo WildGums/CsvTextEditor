@@ -11,23 +11,29 @@ namespace CsvTextEditor
     using Catel;
     using Catel.MVVM;
     using Catel.Services;
-    using Catel.Threading;
+    using Orc.FileSystem;
     using Orc.ProjectManagement;
 
     public class FileOpenCommandContainer : ProjectCommandContainerBase
     {
         #region Fields
         private readonly IOpenFileService _openFileService;
+        private readonly IFileService _fileService;
+        private readonly IPleaseWaitService _pleaseWaitService;
         #endregion
 
         #region Constructors
-        public FileOpenCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IOpenFileService openFileService)
+        public FileOpenCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IOpenFileService openFileService,
+            IFileService fileService, IPleaseWaitService pleaseWaitService)
             : base(Commands.File.Open, commandManager, projectManager)
         {
-            Argument.IsNotNull(() => projectManager);
             Argument.IsNotNull(() => openFileService);
+            Argument.IsNotNull(() => fileService);
+            Argument.IsNotNull(() => pleaseWaitService);
 
             _openFileService = openFileService;
+            _fileService = fileService;
+            _pleaseWaitService = pleaseWaitService;
         }
         #endregion
 
@@ -37,17 +43,28 @@ namespace CsvTextEditor
             return true;
         }
 
-        protected override Task ExecuteAsync(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
-            _openFileService.Filter = "Text Files (*.csv)|*csv";
+            var location = parameter as string;
 
-            _openFileService.IsMultiSelect = false;
-            if (_openFileService.DetermineFile())
+            if (string.IsNullOrWhiteSpace(location) || !_fileService.Exists(location))
             {
-                return _projectManager.LoadAsync(_openFileService.FileName);
+                _openFileService.Filter = "Text Files (*.csv)|*csv";
+
+                _openFileService.IsMultiSelect = false;
+                if (_openFileService.DetermineFile())
+                {
+                    location = _openFileService.FileName;
+                }
             }
 
-            return TaskHelper.Completed;
+            if (!string.IsNullOrWhiteSpace(location))
+            {
+                using (_pleaseWaitService.PushInScope())
+                {
+                    await _projectManager.LoadAsync(location);
+                }                
+            }
         }
         #endregion
     }

@@ -27,7 +27,7 @@
                       Visibility="{Binding PinnedItems, Converter={catel:CountCollapsedConverter}}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <orchestra:RibbonBackstageButton Command="{Binding ElementName=topGrid, Path=DataContext.OpenRecentlyUsedItem}" 
+                    <orchestra:RibbonBackstageButton Command="{catel:CommandManagerBinding File.Open}"
                                                      CommandParameter="{Binding Name}" ToolTip="{Binding Name}" ShowBorder="False">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -74,7 +74,7 @@
                       Visibility="{Binding RecentlyUsedItems, Converter={catel:CountCollapsedConverter}}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <orchestra:RibbonBackstageButton Command="{Binding ElementName=topGrid, Path=DataContext.OpenRecentlyUsedItem}" 
+                    <orchestra:RibbonBackstageButton Command="{catel:CommandManagerBinding File.Open}"
                                                      CommandParameter="{Binding Name}" 
                                                      ToolTip="{Binding Name}" 
                                                      ShowBorder="False">
