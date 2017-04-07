@@ -146,17 +146,26 @@
     <Compile Include="ProjectManagement\Serializers\ProjectSerializerSelector.cs" />
     <Compile Include="ProjectManagement\Serializers\ProjectWriter.cs" />
     <Compile Include="ProjectManagement\Watchers\CsvTextEditorAutoCompleteProjectWatcher.cs" />
+    <Compile Include="ProjectManagement\Watchers\RecentlyUsedItemsProjectWatcher.cs" />
     <Compile Include="Resources\Fonts\FontAwesome.cs" />
     <Compile Include="Services\ApplicationInitializationService.cs" />
     <Compile Include="Services\Interfaces\IManageUserDataService.cs" />
     <Compile Include="Services\ManageUserDataService.cs" />
     <Compile Include="Services\RibbonService.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\OpenFileViewModel.cs" />
+    <Compile Include="ViewModels\RecentlyUsedItemsViewModel.cs" />
     <Compile Include="ViewModels\RibbonViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\StatusBarViewModel.cs" />
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OpenFileView.xaml.cs">
+      <DependentUpon>OpenFileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RecentlyUsedItemsView.xaml.cs">
+      <DependentUpon>RecentlyUsedItemsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RibbonView.xaml.cs">
       <DependentUpon>RibbonView.xaml</DependentUpon>
@@ -180,6 +189,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OpenFileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RecentlyUsedItemsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

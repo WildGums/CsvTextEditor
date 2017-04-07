@@ -115,6 +115,7 @@ namespace CsvTextEditor.Services
         private void InitializeWatchers()
         {
             _serviceLocator.RegisterTypeAndInstantiate<CsvTextEditorAutoCompleteProjectWatcher>();
+            _serviceLocator.RegisterTypeAndInstantiate<RecentlyUsedItemsProjectWatcher>();
         }
 
         [Time]

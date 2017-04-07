@@ -21,8 +21,9 @@
         <fluent:Ribbon.Menu>
             <fluent:Backstage Header="File">
                 <fluent:BackstageTabControl>
-                    <fluent:Button Header="Open"
-                                   Command="{catel:CommandManagerBinding File.Open}" />
+                    <fluent:BackstageTabItem Header="Open">
+                        <local:OpenFileView />
+                    </fluent:BackstageTabItem>
 
                     <fluent:Button Header="Save"
                                    Command="{catel:CommandManagerBinding File.Save}" />
