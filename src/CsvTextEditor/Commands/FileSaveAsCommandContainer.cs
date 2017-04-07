@@ -7,6 +7,7 @@
 
 namespace CsvTextEditor
 {
+    using System.IO;
     using System.Threading.Tasks;
     using Catel;
     using Catel.MVVM;
@@ -40,10 +41,18 @@ namespace CsvTextEditor
             }
 
             _saveFileService.Filter = "Text Files (*.csv)|*csv";
+            
+            // Note: seems to work strange
+            _saveFileService.AddExtension = true;
 
             if (_saveFileService.DetermineFile())
             {
-                await _projectManager.SaveAsync(project, _saveFileService.FileName);
+                var fileName = _saveFileService.FileName;
+
+                // Note: manually ensure we are using correct extension
+                fileName = Path.ChangeExtension(fileName, "csv");
+
+                await _projectManager.SaveAsync(project, fileName);
             }
 
             await base.ExecuteAsync(parameter);
