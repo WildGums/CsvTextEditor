@@ -124,6 +124,7 @@
     <Compile Include="..\SolutionAssemblyInfo.cs">
       <Link>Properties\SolutionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ApplicationWatchers\ShellActivatedActionQueue.cs" />
     <Compile Include="Commands\Base\EditProjectCommandContainerBase.cs" />
     <Compile Include="Commands\Base\ProjectCommandContainerBase.cs" />
     <Compile Include="Commands\EditCopyCommandContainer.cs" />
@@ -146,10 +147,13 @@
     <Compile Include="ProjectManagement\Serializers\ProjectSerializerSelector.cs" />
     <Compile Include="ProjectManagement\Serializers\ProjectWriter.cs" />
     <Compile Include="ProjectManagement\Watchers\CsvTextEditorAutoCompleteProjectWatcher.cs" />
+    <Compile Include="ProjectManagement\Watchers\MainWindowTitleProjectWatcher.cs" />
     <Compile Include="ProjectManagement\Watchers\RecentlyUsedItemsProjectWatcher.cs" />
     <Compile Include="Resources\Fonts\FontAwesome.cs" />
     <Compile Include="Services\ApplicationInitializationService.cs" />
+    <Compile Include="Services\Interfaces\IMainWindowTitleService.cs" />
     <Compile Include="Services\Interfaces\IManageUserDataService.cs" />
+    <Compile Include="Services\MainWindowTitleService.cs" />
     <Compile Include="Services\ManageUserDataService.cs" />
     <Compile Include="Services\RibbonService.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

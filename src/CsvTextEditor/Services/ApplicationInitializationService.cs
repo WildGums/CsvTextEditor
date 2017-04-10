@@ -17,14 +17,12 @@ namespace CsvTextEditor.Services
     using Catel.MVVM;
     using Catel.Threading;
     using Catel.Windows.Controls;
-    using Orc.CsvTextEditor;
     using Orc.ProjectManagement;
     using Orchestra.Markup;
     using Orchestra.Services;
     using ProjectManagement;
     using Orc.Squirrel;
     using MethodTimer;
-    using ProjectManagement.Watchers;
     using Settings = CsvTextEditor.Settings;
 
     public class ApplicationInitializationService : ApplicationInitializationServiceBase
@@ -63,6 +61,10 @@ namespace CsvTextEditor.Services
 
         public override async Task InitializeAfterCreatingShellAsync()
         {
+            var mainWindowTitleService = _serviceLocator.ResolveType<IMainWindowTitleService>();
+
+            mainWindowTitleService.UpdateTitle();
+
             await base.InitializeAfterCreatingShellAsync();
         }
 
@@ -70,6 +72,7 @@ namespace CsvTextEditor.Services
         {
             _serviceLocator.RegisterType<IManageUserDataService, ManageUserDataService>();
             _serviceLocator.RegisterType<IProjectSerializerSelector, ProjectSerializerSelector>();
+            _serviceLocator.RegisterType<IMainWindowTitleService, MainWindowTitleService>();
         }
 
         private void InitializeFonts()
@@ -116,6 +119,7 @@ namespace CsvTextEditor.Services
         {
             _serviceLocator.RegisterTypeAndInstantiate<CsvTextEditorAutoCompleteProjectWatcher>();
             _serviceLocator.RegisterTypeAndInstantiate<RecentlyUsedItemsProjectWatcher>();
+            _serviceLocator.RegisterTypeAndInstantiate<MainWindowTitleProjectWatcher>();
         }
 
         [Time]

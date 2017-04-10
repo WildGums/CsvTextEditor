@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace CsvTextEditor.ProjectManagement.Watchers
+namespace CsvTextEditor.ProjectManagement
 {
     using System;
     using System.Threading.Tasks;

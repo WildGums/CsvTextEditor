@@ -7,13 +7,11 @@
 
 namespace CsvTextEditor.ViewModels
 {
-    using System;
     using System.Threading.Tasks;
     using Catel;
     using Catel.Fody;
     using Catel.MVVM;
     using Catel.Services;
-    using Catel.Threading;
     using Models;
     using Orc.ProjectManagement;
 
