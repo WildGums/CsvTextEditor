@@ -122,10 +122,13 @@ namespace Orc.CsvTextEditor
             _activeColumnIndex = columnIndex;
         }
 
-        public void UnfreezeColumnResizing()
+        public bool UnfreezeColumnResizing()
         {
+            if (!_freezeInProgress) return false;
+
             _freezeInProgress = false;
             ColumnWidth[_activeColumnIndex] = _activeCellRealLength;
+            return true;
         }
 
         public override VisualLineElement ConstructElement(int offset)
