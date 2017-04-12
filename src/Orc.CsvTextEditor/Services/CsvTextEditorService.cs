@@ -10,7 +10,6 @@ namespace Orc.CsvTextEditor.Services
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
     using System.Windows;
     using System.Windows.Input;
     using System.Xml;
@@ -30,8 +29,6 @@ namespace Orc.CsvTextEditor.Services
     {
         #region Fields
         private readonly ICommandManager _commandManager;
-        private readonly IDispatcherService _dispatcherService;
-
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
         private readonly TextEditor _textEditor;
@@ -44,22 +41,17 @@ namespace Orc.CsvTextEditor.Services
         private int _previousCaretColumn;
         private int _previousCaretLine;
 
-        private Timer _idleTimer;
-        private const int _idleTimerInterval = 800; //ms
         #endregion
 
         #region Constructors
-        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager, ICsvTextEditorServiceInitializer initializer, 
-            IDispatcherService dispatcherService)
+        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager, ICsvTextEditorServiceInitializer initializer)
         {
             Argument.IsNotNull(() => textEditor);
             Argument.IsNotNull(() => commandManager);
             Argument.IsNotNull(() => initializer);
-            Argument.IsNotNull(() => dispatcherService);
 
             _textEditor = textEditor;
             _commandManager = commandManager;
-            _dispatcherService = dispatcherService;
 
             _tools = new List<ICsvTextEditorTool>();
 
@@ -77,7 +69,9 @@ namespace Orc.CsvTextEditor.Services
 
             _textEditor.TextArea.SelectionChanged += OnTextAreaSelectionChanged;
             _textEditor.TextArea.Caret.PositionChanged += OnCaretPositionChanged;
+            _textEditor.TextArea.PreviewMouseLeftButtonDown += OnPreviewMouseLeftButtonDown;
             _textEditor.TextChanged += OnTextChanged;
+            _textEditor.PreviewKeyDown += OnPreviewKeyDown;
 
             textEditor.TextArea.TextEntering += OnTextEntering;
 
@@ -88,6 +82,7 @@ namespace Orc.CsvTextEditor.Services
 
             initializer.Initialize(textEditor, this);
         }
+
         #endregion
 
         #region Properties
@@ -494,21 +489,25 @@ namespace Orc.CsvTextEditor.Services
             {
                 // FIXME: commented, this dramatically affects performance: 
                 //_textEditor.TextArea.TextView.Redraw();
+            }
+        }
 
-                // After user's input we have to restart idle timer
-                if (_idleTimer != null)
+        private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            if (_elementGenerator.UnfreezeColumnResizing())
+            {
+                RefreshView();
+            }
+        }
+
+        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Tab)
+            {
+                if (_elementGenerator.UnfreezeColumnResizing())
                 {
-                    _idleTimer.Dispose();
-                    _idleTimer = null;
+                    RefreshView();
                 }
-
-                _idleTimer = new Timer(state =>
-                {
-                    _elementGenerator.UnfreezeColumnResizing();
-                    _idleTimer.Dispose();
-                    _dispatcherService.Invoke(RefreshView, true);
-                },
-                null, _idleTimerInterval, 0);
             }
         }
 
