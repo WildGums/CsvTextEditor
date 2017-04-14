@@ -73,7 +73,7 @@ namespace Orc.CsvTextEditor.Services
             _textEditor.TextChanged += OnTextChanged;
             _textEditor.PreviewKeyDown += OnPreviewKeyDown;
 
-            textEditor.TextArea.TextEntering += OnTextEntering;
+            _textEditor.TextArea.TextEntering += OnTextEntering;
 
             _highlightAllOccurencesOfSelectedWordTransformer = new HighlightAllOccurencesOfSelectedWordTransformer();
             _textEditor.TextArea.TextView.LineTransformers.Add(_highlightAllOccurencesOfSelectedWordTransformer);
@@ -89,6 +89,7 @@ namespace Orc.CsvTextEditor.Services
         public IReadOnlyList<ICsvTextEditorTool> Tools => _tools;
         public bool IsDirty { get; set; }
         public int LineCount => _textEditor?.Document?.LineCount ?? 0;
+        public int ColumnCount => _elementGenerator.ColumnCount;
         public bool IsAutocompleteEnabled { get; set; } = true;
         public bool HasSelection => _textEditor.SelectionLength > 0;
         public bool CanRedo => _textEditor.CanRedo;
@@ -615,6 +616,20 @@ namespace Orc.CsvTextEditor.Services
             _highlightAllOccurencesOfSelectedWordTransformer.Selection = _textEditor.TextArea.Selection;
 
             RefreshView();
+        }
+
+        public void Dispose()
+        {
+            _textEditor.TextArea.SelectionChanged -= OnTextAreaSelectionChanged;
+            _textEditor.TextArea.Caret.PositionChanged -= OnCaretPositionChanged;
+            _textEditor.TextArea.PreviewMouseLeftButtonDown -= OnPreviewMouseLeftButtonDown;
+            _textEditor.TextChanged -= OnTextChanged;
+            _textEditor.PreviewKeyDown -= OnPreviewKeyDown;
+
+            _textEditor.TextArea.TextEntering -= OnTextEntering;
+
+            _textEditor.TextArea.TextView.ElementGenerators.Clear();
+            _textEditor.TextArea.TextView.LineTransformers.Clear();
         }
     }
 }

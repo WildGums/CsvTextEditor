@@ -86,6 +86,14 @@ namespace Orc.CsvTextEditor
         {
             var scope = Scope;
 
+            if (scope == null)
+            {
+                _csvTextEditorService = null;
+                _csvTextSynchronizationService = null;
+
+                return;
+            }
+
             if (_csvTextEditorService == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorService>(scope))
             {
                 _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(scope);
@@ -94,7 +102,7 @@ namespace Orc.CsvTextEditor
             if (_csvTextSynchronizationService == null && _serviceLocator.IsTypeRegistered<ICsvTextSynchronizationService>(scope))
             {
                 _csvTextSynchronizationService = _serviceLocator.ResolveType<ICsvTextSynchronizationService>(scope);
-            }
+            }            
         }
     }
 }

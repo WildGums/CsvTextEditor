@@ -42,7 +42,7 @@ namespace Orc.CsvTextEditor
         }
 
         public int[] ColumnWidth { get; private set; }
-        public int ColumnCount => Lines[0].Length;
+        public int ColumnCount => Lines?[0].Length ?? 0;
         public string NewLine { get; private set; }
         #endregion
 

@@ -74,6 +74,10 @@
                     </fluent:SplitButton>
                 </fluent:RibbonGroupBox>
 
+                <fluent:RibbonGroupBox Header="Statistic" 
+                                       Visibility="{Binding Project, Converter={catel:ReferenceToCollapsingVisibilityConverter}}">
+                    <local:ProjectStatisticView Margin="2,10,2,2"/>
+                </fluent:RibbonGroupBox>
             </fluent:RibbonTabItem>
         </fluent:Ribbon.Tabs>
     </fluent:Ribbon>

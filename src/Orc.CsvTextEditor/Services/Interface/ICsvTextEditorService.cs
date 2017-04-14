@@ -10,12 +10,13 @@ namespace Orc.CsvTextEditor.Services
     using System;
     using System.Collections.Generic;
 
-    public interface ICsvTextEditorService
+    public interface ICsvTextEditorService : IDisposable
     {
         #region Properties
         IReadOnlyList<ICsvTextEditorTool> Tools { get; }
         bool IsDirty { get; set; }
         int LineCount { get; }
+        int ColumnCount { get; }
         bool IsAutocompleteEnabled { get; set; }
         bool HasSelection { get; }
         bool CanRedo { get; }

@@ -17,6 +17,8 @@ namespace Orc.CsvTextEditor
         #region Fields
         private readonly IServiceLocator _serviceLocator;
         private readonly ITypeFactory _typeFactory;
+
+        private object _oldScope;
         #endregion
 
         #region Constructors
@@ -53,7 +55,7 @@ namespace Orc.CsvTextEditor
             {
                 UpdateServiceRegistration();
             }
-        }
+        }        
 
         private void UpdateServiceRegistration()
         {
@@ -65,6 +67,12 @@ namespace Orc.CsvTextEditor
             }
 
             var scope = textEditorControl.Scope;
+            if (scope == null)
+            {
+                RemoveServiceRegistration(_oldScope);
+                return;
+            }
+
             if (!_serviceLocator.IsTypeRegistered<ICsvTextEditorService>(scope))
             {
                 var csvTextEditorService = (ICsvTextEditorService) _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorService>(textEditor);
@@ -75,6 +83,24 @@ namespace Orc.CsvTextEditor
             {
                 var csvTextSynchronizationService = (ICsvTextSynchronizationService) _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextSynchronizationService>();
                 _serviceLocator.RegisterInstance(csvTextSynchronizationService, scope);
+            }
+
+            _oldScope = scope;
+        }
+
+        private void RemoveServiceRegistration(object oldScope)
+        {
+            if (_serviceLocator.IsTypeRegistered<ICsvTextEditorService>(oldScope))
+            {
+                var csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(oldScope);
+                csvTextEditorService.Dispose();
+
+                _serviceLocator.RemoveType<ICsvTextEditorService>(oldScope);
+            }
+
+            if (_serviceLocator.IsTypeRegistered<ICsvTextSynchronizationService>(oldScope))
+            {
+                _serviceLocator.RemoveType<ICsvTextSynchronizationService>(oldScope);
             }
         }
     }
