@@ -252,6 +252,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Behavior\" />
+    <Folder Include="Resources\Images\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orc.CsvTextEditor\Orc.CsvTextEditor.csproj">
@@ -263,12 +264,6 @@
     <Analyzer Include="..\..\lib\AsyncUsageAnalyzers.1.0.0-alpha003\analyzers\dotnet\AsyncUsageAnalyzers.dll" />
     <Analyzer Include="..\..\lib\WpfAnalyzers.0.2.7.6\analyzers\dotnet\cs\WpfAnalyzers.Analyzers.dll" />
     <Analyzer Include="..\..\lib\WpfAnalyzers.0.2.7.6\analyzers\dotnet\cs\WpfAnalyzers.CodeFixes.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\settings.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\shortcuts.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\logo.ico" />

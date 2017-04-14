@@ -63,10 +63,13 @@
                 </fluent:RibbonGroupBox>
 
                 <fluent:RibbonGroupBox Header="Settings">
-                    <fluent:Button Header="Settings" LargeIcon="/CsvTextEditor;component\Resources\Images\settings.png"
-                                   Command="{catel:CommandManagerBinding Settings.General}" Size="Large" />
-                    <fluent:SplitButton Header="Shortcuts" LargeIcon="/CsvTextEditor;component\Resources\Images\shortcuts.png"
-                                        Command="{Binding ShowKeyboardMappings}" Size="Large">
+                    <fluent:Button Header="Settings" 
+                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Cog}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Settings.General}" />
+                    
+                    <fluent:SplitButton Header="Shortcuts" 
+                                        LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.KeyboardO}, FontFamily=FontAwesome}"
+                                        Command="{Binding ShowKeyboardMappings}" >
                         <orchestra:KeyboardMappingsOverviewView />
                     </fluent:SplitButton>
                 </fluent:RibbonGroupBox>
