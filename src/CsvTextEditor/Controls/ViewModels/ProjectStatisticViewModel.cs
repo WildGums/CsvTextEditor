@@ -45,6 +45,11 @@ namespace CsvTextEditor.ViewModels
                 return;
             }
 
+            if (_csvTextEditorService != null)
+            {
+                _csvTextEditorService.TextChanged -= OnTextChanged;
+            }
+
             _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(e.Tag);
             _csvTextEditorService.TextChanged += OnTextChanged;
 
