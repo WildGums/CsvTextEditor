@@ -11,7 +11,7 @@ namespace CsvTextEditor.ViewModels
     using Catel;
     using Catel.IoC;
     using Catel.MVVM;
-    using Orc.CsvTextEditor.Services;
+    using Orc.CsvTextEditor;
 
     public class ProjectStatisticViewModel : ViewModelBase
     {

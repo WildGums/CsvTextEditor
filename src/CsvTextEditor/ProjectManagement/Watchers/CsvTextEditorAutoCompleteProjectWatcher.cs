@@ -13,7 +13,7 @@ namespace CsvTextEditor.ProjectManagement
     using Catel.IoC;
     using Catel.Services;
     using Catel.Threading;
-    using Orc.CsvTextEditor.Services;
+    using Orc.CsvTextEditor;
     using Orc.ProjectManagement;
 
     public class CsvTextEditorAutoCompleteProjectWatcher : ProjectWatcherBase
