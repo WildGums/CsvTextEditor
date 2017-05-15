@@ -74,7 +74,7 @@
       <HintPath>..\..\lib\Orc.Controls.1.5.0\lib\net46\Orc.Controls.dll</HintPath>
     </Reference>
     <Reference Include="Orc.CsvTextEditor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.CsvTextEditor.1.0.0-unstable0002\lib\net46\Orc.CsvTextEditor.dll</HintPath>
+      <HintPath>..\..\lib\Orc.CsvTextEditor.1.0.0-unstable0014\lib\net46\Orc.CsvTextEditor.dll</HintPath>
     </Reference>
     <Reference Include="Orc.FileSystem, Version=1.2.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Orc.FileSystem.1.2.6\lib\net46\Orc.FileSystem.dll</HintPath>
