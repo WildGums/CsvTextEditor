@@ -17,6 +17,7 @@ namespace Orc.CsvTextEditor.Services
     using Catel;
     using Catel.Collections;
     using Catel.IoC;
+    using Catel.Logging;
     using Catel.MVVM;
     using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.CodeCompletion;
@@ -27,7 +28,10 @@ namespace Orc.CsvTextEditor.Services
 
     internal class CsvTextEditorService : ICsvTextEditorService
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         #region Fields
+
         private readonly ICommandManager _commandManager;
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
@@ -102,6 +106,8 @@ namespace Orc.CsvTextEditor.Services
 
         public void RemoveBlankLines()
         {
+            Log.Debug("Removing blank lines");
+
             var document = _textEditor.Document;
             var documentLines = document.Lines;
 
@@ -120,6 +126,8 @@ namespace Orc.CsvTextEditor.Services
 
         public void TrimWhitespaces()
         {
+            Log.Debug("Trimming white spaces");
+
             StringBuilder builder = new StringBuilder();
             foreach (var line in GetLinesWithoutWhitespaces())
             {
@@ -131,6 +139,8 @@ namespace Orc.CsvTextEditor.Services
 
         public void RemoveDuplicateLines()
         {
+            Log.Debug("Removing duplicate lines");
+
             StringBuilder builder = new StringBuilder();
             foreach (var line in GetLinesWithoutWhitespaces().Distinct())
             {
