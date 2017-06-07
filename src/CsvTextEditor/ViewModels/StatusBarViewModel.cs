@@ -13,7 +13,6 @@ namespace CsvTextEditor.ViewModels
     using Catel.MVVM;
     using Catel.Threading;
     using Orc.CsvTextEditor;
-    using Orc.CsvTextEditor.Services;
     using Orc.ProjectManagement;
     using Orchestra;
     using Orc.Squirrel;

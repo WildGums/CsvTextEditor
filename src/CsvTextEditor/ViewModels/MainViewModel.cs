@@ -45,9 +45,9 @@ namespace CsvTextEditor.ViewModels
             return base.InitializeAsync();
         }
 
-        private async Task OnProjectActivationAsync(object sender, ProjectUpdatingCancelEventArgs e)
+        private Task OnProjectActivationAsync(object sender, ProjectUpdatingCancelEventArgs e)
         {
-            _dispatcherService.Invoke(() => Project = (Project)e.NewProject, true);
+            return _dispatcherService.InvokeAsync(() => Project = (Project)e.NewProject);
         }
 
         protected override Task CloseAsync()

@@ -7,8 +7,10 @@
 
 namespace CsvTextEditor
 {
+    using System;
     using System.Threading.Tasks;
     using Catel;
+    using Catel.Logging;
     using Catel.MVVM;
     using Catel.Services;
     using Orc.FileSystem;
@@ -17,8 +19,10 @@ namespace CsvTextEditor
     public class FileOpenCommandContainer : ProjectCommandContainerBase
     {
         #region Fields
-        private readonly IOpenFileService _openFileService;
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         private readonly IFileService _fileService;
+        private readonly IOpenFileService _openFileService;
         private readonly IPleaseWaitService _pleaseWaitService;
         #endregion
 
@@ -45,25 +49,32 @@ namespace CsvTextEditor
 
         protected override async Task ExecuteAsync(object parameter)
         {
-            var location = parameter as string;
-
-            if (string.IsNullOrWhiteSpace(location) || !_fileService.Exists(location))
+            try
             {
-                _openFileService.Filter = "Text Files (*.csv)|*csv";
+                var location = parameter as string;
 
-                _openFileService.IsMultiSelect = false;
-                if (_openFileService.DetermineFile())
+                if (string.IsNullOrWhiteSpace(location) || !_fileService.Exists(location))
                 {
-                    location = _openFileService.FileName;
+                    _openFileService.Filter = "Text Files (*.csv)|*csv";
+
+                    _openFileService.IsMultiSelect = false;
+                    if (_openFileService.DetermineFile())
+                    {
+                        location = _openFileService.FileName;
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(location))
+                {
+                    using (_pleaseWaitService.PushInScope())
+                    {
+                        await _projectManager.LoadAsync(location);
+                    }
                 }
             }
-
-            if (!string.IsNullOrWhiteSpace(location))
+            catch (Exception ex)
             {
-                using (_pleaseWaitService.PushInScope())
-                {
-                    await _projectManager.LoadAsync(location);
-                }                
+                Log.Error(ex, "Failed to open file");
             }
         }
         #endregion

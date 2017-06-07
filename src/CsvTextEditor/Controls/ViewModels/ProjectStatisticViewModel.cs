@@ -11,7 +11,7 @@ namespace CsvTextEditor.ViewModels
     using Catel;
     using Catel.IoC;
     using Catel.MVVM;
-    using Orc.CsvTextEditor.Services;
+    using Orc.CsvTextEditor;
 
     public class ProjectStatisticViewModel : ViewModelBase
     {
@@ -43,6 +43,11 @@ namespace CsvTextEditor.ViewModels
             if (e.ServiceType != typeof(ICsvTextEditorService))
             {
                 return;
+            }
+
+            if (_csvTextEditorService != null)
+            {
+                _csvTextEditorService.TextChanged -= OnTextChanged;
             }
 
             _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(e.Tag);

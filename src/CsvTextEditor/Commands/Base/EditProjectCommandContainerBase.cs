@@ -13,7 +13,7 @@ namespace CsvTextEditor
     using Catel.IoC;
     using Catel.MVVM;
     using Models;
-    using Orc.CsvTextEditor.Services;
+    using Orc.CsvTextEditor;
     using Orc.ProjectManagement;
 
     public abstract class EditProjectCommandContainerBase : ProjectCommandContainerBase
