@@ -132,6 +132,9 @@
     <Compile Include="Commands\EditPasteCommandContainer.cs" />
     <Compile Include="Commands\EditRedoCommandContainer.cs" />
     <Compile Include="Commands\EditFindReplaceCommandContainer.cs" />
+    <Compile Include="Commands\EditRemoveBlankLinesCommandContainer.cs" />
+    <Compile Include="Commands\EditRemoveDuplicateLinesCommandContainer.cs" />
+    <Compile Include="Commands\EditTrimWhitespacesCommandContainer.cs" />
     <Compile Include="Commands\EditUndoCommandContainer.cs" />
     <Compile Include="Commands\HelpAboutCommandContainer.cs" />
     <Compile Include="Commands\FileCloseCommandContainer.cs" />

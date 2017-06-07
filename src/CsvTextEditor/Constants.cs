@@ -78,6 +78,16 @@ namespace CsvTextEditor
 
             public const string DeleteLine = "Edit.DeleteLine";
             public static readonly InputGesture DeleteLineInputGesture = new InputGesture(Key.L, ModifierKeys.Control);
+            
+            public const string RemoveBlankLines = "Edit.RemoveBlankLines";
+            public static readonly InputGesture RemoveBlankLinesInputGesture = null;
+
+            public const string RemoveDuplicateLines = "Edit.RemoveDuplicateLines";
+            public static readonly InputGesture RemoveDuplicateLinesInputGesture = null;
+
+            public const string TrimWhitespaces = "Edit.TrimWhitespaces";
+            public static readonly InputGesture TrimWhitespacesInputGesture = null;
+
         }
 
         public static class Settings

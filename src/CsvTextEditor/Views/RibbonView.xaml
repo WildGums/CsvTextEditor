@@ -57,9 +57,15 @@
                                    LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.MailForward}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding Edit.Redo}" />
 
-                    <fluent:Button Header="Find and replace"
+                    <fluent:Button x:Name="FindAndReplaceButton" Header="Find and replace"
                                    LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Search}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding Edit.FindReplace}" />
+
+                    <fluent:SplitButton Header="Quick Format" LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.AlignJustify}, FontFamily=FontAwesome}" IsEnabled="{Binding ElementName=FindAndReplaceButton, Path=IsEnabled}">
+                        <fluent:MenuItem Header="Remove blank lines" Icon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Remove}}" Command="{catel:CommandManagerBinding Edit.RemoveBlankLines}" />
+                        <fluent:MenuItem Header="Remove duplicate lines" Icon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Remove}}" Command="{catel:CommandManagerBinding Edit.RemoveDuplicateLines}" />
+                        <fluent:MenuItem Header="Trim whitespaces" Icon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.AlignJustify}}" Command="{catel:CommandManagerBinding Edit.TrimWhitespaces}" />
+                    </fluent:SplitButton>
                 </fluent:RibbonGroupBox>
 
                 <fluent:RibbonGroupBox Header="Settings">
