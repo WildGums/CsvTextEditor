@@ -109,6 +109,9 @@ namespace CsvTextEditor.Services
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "DeleteLine");
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "DuplicateLine");
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "FindReplace");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "RemoveBlankLines");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "RemoveDuplicateLines");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "TrimWhitespaces");
 
             _commandManager.CreateCommandWithGesture(typeof(Commands.Settings), "General");
 

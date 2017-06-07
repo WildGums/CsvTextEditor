@@ -49,5 +49,8 @@ namespace Orc.CsvTextEditor.Services
 
         event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
         event EventHandler<EventArgs> TextChanged;
+        void RemoveBlankLines();
+        void TrimWhitespaces();
+        void RemoveDuplicateLines();
     }
 }
