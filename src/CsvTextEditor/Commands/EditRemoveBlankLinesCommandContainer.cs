@@ -9,13 +9,15 @@ namespace CsvTextEditor
 {
     using Catel.IoC;
     using Catel.MVVM;
+    using Orc.Notifications;
     using Orc.ProjectManagement;
 
-    public class EditRemoveBlankLinesCommandContainer : EditProjectCommandContainerBase
+    public class EditRemoveBlankLinesCommandContainer : QuickFormatCommandContainerBase
     {
         #region Constructors
-        public EditRemoveBlankLinesCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IServiceLocator serviceLocator)
-            : base(Commands.Edit.RemoveBlankLines, commandManager, projectManager, serviceLocator)
+        public EditRemoveBlankLinesCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IServiceLocator serviceLocator,
+            INotificationService notificationService)
+            : base(Commands.Edit.RemoveBlankLines, commandManager, projectManager, serviceLocator, notificationService)
         {
         }
 
@@ -23,11 +25,14 @@ namespace CsvTextEditor
 
         #region Methods
 
-        protected override void Execute(object parameter)
+        protected override void EcecuteOperation()
         {
             CsvTextEditorService.RemoveBlankLines();
+        }
 
-            base.Execute(parameter);
+        protected override string GetOperationDescription()
+        {
+            return "removing blank lines";
         }
         #endregion
     }

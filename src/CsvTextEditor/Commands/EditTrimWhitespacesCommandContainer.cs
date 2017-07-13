@@ -9,25 +9,29 @@ namespace CsvTextEditor
 {
     using Catel.IoC;
     using Catel.MVVM;
+    using Orc.Notifications;
     using Orc.ProjectManagement;
 
-    public class EditTrimWhitespacesCommandContainer : EditProjectCommandContainerBase
+    public class EditTrimWhitespacesCommandContainer : QuickFormatCommandContainerBase
     {
         #region Constructors
-        public EditTrimWhitespacesCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IServiceLocator serviceLocator)
-            : base(Commands.Edit.TrimWhitespaces, commandManager, projectManager, serviceLocator)
+        public EditTrimWhitespacesCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IServiceLocator serviceLocator,
+            INotificationService notificationService)
+            : base(Commands.Edit.TrimWhitespaces, commandManager, projectManager, serviceLocator, notificationService)
         {
         }
 
         #endregion
 
         #region Methods
-
-        protected override void Execute(object parameter)
+        protected override void EcecuteOperation()
         {
             CsvTextEditorService.TrimWhitespaces();
+        }
 
-            base.Execute(parameter);
+        protected override string GetOperationDescription()
+        {
+            return "trimming white-spaces";
         }
         #endregion
     }
