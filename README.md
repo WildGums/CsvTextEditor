@@ -23,11 +23,11 @@ We found that Excel reformats csv files  when saving a file, which causes us a l
 
 Essentially CsvTextEditor is a simple "text editor" with some extra features that make it easy to edit csv files and will not reformat the file in anyway.
 
-### Limitations
+## Limitations
 
 Please read this section carefully.
 
-#### Speed
+### Speed
 
 The control is effective with relatively small csv files. It **is not** designed to deal with large files with more than 100K rows or over 1MB in size.
 
@@ -35,7 +35,7 @@ Our use case is typically 20 columns (or less) and a few hundred rows.
 
 We would welcome any efforts to improve the performance if someone was willing to tackle this issue.
 
-#### Csv format
+### Csv format
 
 **We only support _simple_ comma separated files**. (i.e. we expect the csv files to be fairly clean and **do not** support quotes, imbedded commas or new lines within the text.)
 
