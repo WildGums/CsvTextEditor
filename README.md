@@ -9,7 +9,9 @@ It is built with:
 - [AvalonEdit](http://avalonedit.net/) 
 - Loosely implements [Elastic-tabstops](http://nickgravgaard.com/elastic-tabstops/) in the background (i.e. instead of tabstops we use commas as the separators).
 
-We have purposely kept the control simple. We welcome all pull requests, however please discuss large feature implementations ahead of time.
+We have purposely kept the control simple.
+
+We welcome all pull requests, however please discuss large feature implementations ahead of time.
 
 ## Download
 
@@ -53,12 +55,14 @@ We would also welcome a PR that allowed CsvTextEditor to handle more cases.
 - Syntax highlighting (Numbers are shown in blue font)
 - Automatically highlight "True/False" and  "Yes/No" values
 - Word hints based on existing values in the column will be shown as you type
+
 - **ShortCut Keys**:
   - Delete lines ("CTRL +L")
   - Duplicate lines ("CTRL + D")
   - Add columns (",")
   - Delete columns ("CTL + ,")
   - Search and replace ("CTRL + F") (Search will also highlight all occurrences in the file)
+
 - **Commands**:
   - Remove duplicate rows
   - Remove blank lines
