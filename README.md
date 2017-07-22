@@ -17,6 +17,10 @@ We welcome all pull requests, however please discuss large feature implementatio
 
 Download the latest version from the [release page](https://github.com/WildGums/CsvTextEditor/releases)
 
+## Requirements
+
+.NET 4.6.2 or above
+
 ## Goal
 
 We work with a lot of csv files on a daily basis and wanted a no-nonsense, quick and simple tool to edit csv files.
