@@ -23,7 +23,7 @@ namespace CsvTextEditor.ProjectManagement
 
         private readonly IDispatcherService _dispatcherService;
         private readonly IServiceLocator _serviceLocator;
-        private ICsvTextEditorService _csvTextEditorService;
+        private ICsvTextEditorInstance _csvTextEditorInstance;
         #endregion
 
         #region Constructors
@@ -41,9 +41,9 @@ namespace CsvTextEditor.ProjectManagement
 
         protected override Task OnActivatedAsync(IProject oldProject, IProject newProject)
         {
-            if (_csvTextEditorService != null)
+            if (_csvTextEditorInstance != null)
             {
-                _csvTextEditorService.TextChanged -= CsvTextEditorServiceOnTextChanged;
+                _csvTextEditorInstance.TextChanged -= CsvTextEditorInstanceOnTextChanged;
             }
 
             if (newProject == null)
@@ -51,14 +51,14 @@ namespace CsvTextEditor.ProjectManagement
                 return TaskHelper.Completed;
             }
 
-            if (_csvTextEditorService == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorService>(newProject))
+            if (_csvTextEditorInstance == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(newProject))
             {
-                _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(newProject);
+                _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(newProject);
             }
 
-            if (_csvTextEditorService != null)
+            if (_csvTextEditorInstance != null)
             {
-                _csvTextEditorService.TextChanged += CsvTextEditorServiceOnTextChanged;
+                _csvTextEditorInstance.TextChanged += CsvTextEditorInstanceOnTextChanged;
             }
 
             _dispatcherService.Invoke(RefreshAutoComplete, true);
@@ -66,14 +66,14 @@ namespace CsvTextEditor.ProjectManagement
             return base.OnActivatedAsync(oldProject, newProject);
         }
 
-        private void CsvTextEditorServiceOnTextChanged(object sender, EventArgs e)
+        private void CsvTextEditorInstanceOnTextChanged(object sender, EventArgs e)
         {
             _dispatcherService.Invoke(RefreshAutoComplete, true);
         }
 
         private void RefreshAutoComplete()
         {
-            _csvTextEditorService.IsAutocompleteEnabled = _csvTextEditorService.LineCount <= MaxLineCountWithAutoCompleteEnabled;
+            _csvTextEditorInstance.IsAutocompleteEnabled = _csvTextEditorInstance.LinesCount <= MaxLineCountWithAutoCompleteEnabled;
         }
     }
 }

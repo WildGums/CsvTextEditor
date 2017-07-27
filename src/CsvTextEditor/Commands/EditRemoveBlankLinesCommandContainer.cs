@@ -9,6 +9,7 @@ namespace CsvTextEditor
 {
     using Catel.IoC;
     using Catel.MVVM;
+    using Orc.CsvTextEditor.Operations;
     using Orc.Notifications;
     using Orc.ProjectManagement;
 
@@ -27,7 +28,7 @@ namespace CsvTextEditor
 
         protected override void EcecuteOperation()
         {
-            CsvTextEditorService.RemoveBlankLines();
+            CsvTextEditorInstance.ExecuteOperation<RemoveBlankLinesOperation>();
         }
 
         protected override string GetOperationDescription()

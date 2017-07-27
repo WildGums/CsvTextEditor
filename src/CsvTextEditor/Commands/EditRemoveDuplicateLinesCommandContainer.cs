@@ -9,6 +9,7 @@ namespace CsvTextEditor
 {
     using Catel.IoC;
     using Catel.MVVM;
+    using Orc.CsvTextEditor.Operations;
     using Orc.Notifications;
     using Orc.ProjectManagement;
 
@@ -26,7 +27,7 @@ namespace CsvTextEditor
         #region Methods
         protected override void EcecuteOperation()
         {
-            CsvTextEditorService.RemoveDuplicateLines();
+            CsvTextEditorInstance.ExecuteOperation<RemoveDuplicateLinesOperation>();
         }
 
         protected override string GetOperationDescription()

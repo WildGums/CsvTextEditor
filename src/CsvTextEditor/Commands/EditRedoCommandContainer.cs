@@ -28,12 +28,12 @@ namespace CsvTextEditor
                 return false;
             }
 
-            return CsvTextEditorService?.CanRedo ?? false;
+            return CsvTextEditorInstance?.CanRedo ?? false;
         }
 
         protected override void Execute(object parameter)
         {
-            CsvTextEditorService.Redo();
+            CsvTextEditorInstance.Redo();
 
             base.Execute(parameter);
         }

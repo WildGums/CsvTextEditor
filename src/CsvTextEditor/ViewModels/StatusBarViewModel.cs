@@ -24,7 +24,7 @@ namespace CsvTextEditor.ViewModels
         #region Fields
         private readonly IProjectManager _projectManager;
         private readonly IServiceLocator _serviceLocator;
-        private ICsvTextEditorService _csvTextEditorService;
+        private ICsvTextEditorInstance _csvTextEditorInstance;
         private readonly IConfigurationService _configurationService;
         private readonly IUpdateService _updateService;
         #endregion
@@ -110,9 +110,9 @@ namespace CsvTextEditor.ViewModels
 
         private Task OnProjectActivatedAsync(object sender, ProjectUpdatedEventArgs args)
         {
-            if (_csvTextEditorService != null)
+            if (_csvTextEditorInstance != null)
             {
-                _csvTextEditorService.CaretTextLocationChanged -= OnCaretTextLocationChanged;
+                _csvTextEditorInstance.CaretTextLocationChanged -= OnCaretTextLocationChanged;
             }
 
             var activeProject = args.NewProject;
@@ -121,9 +121,9 @@ namespace CsvTextEditor.ViewModels
                 return TaskHelper.Completed;
             }
 
-            _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(args.NewProject);
+            _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(args.NewProject);
 
-            _csvTextEditorService.CaretTextLocationChanged += OnCaretTextLocationChanged;
+            _csvTextEditorInstance.CaretTextLocationChanged += OnCaretTextLocationChanged;
 
             return TaskHelper.Completed;
         }

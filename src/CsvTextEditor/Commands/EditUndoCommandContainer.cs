@@ -28,12 +28,12 @@ namespace CsvTextEditor
                 return false;
             }
 
-            return CsvTextEditorService?.CanUndo ?? false;
+            return CsvTextEditorInstance?.CanUndo ?? false;
         }
 
         protected override void Execute(object parameter)
         {
-            CsvTextEditorService.Undo();
+            CsvTextEditorInstance.Undo();
 
             base.Execute(parameter);
         }

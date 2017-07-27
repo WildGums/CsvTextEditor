@@ -18,7 +18,7 @@ namespace CsvTextEditor.ViewModels
         #region Fields
         private readonly IServiceLocator _serviceLocator;
 
-        private ICsvTextEditorService _csvTextEditorService;
+        private ICsvTextEditorInstance _csvTextEditorInstance;
         #endregion
 
         #region Constructors
@@ -40,26 +40,26 @@ namespace CsvTextEditor.ViewModels
         #region Methods
         private void OnTypeRegistered(object sender, TypeRegisteredEventArgs e)
         {
-            if (e.ServiceType != typeof(ICsvTextEditorService))
+            if (e.ServiceType != typeof(ICsvTextEditorInstance))
             {
                 return;
             }
 
-            if (_csvTextEditorService != null)
+            if (_csvTextEditorInstance != null)
             {
-                _csvTextEditorService.TextChanged -= OnTextChanged;
+                _csvTextEditorInstance.TextChanged -= OnTextChanged;
             }
 
-            _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(e.Tag);
-            _csvTextEditorService.TextChanged += OnTextChanged;
+            _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(e.Tag);
+            _csvTextEditorInstance.TextChanged += OnTextChanged;
 
             UpdateStatistic();
         }
 
         private void UpdateStatistic()
         {
-            RowsCount = _csvTextEditorService.LineCount;
-            ColumnsCount = _csvTextEditorService.ColumnCount;
+            RowsCount = _csvTextEditorInstance.LinesCount;
+            ColumnsCount = _csvTextEditorInstance.ColumnsCount;
         }
 
         private void OnTextChanged(object sender, EventArgs e)
