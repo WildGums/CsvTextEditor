@@ -45,7 +45,7 @@ namespace CsvTextEditor
             // Note: seems to work strange
             _saveFileService.AddExtension = true;
 
-            if (_saveFileService.DetermineFile())
+            if (await _saveFileService.DetermineFileAsync())
             {
                 var fileName = _saveFileService.FileName;
 

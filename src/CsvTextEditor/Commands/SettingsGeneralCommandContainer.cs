@@ -9,6 +9,7 @@ namespace CsvTextEditor
 {
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
     using Catel;
     using Catel.Logging;
     using Catel.MVVM;
@@ -34,10 +35,8 @@ namespace CsvTextEditor
             _viewModelFactory = viewModelFactory;
         }
 
-        protected override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
-            base.Execute(parameter);
-
             var settingsViewModelType = TypeCache.GetTypes(x => string.Equals(x.Name, ViewModelType)).FirstOrDefault();
             if (settingsViewModelType == null)
             {
@@ -46,7 +45,7 @@ namespace CsvTextEditor
 
             var viewModel = _viewModelFactory.CreateViewModel(settingsViewModelType, null, null);
 
-            _uiVisualizerService.ShowDialog(viewModel);
+            await _uiVisualizerService.ShowDialogAsync(viewModel);
         }
     }
 }

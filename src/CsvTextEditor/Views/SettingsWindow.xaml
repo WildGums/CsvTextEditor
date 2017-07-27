@@ -1,7 +1,8 @@
 ﻿<catel:DataWindow x:Class="CsvTextEditor.Views.SettingsWindow"
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                  xmlns:catel="http://catel.codeplex.com">
+                  xmlns:catel="http://schemas.catelproject.com"
+                  xmlns:orc="http://www.wildgums.net.au/orc">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -22,40 +23,43 @@
                     </TextBlock>
                 </Label>
 
-                <catel:StackGrid IsEnabled="{Binding IsUpdateSystemAvailable}">
-                    <catel:StackGrid.RowDefinitions>
+                <orc:StackGrid IsEnabled="{Binding IsUpdateSystemAvailable}">
+                    <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                    </catel:StackGrid.RowDefinitions>
+                    </Grid.RowDefinitions>
 
-                    <catel:StackGrid.ColumnDefinitions>
+                    <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" MinWidth="300" />
-                    </catel:StackGrid.ColumnDefinitions>
+                    </Grid.ColumnDefinitions>
 
                     <CheckBox Grid.ColumnSpan="2" Content="Automatically install new updates" IsChecked="{Binding CheckForUpdates}" />
 
                     <Label Content="Update channel" />
                     <ComboBox ItemsSource="{Binding AvailableUpdateChannels}" SelectedItem="{Binding UpdateChannel}" DisplayMemberPath="Name" />
-                </catel:StackGrid>
+                </orc:StackGrid>
             </StackPanel>
         </GroupBox>
 
         <GroupBox Grid.Row="1" Header="User data options">
-            <catel:StackGrid>
-                <catel:StackGrid.RowDefinitions>
+            <orc:StackGrid>
+                <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                </catel:StackGrid.RowDefinitions>
+                </Grid.RowDefinitions>
 
-                <catel:StackGrid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
-                </catel:StackGrid.ColumnDefinitions>
+                </Grid.ColumnDefinitions>
 
                 <Button Content="Open data directory..." Command="{Binding OpenApplicationDataDirectory}" />
                 <Button Content="Create user data backup" Command="{Binding BackupUserData}" />
-            </catel:StackGrid>
+            </orc:StackGrid>
         </GroupBox>
     </Grid>
 
 </catel:DataWindow>
+
+
+

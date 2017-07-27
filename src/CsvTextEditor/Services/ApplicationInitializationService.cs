@@ -89,7 +89,6 @@ namespace CsvTextEditor.Services
         {
             Log.Info("Improving performance");
 
-            ModelBase.DefaultSuspendValidationValue = true;
             UserControl.DefaultCreateWarningAndErrorValidatorForViewModelValue = false;
             UserControl.DefaultSkipSearchingForInfoBarMessageControlValue = true;
         }

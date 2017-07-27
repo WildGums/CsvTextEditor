@@ -35,7 +35,7 @@ namespace CsvTextEditor.ViewModels
             _updateService = updateService;
 
             OpenApplicationDataDirectory = new Command(OnOpenApplicationDataDirectoryExecute);
-            BackupUserData = new Command(OnBackupUserDataExecute);
+            BackupUserData = new TaskCommand(OnBackupUserDataExecuteAsync);
 
             Title = "Settings";
         }
@@ -56,11 +56,11 @@ namespace CsvTextEditor.ViewModels
             _manageUserDataService.OpenApplicationDataDirectory();
         }
 
-        public Command BackupUserData { get; private set; }
+        public TaskCommand BackupUserData { get; private set; }
 
-        private void OnBackupUserDataExecute()
+        private async Task OnBackupUserDataExecuteAsync()
         {
-            _manageUserDataService.BackupUserData();
+            await _manageUserDataService.BackupUserDataAsync();
         }
         #endregion
 

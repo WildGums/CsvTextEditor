@@ -57,7 +57,7 @@ namespace CsvTextEditor.ViewModels
 
         private async Task OnShowKeyboardMappingsExecuteAsync()
         {
-            _uiVisualizerService.ShowDialog<KeyboardMappingsCustomizationViewModel>();
+            await _uiVisualizerService.ShowDialogAsync<KeyboardMappingsCustomizationViewModel>();
         }
         #endregion
     }
