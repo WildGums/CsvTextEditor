@@ -130,8 +130,8 @@ namespace CsvTextEditor.ViewModels
 
         private void OnCaretTextLocationChanged(object sender, CaretTextLocationChangedEventArgs args)
         {
-            Column = args.Column;
-            Line = args.Line;
+            Column = args.Location.Column.Index;
+            Line = args.Location.Line.Index;
         }
         #endregion
     }
