@@ -130,6 +130,7 @@
       <Link>Properties\SolutionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ApplicationWatchers\ShellActivatedActionQueue.cs" />
+    <Compile Include="Behaviors\ExternalFileDragDropBehavior.cs" />
     <Compile Include="Commands\Base\EditProjectCommandContainerBase.cs" />
     <Compile Include="Commands\Base\ProjectCommandContainerBase.cs" />
     <Compile Include="Commands\EditCopyCommandContainer.cs" />
@@ -268,7 +269,6 @@
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Behavior\" />
     <Folder Include="Resources\Images\" />
   </ItemGroup>
   <ItemGroup>
