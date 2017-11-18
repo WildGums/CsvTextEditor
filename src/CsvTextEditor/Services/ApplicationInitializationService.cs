@@ -15,6 +15,7 @@ namespace CsvTextEditor.Services
     using Catel.IoC;
     using Catel.Logging;
     using Catel.MVVM;
+    using Catel.Services;
     using Catel.Threading;
     using Catel.Windows.Controls;
     using Orc.ProjectManagement;
@@ -30,18 +31,21 @@ namespace CsvTextEditor.Services
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
         private readonly ICommandManager _commandManager;
+        private readonly IPleaseWaitService _pleaseWaitService;
 
         private readonly IServiceLocator _serviceLocator;
         #endregion
 
         #region Constructors
-        public ApplicationInitializationService(IServiceLocator serviceLocator, ICommandManager commandManager)
+        public ApplicationInitializationService(IServiceLocator serviceLocator, ICommandManager commandManager, IPleaseWaitService pleaseWaitService)
         {
             Argument.IsNotNull(() => serviceLocator);
             Argument.IsNotNull(() => commandManager);
+            Argument.IsNotNull(() => pleaseWaitService);
 
             _serviceLocator = serviceLocator;
             _commandManager = commandManager;
+            _pleaseWaitService = pleaseWaitService;
         }
         #endregion
 
@@ -68,11 +72,20 @@ namespace CsvTextEditor.Services
             await base.InitializeAfterCreatingShellAsync();
         }
 
+        public override async Task InitializeAfterShowingShellAsync()
+        {
+            await base.InitializeAfterShowingShellAsync();
+
+            await LoadProjectAsync();
+        }
+
         private void RegisterTypes()
         {
             _serviceLocator.RegisterType<IManageUserDataService, ManageUserDataService>();
             _serviceLocator.RegisterType<IProjectSerializerSelector, ProjectSerializerSelector>();
             _serviceLocator.RegisterType<IMainWindowTitleService, MainWindowTitleService>();
+
+            _serviceLocator.RegisterType<IProjectInitializer, CsvTextEditorProjectInitializer>();
         }
 
         private void InitializeFonts()
@@ -139,6 +152,22 @@ namespace CsvTextEditor.Services
             // Not dot await, it's a background thread
             updateService.HandleUpdatesAsync(maximumReleaseDate);
 #pragma warning restore 4014
+        }
+
+        protected async Task LoadProjectAsync()
+        {
+            using (_pleaseWaitService.PushInScope())
+            {
+                var projectManager = _serviceLocator.ResolveType<IProjectManager>();
+                if (projectManager == null)
+                {
+                    const string error = "Failed to resolve project manager";
+                    Log.Error(error);
+                    throw new Exception(error);
+                }
+
+                await projectManager.InitializeAsync();
+            }
         }
         #endregion
     }

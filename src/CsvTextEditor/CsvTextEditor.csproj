@@ -71,6 +71,9 @@
       <HintPath>..\..\lib\Expression.Blend.Sdk.WPF.1.0.1\lib\net45\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Orc.CommandLine, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\Orc.CommandLine.2.1.0\lib\net46\Orc.CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="Orc.Controls, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Orc.Controls.2.0.0\lib\net46\Orc.Controls.dll</HintPath>
     </Reference>
@@ -131,6 +134,7 @@
     </Compile>
     <Compile Include="ApplicationWatchers\ShellActivatedActionQueue.cs" />
     <Compile Include="Behaviors\ExternalFileDragDropBehavior.cs" />
+    <Compile Include="CommandLineContext.cs" />
     <Compile Include="Commands\Base\EditProjectCommandContainerBase.cs" />
     <Compile Include="Commands\Base\ProjectCommandContainerBase.cs" />
     <Compile Include="Commands\EditCopyCommandContainer.cs" />
@@ -157,6 +161,7 @@
     <Compile Include="MethodTimeLogger.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="ModuleInitializer.cs" />
+    <Compile Include="ProjectManagement\Initializers\CsvTextEditorProjectInitializer.cs" />
     <Compile Include="ProjectManagement\Serializers\ProjectReader.cs" />
     <Compile Include="ProjectManagement\Serializers\ProjectSerializerSelector.cs" />
     <Compile Include="ProjectManagement\Serializers\ProjectWriter.cs" />
