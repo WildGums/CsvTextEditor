@@ -17,7 +17,7 @@
     
     <csvTextEditor:CsvTextEditorControl x:Name="CsvTextEditorControl"
                                         Text="{Binding Text, Mode=TwoWay}"
-                                        Scope="{Binding Project, Mode=OneWay}">
+                                        Scope="{Binding Project, Mode=OneWay}" >
         <i:Interaction.Behaviors>
             <behaviors:ExternalFileDragDropBehavior/>
         </i:Interaction.Behaviors>

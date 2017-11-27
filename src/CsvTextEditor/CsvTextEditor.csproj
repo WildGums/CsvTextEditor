@@ -78,7 +78,7 @@
       <HintPath>..\..\lib\Orc.Controls.2.0.0\lib\net46\Orc.Controls.dll</HintPath>
     </Reference>
     <Reference Include="Orc.CsvTextEditor, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.CsvTextEditor.2.0.0-unstable0013\lib\net46\Orc.CsvTextEditor.dll</HintPath>
+      <HintPath>..\..\lib\Orc.CsvTextEditor.2.0.0-unstable0014\lib\net46\Orc.CsvTextEditor.dll</HintPath>
     </Reference>
     <Reference Include="Orc.FileSystem, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Orc.FileSystem.2.0.0\lib\net46\Orc.FileSystem.dll</HintPath>
@@ -132,6 +132,7 @@
     <Compile Include="..\SolutionAssemblyInfo.cs">
       <Link>Properties\SolutionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ApplicationWatchers\ProjectManagementCloseApplicationWatcher.cs" />
     <Compile Include="ApplicationWatchers\ShellActivatedActionQueue.cs" />
     <Compile Include="Behaviors\ExternalFileDragDropBehavior.cs" />
     <Compile Include="CommandLineContext.cs" />
@@ -168,13 +169,17 @@
     <Compile Include="ProjectManagement\Watchers\CsvTextEditorAutoCompleteProjectWatcher.cs" />
     <Compile Include="ProjectManagement\Watchers\MainWindowTitleProjectWatcher.cs" />
     <Compile Include="ProjectManagement\Watchers\RecentlyUsedItemsProjectWatcher.cs" />
+    <Compile Include="ProjectManagement\Watchers\CsvTextEditorIsDirtyProjectWatcher.cs" />
     <Compile Include="Resources\Fonts\FontAwesome.cs" />
     <Compile Include="Services\ApplicationInitializationService.cs" />
     <Compile Include="Services\Interfaces\IMainWindowTitleService.cs" />
     <Compile Include="Services\Interfaces\IManageUserDataService.cs" />
+    <Compile Include="Services\Interfaces\ISaveProjectChangesService.cs" />
     <Compile Include="Services\MainWindowTitleService.cs" />
     <Compile Include="Services\ManageUserDataService.cs" />
     <Compile Include="Services\RibbonService.cs" />
+    <Compile Include="Services\SaveChangesReason.cs" />
+    <Compile Include="Services\SaveProjectChangesService.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OpenFileViewModel.cs" />
     <Compile Include="ViewModels\RecentlyUsedItemsViewModel.cs" />

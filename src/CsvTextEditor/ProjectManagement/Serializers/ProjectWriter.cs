@@ -9,30 +9,37 @@ namespace CsvTextEditor.ProjectManagement
 {
     using System.Threading.Tasks;
     using Catel;
+    using Catel.IoC;
     using Catel.Threading;
     using Models;
-    using Orc.FileSystem;
+    using Orc.CsvTextEditor;
     using Orc.ProjectManagement;
 
     public class ProjectWriter : ProjectWriterBase<Project>
     {
         #region Fields
-        private readonly IFileService _fileService;
+        private readonly IServiceLocator _serviceLocator;
         #endregion
 
         #region Constructors
-        public ProjectWriter(IFileService fileService)
+        public ProjectWriter(IServiceLocator serviceLocator)
         {
-            Argument.IsNotNull(() => fileService);
+            Argument.IsNotNull(() => serviceLocator);
 
-            _fileService = fileService;
+            _serviceLocator = serviceLocator;
         }
         #endregion
 
         #region Methods
         protected override Task<bool> WriteToLocationAsync(Project project, string location)
         {
-            _fileService.WriteAllText(location, project.Text);
+            if (!_serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(project))
+            {
+                return TaskHelper<bool>.FromResult(false);
+            }
+
+            var csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(project);
+            csvTextEditorInstance.Save(location);
 
             return TaskHelper<bool>.FromResult(true);
         }

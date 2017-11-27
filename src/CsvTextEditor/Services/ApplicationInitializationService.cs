@@ -84,8 +84,11 @@ namespace CsvTextEditor.Services
             _serviceLocator.RegisterType<IManageUserDataService, ManageUserDataService>();
             _serviceLocator.RegisterType<IProjectSerializerSelector, ProjectSerializerSelector>();
             _serviceLocator.RegisterType<IMainWindowTitleService, MainWindowTitleService>();
+            _serviceLocator.RegisterType<ISaveProjectChangesService, SaveProjectChangesService>();
 
             _serviceLocator.RegisterType<IProjectInitializer, CsvTextEditorProjectInitializer>();
+
+            _serviceLocator.RegisterTypeAndInstantiate<ProjectManagementCloseApplicationWatcher>();
         }
 
         private void InitializeFonts()
@@ -135,6 +138,7 @@ namespace CsvTextEditor.Services
             _serviceLocator.RegisterTypeAndInstantiate<CsvTextEditorAutoCompleteProjectWatcher>();
             _serviceLocator.RegisterTypeAndInstantiate<RecentlyUsedItemsProjectWatcher>();
             _serviceLocator.RegisterTypeAndInstantiate<MainWindowTitleProjectWatcher>();
+            _serviceLocator.RegisterTypeAndInstantiate<CsvTextEditorIsDirtyProjectWatcher>();
         }
 
         [Time]
