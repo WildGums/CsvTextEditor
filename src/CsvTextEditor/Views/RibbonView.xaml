@@ -36,6 +36,19 @@
 
         <fluent:Ribbon.Tabs>
             <fluent:RibbonTabItem Header="View">
+                <fluent:RibbonGroupBox Header="File">
+                    <fluent:SplitButton Header="Open in editor"
+                                        LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Edit}, FontFamily=FontAwesome}" 
+                                        Command="{catel:CommandManagerBinding File.OpenInTextEditor}"
+                                        IsEnabled="{Binding IsActiveProjectExists}">
+                        <fluent:Gallery ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                            <fluent:Button Header="Excel" 
+                                           LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.FileExcelO}, FontFamily=FontAwesome}" 
+                                           Command="{catel:CommandManagerBinding File.OpenInExcel}"/>
+                        </fluent:Gallery>
+                    </fluent:SplitButton>
+                </fluent:RibbonGroupBox>
+
                 <fluent:RibbonGroupBox Header="Edit">
                     <fluent:Button Header="Copy"
                                    LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Copy}, FontFamily=FontAwesome}"

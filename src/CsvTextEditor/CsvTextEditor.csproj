@@ -137,6 +137,7 @@
     <Compile Include="Behaviors\ExternalFileDragDropBehavior.cs" />
     <Compile Include="CommandLineContext.cs" />
     <Compile Include="Commands\Base\EditProjectCommandContainerBase.cs" />
+    <Compile Include="Commands\Base\FileOpenInExternalToolCommandContainerBase.cs" />
     <Compile Include="Commands\Base\ProjectCommandContainerBase.cs" />
     <Compile Include="Commands\EditCopyCommandContainer.cs" />
     <Compile Include="Commands\EditCutCommandContainer.cs" />
@@ -147,6 +148,8 @@
     <Compile Include="Commands\EditRemoveDuplicateLinesCommandContainer.cs" />
     <Compile Include="Commands\EditTrimWhitespacesCommandContainer.cs" />
     <Compile Include="Commands\EditUndoCommandContainer.cs" />
+    <Compile Include="Commands\FileOpenInExcelCommandContainer.cs" />
+    <Compile Include="Commands\FileOpenInTextEditorCommandContainer.cs" />
     <Compile Include="Commands\HelpAboutCommandContainer.cs" />
     <Compile Include="Commands\FileCloseCommandContainer.cs" />
     <Compile Include="Commands\FileSaveAsCommandContainer.cs" />
@@ -162,6 +165,7 @@
     <Compile Include="MethodTimeLogger.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="ModuleInitializer.cs" />
+    <Compile Include="Native\Shell32.cs" />
     <Compile Include="ProjectManagement\Initializers\CsvTextEditorProjectInitializer.cs" />
     <Compile Include="ProjectManagement\Serializers\ProjectReader.cs" />
     <Compile Include="ProjectManagement\Serializers\ProjectSerializerSelector.cs" />
@@ -172,6 +176,8 @@
     <Compile Include="ProjectManagement\Watchers\CsvTextEditorIsDirtyProjectWatcher.cs" />
     <Compile Include="Resources\Fonts\FontAwesome.cs" />
     <Compile Include="Services\ApplicationInitializationService.cs" />
+    <Compile Include="Services\FileExtensionService.cs" />
+    <Compile Include="Services\Interfaces\IFileExtensionService.cs" />
     <Compile Include="Services\Interfaces\IMainWindowTitleService.cs" />
     <Compile Include="Services\Interfaces\IManageUserDataService.cs" />
     <Compile Include="Services\Interfaces\ISaveProjectChangesService.cs" />

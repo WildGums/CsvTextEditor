@@ -47,6 +47,12 @@ namespace CsvTextEditor
             public const string Open = "File.Open";
             public static readonly InputGesture OpenInputGesture = new InputGesture(Key.O, ModifierKeys.Control);
 
+            public const string OpenInTextEditor = "File.OpenInTextEditor";
+            public static readonly InputGesture OpenInTextEditorInputGesture = null;
+
+            public const string OpenInExcel = "File.OpenInExcel";
+            public static readonly InputGesture OpenInExcelInputGesture = null;
+
             public const string Save = "File.Save";
             public static readonly InputGesture SaveInputGesture = new InputGesture(Key.S, ModifierKeys.Control);
 

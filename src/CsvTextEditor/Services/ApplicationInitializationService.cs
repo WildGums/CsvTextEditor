@@ -85,6 +85,7 @@ namespace CsvTextEditor.Services
             _serviceLocator.RegisterType<IProjectSerializerSelector, ProjectSerializerSelector>();
             _serviceLocator.RegisterType<IMainWindowTitleService, MainWindowTitleService>();
             _serviceLocator.RegisterType<ISaveProjectChangesService, SaveProjectChangesService>();
+            _serviceLocator.RegisterType<IFileExtensionService, FileExtensionService>();
 
             _serviceLocator.RegisterType<IProjectInitializer, CsvTextEditorProjectInitializer>();
 
@@ -115,6 +116,9 @@ namespace CsvTextEditor.Services
             _commandManager.CreateCommandWithGesture(typeof(Commands.File), "Open");
             _commandManager.CreateCommandWithGesture(typeof(Commands.File), "Save");
             _commandManager.CreateCommandWithGesture(typeof(Commands.File), "SaveAs");
+
+            _commandManager.CreateCommandWithGesture(typeof(Commands.File), "OpenInTextEditor");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.File), "OpenInExcel");
 
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Undo");
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Redo");
