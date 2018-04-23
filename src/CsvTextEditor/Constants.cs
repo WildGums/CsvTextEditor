@@ -15,6 +15,8 @@ namespace CsvTextEditor
     {
         public static class Application
         {
+            
+
             public static class AutomaticUpdates
             {
                 public const bool CheckForUpdatesDefaultValue = true;
@@ -29,6 +31,12 @@ namespace CsvTextEditor
                 public static readonly UpdateChannel DefaultChannel = AvailableChannels[0];
             }
         }
+    }
+
+
+    public static class Configuration
+    {
+        public const string CustomEditor = "Settings.Application.Editor.CustomEditor";
     }
 
     public static class Commands
@@ -98,6 +106,7 @@ namespace CsvTextEditor
 
         public static class Settings
         {
+ 
             public const string General = "Settings.General";
             public static readonly InputGesture GeneralInputGesture = new InputGesture(Key.S, ModifierKeys.Alt | ModifierKeys.Control);
         }

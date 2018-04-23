@@ -11,7 +11,9 @@ namespace CsvTextEditor.ViewModels
     using System.Threading.Tasks;
     using Catel;
     using Catel.Configuration;
+    using Catel.IoC;
     using Catel.MVVM;
+    using Catel.Services;
     using Orc.Squirrel;
     using Services;
 
@@ -34,6 +36,7 @@ namespace CsvTextEditor.ViewModels
             _manageUserDataService = manageUserDataService;
             _updateService = updateService;
 
+            PickEditor = new TaskCommand(PickEditorExecuteAsync);
             OpenApplicationDataDirectory = new Command(OnOpenApplicationDataDirectoryExecute);
             BackupUserData = new TaskCommand(OnBackupUserDataExecuteAsync);
 
@@ -44,6 +47,7 @@ namespace CsvTextEditor.ViewModels
         #region Properties
         public bool IsUpdateSystemAvailable { get; private set; }
         public bool CheckForUpdates { get; set; }
+        public string CustomEditor { get; private set; }
         public List<UpdateChannel> AvailableUpdateChannels { get; private set; }
         public UpdateChannel UpdateChannel { get; set; }
         #endregion
@@ -54,6 +58,21 @@ namespace CsvTextEditor.ViewModels
         private void OnOpenApplicationDataDirectoryExecute()
         {
             _manageUserDataService.OpenApplicationDataDirectory();
+        }
+
+        public TaskCommand PickEditor { get; private set; }
+
+        private async Task PickEditorExecuteAsync()
+        {
+            var resolver = ServiceLocator.Default.GetDependencyResolver();
+            var openFileService = resolver.Resolve<IOpenFileService>();
+
+            openFileService.Filter = "Program Files (*.exe)|*exe";
+            openFileService.IsMultiSelect = false;
+
+            var result = await openFileService.DetermineFileAsync();
+
+            CustomEditor = openFileService.FileName;
         }
 
         public TaskCommand BackupUserData { get; private set; }
@@ -73,12 +92,17 @@ namespace CsvTextEditor.ViewModels
             CheckForUpdates = _updateService.CheckForUpdates;
             AvailableUpdateChannels = new List<UpdateChannel>(_updateService.AvailableChannels);
             UpdateChannel = _updateService.CurrentChannel;
+            CustomEditor = _configurationService.GetLocalValue<string>(Configuration.CustomEditor);
+
         }
 
         protected override async Task<bool> SaveAsync()
         {
             _updateService.CheckForUpdates = CheckForUpdates;
             _updateService.CurrentChannel = UpdateChannel;
+
+
+            _configurationService.SetLocalValue(Configuration.CustomEditor, CustomEditor);
 
             return await base.SaveAsync();
         }

@@ -77,9 +77,6 @@
     <Reference Include="Orc.Controls, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Orc.Controls.2.0.0\lib\net46\Orc.Controls.dll</HintPath>
     </Reference>
-    <Reference Include="Orc.CsvTextEditor, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.CsvTextEditor.2.0.0-unstable0016\lib\net46\Orc.CsvTextEditor.dll</HintPath>
-    </Reference>
     <Reference Include="Orc.FileSystem, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Orc.FileSystem.2.0.0\lib\net46\Orc.FileSystem.dll</HintPath>
     </Reference>
@@ -294,6 +291,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orc.CsvTextEditor\src\Orc.CsvTextEditor\Orc.CsvTextEditor.csproj">
+      <Project>{c270d792-e28e-4485-beef-8816fcc515e0}</Project>
+      <Name>Orc.CsvTextEditor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\lib\Fody.2.1.2\build\netstandard1.0\Fody.targets" Condition="Exists('..\..\lib\Fody.2.1.2\build\netstandard1.0\Fody.targets')" />

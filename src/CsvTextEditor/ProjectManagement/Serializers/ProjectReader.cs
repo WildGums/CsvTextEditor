@@ -7,10 +7,14 @@
 
 namespace CsvTextEditor.ProjectManagement
 {
+    using System.Diagnostics;
     using System.Threading.Tasks;
     using Catel;
+    using Catel.IoC;
+    using Catel.Services;
     using Models;
     using Orc.FileSystem;
+    using Orc.Notifications;
     using Orc.ProjectManagement;
 
     public class ProjectReader : ProjectReaderBase
@@ -31,14 +35,31 @@ namespace CsvTextEditor.ProjectManagement
         #region Methods
         protected override async Task<IProject> ReadFromLocationAsync(string location)
         {
-            var text = await _fileService.ReadAllTextAsync(location);
 
-            var project = new Project(location)
+            try
             {
-                Text = text
-            };
 
-            return project;
+                var text = await _fileService.ReadAllTextAsync(location);
+
+                var project = new Project(location)
+                {
+                    Text = text
+                };
+
+                return project;
+
+            } catch (System.IO.IOException e)
+            {
+
+                
+
+                var resolver = ServiceLocator.Default.GetDependencyResolver();
+                var notificationService = resolver.Resolve<INotificationService>();
+                notificationService.ShowNotification("Could not open file", e.Message);
+            }
+
+            return null;
+
         }
         #endregion
     }
