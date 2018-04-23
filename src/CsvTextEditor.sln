@@ -22,8 +22,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B9C7A403
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvTextEditor.Tests", "CsvTextEditor.Tests\CsvTextEditor.Tests.csproj", "{0AAC6BF9-69E9-4407-9962-7366D22DFC72}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orc.CsvTextEditor", "..\..\Orc.CsvTextEditor\src\Orc.CsvTextEditor\Orc.CsvTextEditor.csproj", "{C270D792-E28E-4485-BEEF-8816FCC515E0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,10 +36,6 @@ Global
 		{0AAC6BF9-69E9-4407-9962-7366D22DFC72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AAC6BF9-69E9-4407-9962-7366D22DFC72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AAC6BF9-69E9-4407-9962-7366D22DFC72}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C270D792-E28E-4485-BEEF-8816FCC515E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C270D792-E28E-4485-BEEF-8816FCC515E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C270D792-E28E-4485-BEEF-8816FCC515E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C270D792-E28E-4485-BEEF-8816FCC515E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,8 +45,5 @@ Global
 		{F61D7A6D-9351-44E9-A980-CDB5C429B01D} = {96428619-7BFF-43C8-ADA7-E7B7C699293A}
 		{B9C7A403-F0AC-43FA-8FA0-DC0FE9E34405} = {96428619-7BFF-43C8-ADA7-E7B7C699293A}
 		{0AAC6BF9-69E9-4407-9962-7366D22DFC72} = {B9C7A403-F0AC-43FA-8FA0-DC0FE9E34405}
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {7015DC5F-883B-4CB8-9F54-C86820B69A88}
 	EndGlobalSection
 EndGlobal
