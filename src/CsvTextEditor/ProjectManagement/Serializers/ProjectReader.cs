@@ -21,14 +21,17 @@ namespace CsvTextEditor.ProjectManagement
     {
         #region Fields
         private readonly IFileService _fileService;
+        private readonly INotificationService _notificationService;
         #endregion
 
         #region Constructors
-        public ProjectReader(IFileService fileService)
+        public ProjectReader(IFileService fileService, INotificationService notificationService)
         {
             Argument.IsNotNull(() => fileService);
+            Argument.IsNotNull(() => notificationService);
 
             _fileService = fileService;
+            _notificationService = notificationService;
         }
         #endregion
 
@@ -38,7 +41,6 @@ namespace CsvTextEditor.ProjectManagement
 
             try
             {
-
                 var text = await _fileService.ReadAllTextAsync(location);
 
                 var project = new Project(location)
@@ -48,14 +50,9 @@ namespace CsvTextEditor.ProjectManagement
 
                 return project;
 
-            } catch (System.IO.IOException e)
+            } catch (System.IO.IOException ex)
             {
-
-                
-
-                var resolver = ServiceLocator.Default.GetDependencyResolver();
-                var notificationService = resolver.Resolve<INotificationService>();
-                notificationService.ShowNotification("Could not open file", e.Message);
+                _notificationService.ShowNotification("Could not open file", ex.Message);
             }
 
             return null;

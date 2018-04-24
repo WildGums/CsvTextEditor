@@ -23,18 +23,21 @@ namespace CsvTextEditor.ViewModels
         private readonly IConfigurationService _configurationService;
         private readonly IManageUserDataService _manageUserDataService;
         private readonly IUpdateService _updateService;
+        private readonly IOpenFileService _openFileService;
         #endregion
 
         #region Constructors
-        public SettingsViewModel(IConfigurationService configurationService, IManageUserDataService manageUserDataService, IUpdateService updateService)
+        public SettingsViewModel(IConfigurationService configurationService, IManageUserDataService manageUserDataService, IUpdateService updateService, IOpenFileService openFileService)
         {
             Argument.IsNotNull(() => configurationService);
             Argument.IsNotNull(() => manageUserDataService);
             Argument.IsNotNull(() => updateService);
+            Argument.IsNotNull(() => openFileService);
 
             _configurationService = configurationService;
             _manageUserDataService = manageUserDataService;
             _updateService = updateService;
+            _openFileService = openFileService;
 
             PickEditor = new TaskCommand(PickEditorExecuteAsync);
             OpenApplicationDataDirectory = new Command(OnOpenApplicationDataDirectoryExecute);
@@ -64,15 +67,13 @@ namespace CsvTextEditor.ViewModels
 
         private async Task PickEditorExecuteAsync()
         {
-            var resolver = ServiceLocator.Default.GetDependencyResolver();
-            var openFileService = resolver.Resolve<IOpenFileService>();
+            _openFileService.Filter = "Program Files (*.exe)|*exe";
+            _openFileService.IsMultiSelect = false;
 
-            openFileService.Filter = "Program Files (*.exe)|*exe";
-            openFileService.IsMultiSelect = false;
-
-            var result = await openFileService.DetermineFileAsync();
-
-            CustomEditor = openFileService.FileName;
+            if (await _openFileService.DetermineFileAsync())
+            {
+                CustomEditor = _openFileService.FileName;
+            }       
         }
 
         public TaskCommand BackupUserData { get; private set; }
@@ -92,7 +93,7 @@ namespace CsvTextEditor.ViewModels
             CheckForUpdates = _updateService.CheckForUpdates;
             AvailableUpdateChannels = new List<UpdateChannel>(_updateService.AvailableChannels);
             UpdateChannel = _updateService.CurrentChannel;
-            CustomEditor = _configurationService.GetLocalValue<string>(Configuration.CustomEditor);
+            CustomEditor = _configurationService.GetRoamingValue<string>(Configuration.CustomEditor);
 
         }
 
@@ -101,8 +102,7 @@ namespace CsvTextEditor.ViewModels
             _updateService.CheckForUpdates = CheckForUpdates;
             _updateService.CurrentChannel = UpdateChannel;
 
-
-            _configurationService.SetLocalValue(Configuration.CustomEditor, CustomEditor);
+            _configurationService.SetRoamingValue(Configuration.CustomEditor, CustomEditor);
 
             return await base.SaveAsync();
         }
