@@ -5,46 +5,46 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace CsvTextEditor
 {
+    using Catel;
     using Catel.Configuration;
-    using Catel.IoC;
     using Catel.MVVM;
     using Catel.Services;
     using Orc.FileSystem;
-    using Orc.Notifications;
     using Orc.ProjectManagement;
     using Services;
 
     public class FileOpenInTextEditorCommandContainer : FileOpenInExternalToolCommandContainerBase
     {
+        private readonly IFileExtensionService _fileExtensionService;
+        private readonly IProcessService _processService;
+        private readonly IConfigurationService _configurationService;
 
         public FileOpenInTextEditorCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IFileExtensionService fileExtensionService,
-            IFileService fileService, IProcessService processService)
-            : base(Commands.File.OpenInTextEditor , "txt", commandManager, projectManager, fileExtensionService, fileService, processService)
+            IFileService fileService, IProcessService processService, IConfigurationService configurationService)
+            : base(Commands.File.OpenInTextEditor, "txt", commandManager, projectManager, fileExtensionService, fileService, processService)
         {
-        }
+            Argument.IsNotNull(() => fileExtensionService);
+            Argument.IsNotNull(() => configurationService);
+            Argument.IsNotNull(() => processService);
 
+            _fileExtensionService = fileExtensionService;
+            _processService = processService;
+            _configurationService = configurationService;
+        }
 
         protected override void Execute(object parameter)
         {
-
-            var resolver = ServiceLocator.Default.GetDependencyResolver();
-            var processService = resolver.Resolve<IProcessService>();
-            var configurationService = resolver.Resolve<IConfigurationService>();
-            var externalToolPath = configurationService.GetLocalValue<string>(Configuration.CustomEditor);
+            var externalToolPath = _configurationService.GetLocalValue<string>(Configuration.CustomEditor);
 
             if (externalToolPath != null)
             {
-                processService.StartProcess(externalToolPath, _projectManager.ActiveProject.Location);
-            } else
-            {
-
-                var fileExtensionService = resolver.Resolve<IFileExtensionService>();
-                var defaultToolPath = fileExtensionService.GetRegisteredTool("txt");
-                processService.StartProcess(defaultToolPath, _projectManager.ActiveProject.Location);
-
+                _processService.StartProcess(externalToolPath, _projectManager.ActiveProject.Location);
             }
-
-            
+            else
+            {
+                var defaultToolPath = _fileExtensionService.GetRegisteredTool("txt");
+                _processService.StartProcess(defaultToolPath, _projectManager.ActiveProject.Location);
+            }
         }
     }
 }
