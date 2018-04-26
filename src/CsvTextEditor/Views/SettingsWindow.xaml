@@ -2,7 +2,7 @@
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:catel="http://schemas.catelproject.com"
-                  xmlns:orc="http://www.wildgums.net.au/orc">
+                  xmlns:orccontrols="http://schemas.wildgums.com/orc/controls">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -24,7 +24,7 @@
                     </TextBlock>
                 </Label>
 
-                <orc:StackGrid IsEnabled="{Binding IsUpdateSystemAvailable}">
+                <orccontrols:StackGrid IsEnabled="{Binding IsUpdateSystemAvailable}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -39,12 +39,12 @@
 
                     <Label Content="Update channel" />
                     <ComboBox ItemsSource="{Binding AvailableUpdateChannels}" SelectedItem="{Binding UpdateChannel}" DisplayMemberPath="Name" />
-                </orc:StackGrid>
+                </orccontrols:StackGrid>
             </StackPanel>
         </GroupBox>
 
         <GroupBox Grid.Row="1" Header="User data options">
-            <orc:StackGrid>
+            <orccontrols:StackGrid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -56,11 +56,11 @@
 
                 <Button Content="Open data directory..." Command="{Binding OpenApplicationDataDirectory}" />
                 <Button Content="Create user data backup" Command="{Binding BackupUserData}" />
-            </orc:StackGrid>
+            </orccontrols:StackGrid>
         </GroupBox>
 
         <GroupBox Grid.Row="2" Header="Editor options">
-            <orc:StackGrid>
+            <orccontrols:StackGrid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -73,7 +73,7 @@
 
                 <Button Content="Pick Editor..." Command="{Binding PickEditor}" />
                 <Label Content="{Binding CustomEditor}" />
-            </orc:StackGrid>
+            </orccontrols:StackGrid>
         </GroupBox>
 
     </Grid>
