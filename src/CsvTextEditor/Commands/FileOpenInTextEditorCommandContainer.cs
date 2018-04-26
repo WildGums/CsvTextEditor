@@ -34,17 +34,10 @@ namespace CsvTextEditor
 
         protected override void Execute(object parameter)
         {
-            var externalToolPath = _configurationService.GetLocalValue<string>(Configuration.CustomEditor);
+            var externalToolPath = _configurationService.GetRoamingValue<string>(Configuration.CustomEditor);
 
-            if (externalToolPath != null)
-            {
-                _processService.StartProcess(externalToolPath, _projectManager.ActiveProject.Location);
-            }
-            else
-            {
-                var defaultToolPath = _fileExtensionService.GetRegisteredTool("txt");
-                _processService.StartProcess(defaultToolPath, _projectManager.ActiveProject.Location);
-            }
+            var toolPath = externalToolPath ?? _fileExtensionService.GetRegisteredTool("txt");
+            _processService.StartProcess(toolPath, _projectManager.ActiveProject.Location);
         }
     }
 }
