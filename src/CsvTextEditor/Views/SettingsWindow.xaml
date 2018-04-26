@@ -8,6 +8,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -57,6 +58,24 @@
                 <Button Content="Create user data backup" Command="{Binding BackupUserData}" />
             </orc:StackGrid>
         </GroupBox>
+
+        <GroupBox Grid.Row="2" Header="Editor options">
+            <orc:StackGrid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button Content="Pick Editor..." Command="{Binding PickEditor}" />
+                <Label Content="{Binding CustomEditor}" />
+            </orc:StackGrid>
+        </GroupBox>
+
     </Grid>
 
 </catel:DataWindow>

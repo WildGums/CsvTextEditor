@@ -50,6 +50,7 @@ namespace CsvTextEditor.ViewModels
         public bool IsUpdatedInstalled { get; private set; }
         public string Version { get; private set; }
         public int Column { get; private set; }
+        public string Heading { get; private set; }
         public int Line { get; private set; }
         #endregion
 
@@ -131,7 +132,16 @@ namespace CsvTextEditor.ViewModels
         private void OnCaretTextLocationChanged(object sender, CaretTextLocationChangedEventArgs args)
         {
             Column = args.Location.Column.Index;
-            Line = args.Location.Line.Index;
+            Line = args.Location.Line.Index + 1;
+            Heading = HeadingForLocation(args.Location);
+        }
+
+        private string HeadingForLocation(Location location)
+        {
+            var allText = _csvTextEditorInstance.GetText();
+            var firstLine = allText.Substring(0, allText.IndexOf(Symbols.NewLineEnd));
+            var columnHeaders = firstLine.Split(Symbols.Comma);
+            return columnHeaders[location.Column.Index];
         }
         #endregion
     }
