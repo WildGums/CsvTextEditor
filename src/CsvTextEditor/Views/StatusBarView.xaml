@@ -37,6 +37,8 @@
 
                 <TextBlock Text="Column "/>
                 <TextBlock Text="{Binding Column}"/>
+                <TextBlock Text="Heading "/>
+                <TextBlock FontWeight="Bold" Text="{Binding Heading}"/>
 
                 <Separator Margin="3,0,3,0" Width="{Binding ElementName=stackPanel, Path=ActualHeight}">
                     <Separator.LayoutTransform>
