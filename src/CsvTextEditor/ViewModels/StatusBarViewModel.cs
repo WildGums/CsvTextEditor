@@ -141,7 +141,7 @@ namespace CsvTextEditor.ViewModels
             var allText = _csvTextEditorInstance.GetText();
             var firstLine = allText.Substring(0, allText.IndexOf(Symbols.NewLineEnd));
             var columnHeaders = firstLine.Split(Symbols.Comma);
-            return columnHeaders[location.Column.Index];
+            return columnHeaders[location.Column.Index].Trim();
         }
         #endregion
     }
