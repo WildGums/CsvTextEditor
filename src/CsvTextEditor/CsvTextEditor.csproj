@@ -104,10 +104,10 @@
       <HintPath>..\..\lib\Orc.SystemInfo.3.0.0-alpha0009\lib\net46\Orc.SystemInfo.dll</HintPath>
     </Reference>
     <Reference Include="Orchestra.Core, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orchestra.Core.5.0.0-alpha0008\lib\net46\Orchestra.Core.dll</HintPath>
+      <HintPath>..\..\lib\Orchestra.Core.5.0.0-alpha0015\lib\net46\Orchestra.Core.dll</HintPath>
     </Reference>
     <Reference Include="Orchestra.Shell.Ribbon.Fluent, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orchestra.Shell.Ribbon.Fluent.5.0.0-alpha0008\lib\net46\Orchestra.Shell.Ribbon.Fluent.dll</HintPath>
+      <HintPath>..\..\lib\Orchestra.Shell.Ribbon.Fluent.5.0.0-alpha0015\lib\net46\Orchestra.Shell.Ribbon.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -300,8 +300,10 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\lib\AsyncUsageAnalyzers.1.0.0-alpha003\analyzers\dotnet\AsyncUsageAnalyzers.dll" />
-    <Analyzer Include="..\..\lib\WpfAnalyzers.2.1.2.1\analyzers\dotnet\cs\WpfAnalyzers.Analyzers.dll" />
-    <Analyzer Include="..\..\lib\WpfAnalyzers.2.1.2.1\analyzers\dotnet\cs\WpfAnalyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\lib\WpfAnalyzers.2.1.3.2\analyzers\dotnet\cs\Gu.Roslyn.AnalyzerExtensions.dll" />
+    <Analyzer Include="..\..\lib\WpfAnalyzers.2.1.3.2\analyzers\dotnet\cs\Gu.Roslyn.CodeFixExtensions.dll" />
+    <Analyzer Include="..\..\lib\WpfAnalyzers.2.1.3.2\analyzers\dotnet\cs\WpfAnalyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\lib\WpfAnalyzers.2.1.3.2\analyzers\dotnet\cs\WpfAnalyzers.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\logo.ico" />
