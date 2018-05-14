@@ -37,6 +37,12 @@
         <fluent:Ribbon.Tabs>
             <fluent:RibbonTabItem Header="View">
                 <fluent:RibbonGroupBox Header="File">
+
+                    <fluent:Button Header="Save"
+                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Save}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding File.Save}" />
+
+
                     <fluent:SplitButton Header="Open in editor"
                                         LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Edit}, FontFamily=FontAwesome}" 
                                         Command="{catel:CommandManagerBinding File.OpenInTextEditor}"
