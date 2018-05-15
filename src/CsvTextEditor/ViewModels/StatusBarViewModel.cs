@@ -139,9 +139,17 @@ namespace CsvTextEditor.ViewModels
         private string HeadingForLocation(Location location)
         {
             var allText = _csvTextEditorInstance.GetText();
-            var firstLine = allText.Substring(0, allText.IndexOf(Symbols.NewLineEnd));
-            var columnHeaders = firstLine.Split(Symbols.Comma);
-            return columnHeaders[location.Column.Index].Trim();
+            var indexOfNewLine = allText.IndexOf(Symbols.NewLineEnd);
+
+            if (indexOfNewLine != -1)
+            {
+                var firstLine = allText.Substring(0, indexOfNewLine);
+                var columnHeaders = firstLine.Split(Symbols.Comma);
+                return columnHeaders[location.Column.Index].Trim();
+            }
+
+            return "";
+
         }
         #endregion
     }
