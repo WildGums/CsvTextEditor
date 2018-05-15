@@ -71,8 +71,11 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button Content="Pick Editor..." Command="{Binding PickEditor}" />
-                <Label Content="{Binding CustomEditor}" />
+                <Button Grid.Row="0" Content="Pick Editor..." Command="{Binding PickEditor}" />
+                <Label Grid.Row="0" Content="{Binding CustomEditor}" />
+
+                <CheckBox Margin="6,10,0,3" Grid.Row="1" IsChecked="{Binding TimedAutoSave}" Content="Auto save every minute"></CheckBox>
+                
             </orc:StackGrid>
         </GroupBox>
 

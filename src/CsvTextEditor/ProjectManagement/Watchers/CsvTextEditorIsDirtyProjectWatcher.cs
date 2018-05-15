@@ -8,8 +8,11 @@
 namespace CsvTextEditor.ProjectManagement
 {
     using System;
+    using System.Diagnostics;
     using System.Threading.Tasks;
+    using System.Windows.Threading;
     using Catel;
+    using Catel.Configuration;
     using Catel.IoC;
     using Catel.Threading;
     using Models;
@@ -22,22 +25,36 @@ namespace CsvTextEditor.ProjectManagement
         #region Fields
         private readonly IMainWindowTitleService _mainWindowTitleService;
         private readonly ISaveProjectChangesService _saveProjectChangesService;
+        private readonly IConfigurationService _configurationService;
+        private readonly IProjectManager _projectManager;
         private readonly IServiceLocator _serviceLocator;
         private ICsvTextEditorInstance _csvTextEditorInstance;
+        private DispatcherTimer _autoSaveTimer;
         #endregion
 
         #region Constructors
         public CsvTextEditorIsDirtyProjectWatcher(IProjectManager projectManager, IServiceLocator serviceLocator, IMainWindowTitleService mainWindowTitleService,
-            ISaveProjectChangesService saveProjectChangesService)
+            ISaveProjectChangesService saveProjectChangesService, IConfigurationService configurationService)
             : base(projectManager)
         {
             Argument.IsNotNull(() => serviceLocator);
             Argument.IsNotNull(() => mainWindowTitleService);
             Argument.IsNotNull(() => saveProjectChangesService);
+            Argument.IsNotNull(() => configurationService);
+            Argument.IsNotNull(() => projectManager);
 
+            _projectManager = projectManager;
             _serviceLocator = serviceLocator;
             _mainWindowTitleService = mainWindowTitleService;
             _saveProjectChangesService = saveProjectChangesService;
+            _configurationService = configurationService;
+
+            _autoSaveTimer = new DispatcherTimer();
+            _autoSaveTimer.Tick += AutoSaveIfNeeded;
+            _autoSaveTimer.Interval = TimeSpan.FromSeconds(Configuration.AutoSaveTimeInSeconds);
+            _autoSaveTimer.Start();
+
+
         }
         #endregion
 
@@ -57,6 +74,23 @@ namespace CsvTextEditor.ProjectManagement
                 _csvTextEditorInstance.TextChanged += CsvTextEditorInstanceOnTextChanged;
 
             return base.OnActivatedAsync(oldProject, newProject);
+        }
+
+        private void AutoSaveIfNeeded(object sender, EventArgs e)
+        {
+            if (!_configurationService.IsRoamingValueAvailable(Configuration.TimedAutoSave))
+                return;
+
+            if (_csvTextEditorInstance == null)
+                return;
+            
+            if (_csvTextEditorInstance.IsDirty &&
+                _configurationService.GetRoamingValue<bool>(Configuration.TimedAutoSave))
+            {
+                var project = (Project)ProjectManager.ActiveProject;
+                _projectManager.SaveAsync(project.Location).ConfigureAwait(false);
+
+            }
         }
 
         private void CsvTextEditorInstanceOnTextChanged(object sender, EventArgs e)
