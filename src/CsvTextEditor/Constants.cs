@@ -37,6 +37,11 @@ namespace CsvTextEditor
     public static class Configuration
     {
         public const string CustomEditor = "Settings.Application.Editor.CustomEditor";
+        public const string AutoSaveEditor = "Settings.Application.Editor.AutoSaveEditor";
+
+        public static double AutoSaveInterval { get { return 60.0; } }
+
+        public const bool AutoSaveEditorDefaultValue = false;
     }
 
     public static class Commands

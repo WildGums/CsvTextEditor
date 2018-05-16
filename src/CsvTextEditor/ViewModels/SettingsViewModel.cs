@@ -7,7 +7,9 @@
 
 namespace CsvTextEditor.ViewModels
 {
+    using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Threading.Tasks;
     using Catel;
     using Catel.Configuration;
@@ -50,6 +52,7 @@ namespace CsvTextEditor.ViewModels
         #region Properties
         public bool IsUpdateSystemAvailable { get; private set; }
         public bool CheckForUpdates { get; set; }
+        public bool AutoSaveEditor { get; set; }
         public string CustomEditor { get; private set; }
         public List<UpdateChannel> AvailableUpdateChannels { get; private set; }
         public UpdateChannel UpdateChannel { get; set; }
@@ -93,8 +96,9 @@ namespace CsvTextEditor.ViewModels
             CheckForUpdates = _updateService.CheckForUpdates;
             AvailableUpdateChannels = new List<UpdateChannel>(_updateService.AvailableChannels);
             UpdateChannel = _updateService.CurrentChannel;
-            CustomEditor = _configurationService.GetRoamingValue<string>(Configuration.CustomEditor);
 
+            CustomEditor = _configurationService.GetRoamingValue<string>(Configuration.CustomEditor);
+            AutoSaveEditor = _configurationService.GetRoamingValue<bool>(Configuration.AutoSaveEditor);
         }
 
         protected override async Task<bool> SaveAsync()
@@ -103,6 +107,7 @@ namespace CsvTextEditor.ViewModels
             _updateService.CurrentChannel = UpdateChannel;
 
             _configurationService.SetRoamingValue(Configuration.CustomEditor, CustomEditor);
+            _configurationService.SetRoamingValue(Configuration.AutoSaveEditor, AutoSaveEditor);
 
             return await base.SaveAsync();
         }
