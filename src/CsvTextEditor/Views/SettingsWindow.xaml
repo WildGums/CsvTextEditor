@@ -75,7 +75,7 @@
                 <Label Grid.Row="0" Content="{Binding CustomEditor}" />
 
                 <CheckBox Margin="6,10,0,3" Grid.Row="1" IsChecked="{Binding AutoSaveEditor}" Content="Auto save every minute" />
-            </orc:StackGrid>
+            </orccontrols:StackGrid>
         </GroupBox>
 
     </Grid>
