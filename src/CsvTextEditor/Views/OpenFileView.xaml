@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CsvTextEditor.Views"
              xmlns:catel="http://schemas.catelproject.com"
-             xmlns:orchestra="https://github.com/orcomp/orchestra"
+             xmlns:orchestra="http://schemas.wildgums.com/orchestra"
              xmlns:fluent="urn:fluent-ribbon"
              xmlns:csvTextEditor="clr-namespace:CsvTextEditor"
              mc:Ignorable="d" 

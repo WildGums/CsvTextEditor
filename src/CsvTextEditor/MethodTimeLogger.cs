@@ -1,45 +1,41 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MethodTimeLogger.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+// <copyright file="ModuleInitializer.cs" company="WildGums">
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 
-using System;
 using System.Reflection;
 using Catel.Logging;
+using System;
 
 /// <summary>
 /// Note: do not rename this class or put it inside a namespace.
 /// </summary>
-public static class MethodTimeLogger
+internal static class MethodTimeLogger
 {
     #region Methods
-    /// <summary>
-    /// Used by MethodTimer.
-    /// </summary>
-    /// <param name="methodBase"></param>
-    /// <param name="milliseconds"></param>
-    public static void Log(MethodBase methodBase, long milliseconds)
+    public static void Log(MethodBase methodBase, long milliseconds, string message)
     {
-        Log(methodBase.DeclaringType, methodBase.Name, milliseconds);
+        Log(methodBase.DeclaringType, methodBase.Name, milliseconds, message);
     }
 
-    /// <summary>
-    /// Used by custom code.
-    /// </summary>
-    /// <param name="type"></param>
-    /// <param name="methodName"></param>
-    /// <param name="milliseconds"></param>
-    public static void Log(Type type, string methodName, long milliseconds)
+    public static void Log(Type type, string methodName, long milliseconds, string message)
     {
         if (type == null)
         {
             return;
         }
 
+        var finalMessage = $"[METHODTIMER] {type.Name}.{methodName} took '{milliseconds}' ms";
+
+        if (!string.IsNullOrWhiteSpace(message))
+        {
+            finalMessage += $" | {message}";
+        }
+
         var logger = LogManager.GetLogger(type);
-        logger.Debug("[METHODTIMER] {0}.{1} took '{2}' ms", type.Name, methodName, milliseconds);
+        logger.Debug(finalMessage);
     }
     #endregion
 }

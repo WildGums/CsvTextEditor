@@ -7,8 +7,8 @@
                    xmlns:catel="http://schemas.catelproject.com"
                    xmlns:fluent="urn:fluent-ribbon"
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                   xmlns:orc="http://www.wildgums.net.au/orc"
-                   xmlns:orchestra="https://github.com/orcomp/orchestra"
+                   xmlns:orccontrols="http://schemas.wildgums.com/orc/controls"
+                   xmlns:orchestra="http://schemas.wildgums.com/orchestra"
                    xmlns:csvTextEditor="clr-namespace:CsvTextEditor"
                    mc:Ignorable="d"
                    d:DesignHeight="300"
@@ -28,7 +28,7 @@
                     <fluent:Button Header="Save"
                                    Command="{catel:CommandManagerBinding File.Save}" />
 
-                    <fluent:Button Header="SaveAs"
+                    <fluent:Button Header="Save As"
                                    Command="{catel:CommandManagerBinding File.SaveAs}" />
                 </fluent:BackstageTabControl>
             </fluent:Backstage>

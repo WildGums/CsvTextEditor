@@ -149,7 +149,6 @@ namespace CsvTextEditor.ViewModels
             }
 
             return String.Empty;
-
         }
         #endregion
     }
