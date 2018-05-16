@@ -51,10 +51,8 @@ namespace CsvTextEditor.ProjectManagement
 
             _autoSaveTimer = new DispatcherTimer();
             _autoSaveTimer.Tick += AutoSaveIfNeeded;
-            _autoSaveTimer.Interval = TimeSpan.FromSeconds(Configuration.AutoSaveInterval);
+            _autoSaveTimer.Interval = configurationService.GetRoamingValue(Configuration.AutoSaveInterval, Configuration.AutoSaveIntervalDefaultValue);
             _autoSaveTimer.Start();
-
-
         }
         #endregion
 

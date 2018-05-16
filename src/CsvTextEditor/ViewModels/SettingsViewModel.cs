@@ -98,7 +98,7 @@ namespace CsvTextEditor.ViewModels
             UpdateChannel = _updateService.CurrentChannel;
 
             CustomEditor = _configurationService.GetRoamingValue<string>(Configuration.CustomEditor);
-            AutoSaveEditor = _configurationService.GetRoamingValue<bool>(Configuration.AutoSaveEditor);
+            AutoSaveEditor = _configurationService.GetRoamingValue(Configuration.AutoSaveEditor, Configuration.AutoSaveEditorDefaultValue);
         }
 
         protected override async Task<bool> SaveAsync()
