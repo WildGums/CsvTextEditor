@@ -148,7 +148,7 @@ namespace CsvTextEditor.ViewModels
                 return columnHeaders[location.Column.Index].Trim();
             }
 
-            return "";
+            return String.Empty;
 
         }
         #endregion

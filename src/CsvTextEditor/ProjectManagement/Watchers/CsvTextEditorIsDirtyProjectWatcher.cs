@@ -51,7 +51,7 @@ namespace CsvTextEditor.ProjectManagement
 
             _autoSaveTimer = new DispatcherTimer();
             _autoSaveTimer.Tick += AutoSaveIfNeeded;
-            _autoSaveTimer.Interval = TimeSpan.FromSeconds(Configuration.AutoSaveTimeInSeconds);
+            _autoSaveTimer.Interval = TimeSpan.FromSeconds(Configuration.AutoSaveInterval);
             _autoSaveTimer.Start();
 
 
@@ -78,14 +78,14 @@ namespace CsvTextEditor.ProjectManagement
 
         private void AutoSaveIfNeeded(object sender, EventArgs e)
         {
-            if (!_configurationService.IsRoamingValueAvailable(Configuration.TimedAutoSave))
-                return;
 
             if (_csvTextEditorInstance == null)
+            {
                 return;
-            
+            }
+                          
             if (_csvTextEditorInstance.IsDirty &&
-                _configurationService.GetRoamingValue<bool>(Configuration.TimedAutoSave))
+                _configurationService.GetRoamingValue<bool>(Configuration.AutoSaveEditor))
             {
                 var project = (Project)ProjectManager.ActiveProject;
                 _projectManager.SaveAsync(project.Location).ConfigureAwait(false);
