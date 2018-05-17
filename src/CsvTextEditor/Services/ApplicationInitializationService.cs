@@ -151,15 +151,13 @@ namespace CsvTextEditor.Services
         {
             Log.Info("Checking for updates");
 
-            var maximumReleaseDate = DateTime.MaxValue;
-
             var updateService = _serviceLocator.ResolveType<IUpdateService>();
             updateService.Initialize(Settings.Application.AutomaticUpdates.AvailableChannels, Settings.Application.AutomaticUpdates.DefaultChannel,
                 Settings.Application.AutomaticUpdates.CheckForUpdatesDefaultValue);
 
 #pragma warning disable 4014
             // Not dot await, it's a background thread
-            updateService.HandleUpdatesAsync(maximumReleaseDate);
+            updateService.InstallAvailableUpdatesAsync(new SquirrelContext());
 #pragma warning restore 4014
         }
 
