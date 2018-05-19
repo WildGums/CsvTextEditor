@@ -60,7 +60,7 @@
       <HintPath>..\..\lib\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Orc.CsvTextEditor, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.CsvTextEditor.3.0.0-alpha0054\lib\net46\Orc.CsvTextEditor.dll</HintPath>
+      <HintPath>..\..\lib\Orc.CsvTextEditor.3.0.0-alpha0060\lib\net46\Orc.CsvTextEditor.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
