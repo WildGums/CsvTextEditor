@@ -104,13 +104,13 @@
       <HintPath>..\..\lib\squirrel.windows.1.8.0\lib\Net45\NuGet.Squirrel.dll</HintPath>
     </Reference>
     <Reference Include="Orc.CommandLine, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.CommandLine.3.0.0-alpha0025\lib\net46\Orc.CommandLine.dll</HintPath>
+      <HintPath>..\..\lib\Orc.CommandLine.3.0.0-alpha0028\lib\net46\Orc.CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="Orc.Controls, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.Controls.3.0.0-alpha0033\lib\net46\Orc.Controls.dll</HintPath>
+      <HintPath>..\..\lib\Orc.Controls.3.0.0-alpha0035\lib\net46\Orc.Controls.dll</HintPath>
     </Reference>
     <Reference Include="Orc.CsvTextEditor, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.CsvTextEditor.3.0.0-alpha0060\lib\net46\Orc.CsvTextEditor.dll</HintPath>
+      <HintPath>..\..\lib\Orc.CsvTextEditor.3.0.0-alpha0062\lib\net46\Orc.CsvTextEditor.dll</HintPath>
     </Reference>
     <Reference Include="Orc.FileSystem, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Orc.FileSystem.3.0.0-alpha0025\lib\net46\Orc.FileSystem.dll</HintPath>
@@ -122,19 +122,19 @@
       <HintPath>..\..\lib\Orc.ProjectManagement.3.0.0-alpha0013\lib\net46\Orc.ProjectManagement.dll</HintPath>
     </Reference>
     <Reference Include="Orc.Squirrel, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.Squirrel.3.0.0-alpha0011\lib\net46\Orc.Squirrel.dll</HintPath>
+      <HintPath>..\..\lib\Orc.Squirrel.3.0.0-alpha0013\lib\net46\Orc.Squirrel.dll</HintPath>
     </Reference>
     <Reference Include="Orc.Squirrel.Xaml, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.Squirrel.Xaml.3.0.0-alpha0011\lib\net46\Orc.Squirrel.Xaml.dll</HintPath>
+      <HintPath>..\..\lib\Orc.Squirrel.Xaml.3.0.0-alpha0013\lib\net46\Orc.Squirrel.Xaml.dll</HintPath>
     </Reference>
     <Reference Include="Orc.SystemInfo, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.SystemInfo.3.0.0-alpha0015\lib\net46\Orc.SystemInfo.dll</HintPath>
+      <HintPath>..\..\lib\Orc.SystemInfo.3.0.0-alpha0017\lib\net46\Orc.SystemInfo.dll</HintPath>
     </Reference>
     <Reference Include="Orchestra.Core, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orchestra.Core.5.0.0-alpha0018\lib\net46\Orchestra.Core.dll</HintPath>
+      <HintPath>..\..\lib\Orchestra.Core.5.0.0-alpha0025\lib\net46\Orchestra.Core.dll</HintPath>
     </Reference>
     <Reference Include="Orchestra.Shell.Ribbon.Fluent, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orchestra.Shell.Ribbon.Fluent.5.0.0-alpha0018\lib\net46\Orchestra.Shell.Ribbon.Fluent.dll</HintPath>
+      <HintPath>..\..\lib\Orchestra.Shell.Ribbon.Fluent.5.0.0-alpha0025\lib\net46\Orchestra.Shell.Ribbon.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress, Version=0.17.1.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
       <HintPath>..\..\lib\SharpCompress.0.17.1\lib\net45\SharpCompress.dll</HintPath>

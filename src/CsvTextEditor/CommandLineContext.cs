@@ -9,7 +9,7 @@ namespace CsvTextEditor
 
     public class CommandLineContext : ContextBase
     {
-        [Option(' ', "", DisplayName = "initialFile", HelpText = "The initial file to open in CsvTextEditor")]
+        [Option("", "", DisplayName = "initialFile", HelpText = "The initial file to open in CsvTextEditor")]
         public string InitialFile { get; set; }
     }
 }
