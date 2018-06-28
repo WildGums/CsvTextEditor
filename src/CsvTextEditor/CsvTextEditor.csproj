@@ -1,395 +1,67 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{768CCB78-F19F-4BE8-B14B-C84E9AC9F0B3}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CsvTextEditor</RootNamespace>
+    <TargetFrameworks>net462</TargetFrameworks>
     <AssemblyName>CsvTextEditor</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <RootNamespace>CsvTextEditor</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\output\debug\CsvTextEditor\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>1591;1998</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\output\release\CsvTextEditor\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>1591;1998</NoWarn>
-  </PropertyGroup>
+
   <PropertyGroup>
+    <!-- SonarQube requires a project guid -->
+    <ProjectGuid>70261F8B-6554-4C72-BC0B-CFBD7A7DD94C</ProjectGuid>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <StartupObject />
+    <NoWarn>$(NoWarn);SA1652</NoWarn>
     <ApplicationIcon>Resources\Icons\logo.ico</ApplicationIcon>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Catel.Core, Version=5.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Catel.Core.5.5.0\lib\net46\Catel.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Catel.Fody.Attributes, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Catel.Fody.3.3.0\lib\net452\Catel.Fody.Attributes.dll</HintPath>
-    </Reference>
-    <Reference Include="Catel.MVVM, Version=5.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Catel.MVVM.5.5.0\lib\net46\Catel.MVVM.dll</HintPath>
-    </Reference>
-    <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\ControlzEx.3.0.2.4\lib\net462\ControlzEx.dll</HintPath>
-    </Reference>
-    <Reference Include="Costura, Version=2.0.1.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Costura.Fody.2.0.1\lib\net452\Costura.dll</HintPath>
-    </Reference>
-    <Reference Include="DeltaCompressionDotNet, Version=1.1.0.0, Culture=neutral, PublicKeyToken=1d14d6e5194e7f4a, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\DeltaCompressionDotNet.1.1.0\lib\net20\DeltaCompressionDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="DeltaCompressionDotNet.MsDelta, Version=1.1.0.0, Culture=neutral, PublicKeyToken=46b2138a390abf55, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\DeltaCompressionDotNet.1.1.0\lib\net20\DeltaCompressionDotNet.MsDelta.dll</HintPath>
-    </Reference>
-    <Reference Include="DeltaCompressionDotNet.PatchApi, Version=1.1.0.0, Culture=neutral, PublicKeyToken=3e8888ee913ed789, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\DeltaCompressionDotNet.1.1.0\lib\net20\DeltaCompressionDotNet.PatchApi.dll</HintPath>
-    </Reference>
-    <Reference Include="Fluent, Version=6.1.0.233, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Fluent.Ribbon.6.1.0.233\lib\net462\Fluent.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\AvalonEdit.5.0.4\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
-    </Reference>
-    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Ionic.Zip.1.9.1.8\lib\Ionic.Zip.dll</HintPath>
-    </Reference>
-    <Reference Include="MethodTimer, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cb1364609f40a1dc, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\MethodTimer.Fody.2.1.0\lib\net452\MethodTimer.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Expression.Blend.Sdk.WPF.1.0.1\lib\net45\Microsoft.Expression.Interactions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ModuleInit, Version=1.8.0.0, Culture=neutral, PublicKeyToken=409b3227471b0f0d, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\ModuleInit.Fody.1.8.0\lib\net452\ModuleInit.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Mono.Cecil.0.10.0\lib\net40\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Mono.Cecil.0.10.0\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Pdb, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Mono.Cecil.0.10.0\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Rocks, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Mono.Cecil.0.10.0\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Squirrel, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\squirrel.windows.1.8.0\lib\Net45\NuGet.Squirrel.dll</HintPath>
-    </Reference>
-    <Reference Include="Orc.CommandLine, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.CommandLine.3.0.0-alpha0028\lib\net46\Orc.CommandLine.dll</HintPath>
-    </Reference>
-    <Reference Include="Orc.Controls, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.Controls.3.0.0-alpha0035\lib\net46\Orc.Controls.dll</HintPath>
-    </Reference>
-    <Reference Include="Orc.CsvTextEditor, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.CsvTextEditor.3.0.0-alpha0062\lib\net46\Orc.CsvTextEditor.dll</HintPath>
-    </Reference>
-    <Reference Include="Orc.FileSystem, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.FileSystem.3.0.0-alpha0025\lib\net46\Orc.FileSystem.dll</HintPath>
-    </Reference>
-    <Reference Include="Orc.Notifications, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.Notifications.3.0.0-alpha0008\lib\net46\Orc.Notifications.dll</HintPath>
-    </Reference>
-    <Reference Include="Orc.ProjectManagement, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.ProjectManagement.3.0.0-alpha0013\lib\net46\Orc.ProjectManagement.dll</HintPath>
-    </Reference>
-    <Reference Include="Orc.Squirrel, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.Squirrel.3.0.0-alpha0013\lib\net46\Orc.Squirrel.dll</HintPath>
-    </Reference>
-    <Reference Include="Orc.Squirrel.Xaml, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.Squirrel.Xaml.3.0.0-alpha0013\lib\net46\Orc.Squirrel.Xaml.dll</HintPath>
-    </Reference>
-    <Reference Include="Orc.SystemInfo, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orc.SystemInfo.3.0.0-alpha0017\lib\net46\Orc.SystemInfo.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchestra.Core, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orchestra.Core.5.0.0-alpha0025\lib\net46\Orchestra.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchestra.Shell.Ribbon.Fluent, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Orchestra.Shell.Ribbon.Fluent.5.0.0-alpha0025\lib\net46\Orchestra.Shell.Ribbon.Fluent.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpCompress, Version=0.17.1.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\SharpCompress.0.17.1\lib\net45\SharpCompress.dll</HintPath>
-    </Reference>
-    <Reference Include="Splat, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\Splat.1.6.2\lib\Net45\Splat.dll</HintPath>
-    </Reference>
-    <Reference Include="Squirrel, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\squirrel.windows.1.8.0\lib\Net45\Squirrel.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\System.Collections.Immutable.1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\System.ComponentModel.Annotations.4.5.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.IO.FileSystem.Watcher, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\System.IO.FileSystem.Watcher.4.3.0\lib\net46\System.IO.FileSystem.Watcher.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Management" />
-    <Reference Include="System.Reflection, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\System.Reflection.4.3.0\lib\net462\System.Reflection.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Runtime.Serialization.Formatters, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\System.Runtime.Serialization.Formatters.4.3.0\lib\net46\System.Runtime.Serialization.Formatters.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization.Xml, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\System.Runtime.Serialization.Xml.4.3.0\lib\net46\System.Runtime.Serialization.Xml.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Expression.Blend.Sdk.WPF.1.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <PackageReference Include="Catel.Core" Version="5.6.0-beta0001" />
+    <PackageReference Include="Catel.MVVM" Version="5.6.0-beta0001" />
+    <PackageReference Include="Catel.Fody" Version="3.3.0" PrivateAssets="all" />
+    <PackageReference Include="FastMember" Version="1.3.0" />
+    <PackageReference Include="Fody" Version="3.1.3" PrivateAssets="all">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="2.1.0" PrivateAssets="all" />
+    <PackageReference Include="MethodTimer.Fody" Version="2.1.1" PrivateAssets="all" />
+    <PackageReference Include="ModuleInit.Fody" Version="1.8.1" PrivateAssets="all" />
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.5.4" PrivateAssets="All" />
+    <PackageReference Include="Obsolete.Fody" Version="4.4.1" PrivateAssets="all" />
+    <PackageReference Include="Orc.Analytics" Version="3.0.0-alpha0018" />
+    <PackageReference Include="Orc.CommandLine" Version="3.0.0-alpha0034" />
+    <PackageReference Include="Orc.CsvTextEditor" Version="3.0.0-alpha0069" />
+    <PackageReference Include="Orc.FilterBuilder.Xaml" Version="3.0.0-alpha0013" />
+    <PackageReference Include="Orc.Notifications" Version="3.0.0-alpha0012" />
+    <PackageReference Include="Orc.ProjectManagement" Version="3.0.0-alpha0024" />
+    <PackageReference Include="Orc.Squirrel.Xaml" Version="3.0.0-alpha0015" />
+    <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="3.0.0-alpha0035" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="5.0.0-alpha0036" />
+    <PackageReference Include="WpfAnalyzers" Version="2.1.3.2" PrivateAssets="all" />
   </ItemGroup>
+
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="..\GlobalSuppressions.cs">
-      <Link>Properties\GlobalSuppressions.cs</Link>
-    </Compile>
-    <Compile Include="..\SolutionAssemblyInfo.cs">
-      <Link>Properties\SolutionAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="ApplicationWatchers\ProjectManagementCloseApplicationWatcher.cs" />
-    <Compile Include="ApplicationWatchers\ShellActivatedActionQueue.cs" />
-    <Compile Include="Behaviors\ExternalFileDragDropBehavior.cs" />
-    <Compile Include="CommandLineContext.cs" />
-    <Compile Include="Commands\Base\EditProjectCommandContainerBase.cs" />
-    <Compile Include="Commands\Base\FileOpenInExternalToolCommandContainerBase.cs" />
-    <Compile Include="Commands\Base\ProjectCommandContainerBase.cs" />
-    <Compile Include="Commands\EditCopyCommandContainer.cs" />
-    <Compile Include="Commands\EditCutCommandContainer.cs" />
-    <Compile Include="Commands\EditPasteCommandContainer.cs" />
-    <Compile Include="Commands\EditRedoCommandContainer.cs" />
-    <Compile Include="Commands\EditFindReplaceCommandContainer.cs" />
-    <Compile Include="Commands\EditRemoveBlankLinesCommandContainer.cs" />
-    <Compile Include="Commands\EditRemoveDuplicateLinesCommandContainer.cs" />
-    <Compile Include="Commands\EditTrimWhitespacesCommandContainer.cs" />
-    <Compile Include="Commands\EditUndoCommandContainer.cs" />
-    <Compile Include="Commands\FileOpenInExcelCommandContainer.cs" />
-    <Compile Include="Commands\FileOpenInTextEditorCommandContainer.cs" />
-    <Compile Include="Commands\HelpAboutCommandContainer.cs" />
-    <Compile Include="Commands\FileCloseCommandContainer.cs" />
-    <Compile Include="Commands\FileSaveAsCommandContainer.cs" />
-    <Compile Include="Commands\FileSaveCommandContainer.cs" />
-    <Compile Include="Commands\FileOpenCommandContainer.cs" />
-    <Compile Include="Commands\Base\QuickFormatCommandContainerBase.cs" />
-    <Compile Include="Commands\SettingsGeneralCommandContainer.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Controls\ViewModels\ProjectStatisticViewModel.cs" />
-    <Compile Include="Controls\Views\ProjectStatisticView.xaml.cs">
-      <DependentUpon>ProjectStatisticView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MethodTimeLogger.cs" />
-    <Compile Include="Models\Project.cs" />
-    <Compile Include="ModuleInitializer.cs" />
-    <Compile Include="Native\Shell32.cs" />
-    <Compile Include="ProjectManagement\Serializers\ProjectReader.cs" />
-    <Compile Include="ProjectManagement\Serializers\ProjectSerializerSelector.cs" />
-    <Compile Include="ProjectManagement\Serializers\ProjectWriter.cs" />
-    <Compile Include="ProjectManagement\Watchers\CsvTextEditorAutoCompleteProjectWatcher.cs" />
-    <Compile Include="ProjectManagement\Watchers\MainWindowTitleProjectWatcher.cs" />
-    <Compile Include="ProjectManagement\Watchers\RecentlyUsedItemsProjectWatcher.cs" />
-    <Compile Include="ProjectManagement\Watchers\CsvTextEditorIsDirtyProjectWatcher.cs" />
-    <Compile Include="Resources\Fonts\FontAwesome.cs" />
-    <Compile Include="Services\ApplicationInitializationService.cs" />
-    <Compile Include="Services\FileExtensionService.cs" />
-    <Compile Include="Services\InitialProjectLocationService.cs" />
-    <Compile Include="Services\Interfaces\IFileExtensionService.cs" />
-    <Compile Include="Services\Interfaces\IMainWindowTitleService.cs" />
-    <Compile Include="Services\Interfaces\IManageUserDataService.cs" />
-    <Compile Include="Services\Interfaces\ISaveProjectChangesService.cs" />
-    <Compile Include="Services\MainWindowTitleService.cs" />
-    <Compile Include="Services\ManageUserDataService.cs" />
-    <Compile Include="Services\RibbonService.cs" />
-    <Compile Include="Services\SaveChangesReason.cs" />
-    <Compile Include="Services\SaveProjectChangesService.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\OpenFileViewModel.cs" />
-    <Compile Include="ViewModels\RecentlyUsedItemsViewModel.cs" />
-    <Compile Include="ViewModels\RibbonViewModel.cs" />
-    <Compile Include="ViewModels\SettingsViewModel.cs" />
-    <Compile Include="ViewModels\StatusBarViewModel.cs" />
-    <Compile Include="Views\MainView.xaml.cs">
-      <DependentUpon>MainView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\OpenFileView.xaml.cs">
-      <DependentUpon>OpenFileView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\RecentlyUsedItemsView.xaml.cs">
-      <DependentUpon>RecentlyUsedItemsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\RibbonView.xaml.cs">
-      <DependentUpon>RibbonView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SettingsWindow.xaml.cs">
-      <DependentUpon>SettingsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\StatusBarView.xaml.cs">
-      <DependentUpon>StatusBarView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Controls\Views\ProjectStatisticView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\Styles.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\MainView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\OpenFileView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\RecentlyUsedItemsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\RibbonView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SettingsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\StatusBarView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <PackageReference Update="NETStandard.Library" Version="2.0.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
+    <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <AppDesigner Include="Properties\" />
-    <Resource Include="Resources\Fonts\fontawesome-webfont.ttf" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="FodyWeavers.xml" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Analyzer Include="..\..\lib\AsyncUsageAnalyzers.1.0.0-alpha003\analyzers\dotnet\AsyncUsageAnalyzers.dll" />
-    <Analyzer Include="..\..\lib\WpfAnalyzers.2.1.3.2\analyzers\dotnet\cs\Gu.Roslyn.AnalyzerExtensions.dll" />
-    <Analyzer Include="..\..\lib\WpfAnalyzers.2.1.3.2\analyzers\dotnet\cs\Gu.Roslyn.CodeFixExtensions.dll" />
-    <Analyzer Include="..\..\lib\WpfAnalyzers.2.1.3.2\analyzers\dotnet\cs\WpfAnalyzers.CodeFixes.dll" />
-    <Analyzer Include="..\..\lib\WpfAnalyzers.2.1.3.2\analyzers\dotnet\cs\WpfAnalyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Icons\logo.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\logo_0128.png" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\lib\Fody.3.0.3\build\Fody.targets" Condition="Exists('..\..\lib\Fody.3.0.3\build\Fody.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\lib\Fody.3.0.3\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\lib\Fody.3.0.3\build\Fody.targets'))" />
-    <Error Condition="!Exists('..\..\lib\Costura.Fody.2.0.1\build\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\lib\Costura.Fody.2.0.1\build\Costura.Fody.targets'))" />
-  </Target>
-  <Import Project="..\..\lib\Costura.Fody.2.0.1\build\Costura.Fody.targets" Condition="Exists('..\..\lib\Costura.Fody.2.0.1\build\Costura.Fody.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  
+  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
+  <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />
 </Project>

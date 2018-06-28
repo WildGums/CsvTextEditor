@@ -1,0 +1,14 @@
+<Project>
+  <!-- 
+    This file applies to all projects automatically, this file contains all the project specific data
+  -->
+
+  <PropertyGroup>
+    <Authors>wildgums</Authors>
+    <PackageIconUrl>https://github.com/WildGums/Assets/raw/master/packages/logo.png</PackageIconUrl>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <RepositoryUrl></RepositoryUrl>
+  </PropertyGroup>
+   
+</Project>

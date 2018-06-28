@@ -50,7 +50,7 @@ namespace CsvTextEditor
 
             var serviceLocator = ServiceLocator.Default;
             var shellService = serviceLocator.ResolveType<IShellService>();
-            await shellService.CreateWithSplashAsync<ShellWindow>();
+            await shellService.CreateAsync<ShellWindow>();
 
             Log.Info("Elapsed startup stopwatch time: {0}", _stopwatch.Elapsed);
         }
