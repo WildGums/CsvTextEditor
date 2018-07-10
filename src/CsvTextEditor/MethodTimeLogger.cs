@@ -1,41 +1,44 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ModuleInitializer.cs" company="WildGums">
 //   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-
-using System.Reflection;
-using Catel.Logging;
-using System;
-
-/// <summary>
-/// Note: do not rename this class or put it inside a namespace.
-/// </summary>
-internal static class MethodTimeLogger
+namespace CsvTextEditor
 {
-    #region Methods
-    public static void Log(MethodBase methodBase, long milliseconds, string message)
-    {
-        Log(methodBase.DeclaringType, methodBase.Name, milliseconds, message);
-    }
 
-    public static void Log(Type type, string methodName, long milliseconds, string message)
+    using System.Reflection;
+    using Catel.Logging;
+    using System;
+
+    /// <summary>
+    /// Note: do not rename this class or put it inside a namespace.
+    /// </summary>
+    internal static class MethodTimeLogger
     {
-        if (type == null)
+        #region Methods
+        public static void Log(MethodBase methodBase, long milliseconds, string message)
         {
-            return;
+            Log(methodBase.DeclaringType, methodBase.Name, milliseconds, message);
         }
 
-        var finalMessage = $"[METHODTIMER] {type.Name}.{methodName} took '{milliseconds}' ms";
-
-        if (!string.IsNullOrWhiteSpace(message))
+        public static void Log(Type type, string methodName, long milliseconds, string message)
         {
-            finalMessage += $" | {message}";
-        }
+            if (type == null)
+            {
+                return;
+            }
 
-        var logger = LogManager.GetLogger(type);
-        logger.Debug(finalMessage);
+            var finalMessage = $"[METHODTIMER] {type.Name}.{methodName} took '{milliseconds}' ms";
+
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                finalMessage += $" | {message}";
+            }
+
+            var logger = LogManager.GetLogger(type);
+            logger.Debug(finalMessage);
+        }
+        #endregion
     }
-    #endregion
 }

@@ -9,6 +9,7 @@ namespace CsvTextEditor
 {
     using Orc.Squirrel;
     using System;
+    using System.Collections.Immutable;
     using System.Windows.Input;
     using InputGesture = Catel.Windows.Input.InputGesture;
 
@@ -20,7 +21,7 @@ namespace CsvTextEditor
             {
                 public const bool CheckForUpdatesDefaultValue = true;
 
-                public static readonly UpdateChannel[] AvailableChannels =
+                public static readonly ImmutableArray<UpdateChannel> AvailableChannels = new ImmutableArray<UpdateChannel>
                 {
                     new UpdateChannel("Stable", "http://downloads.sesolutions.net.au/csvtexteditor/stable"),
                     new UpdateChannel("Beta", "http://downloads.sesolutions.net.au/csvtexteditor/beta"),
