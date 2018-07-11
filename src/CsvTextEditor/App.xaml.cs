@@ -55,15 +55,15 @@ namespace CsvTextEditor
             Log.Info("Elapsed startup stopwatch time: {0}", _stopwatch.Elapsed);
         }
 
+#if DEBUG
         protected override void OnExit(ExitEventArgs e)
         {
-#if DEBUG
             var apiCopListener = new ConsoleApiCopListener();
             ApiCopManager.AddListener(apiCopListener);
             ApiCopManager.WriteResults();
-#endif
             base.OnExit(e);
         }
+#endif
         #endregion
     }
 }
