@@ -21,12 +21,11 @@ namespace CsvTextEditor
             {
                 public const bool CheckForUpdatesDefaultValue = true;
 
-                public static readonly ImmutableArray<UpdateChannel> AvailableChannels = new ImmutableArray<UpdateChannel>
-                {
+                public static readonly ImmutableArray<UpdateChannel> AvailableChannels = ImmutableArray.Create(
                     new UpdateChannel("Stable", "http://downloads.sesolutions.net.au/csvtexteditor/stable"),
                     new UpdateChannel("Beta", "http://downloads.sesolutions.net.au/csvtexteditor/beta"),
                     new UpdateChannel("Alpha", "http://downloads.sesolutions.net.au/csvtexteditor/alpha")
-                };
+                );
 
                 public static readonly UpdateChannel DefaultChannel = AvailableChannels[0];
             }
