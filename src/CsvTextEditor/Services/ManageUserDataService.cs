@@ -21,7 +21,7 @@ namespace CsvTextEditor.Services
 
         public ManageUserDataService(IMessageService messageService, ISaveFileService saveFileService, IProcessService processService, 
             IDirectoryService directoryService, IFileService fileService)
-            : base(messageService, saveFileService, processService, directoryService, fileService)
+            : base(saveFileService, processService, directoryService, fileService)
         {
             
         }
