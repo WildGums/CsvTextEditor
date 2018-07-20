@@ -18,7 +18,6 @@ using System.Resources;
 [assembly: AssemblyCopyright("Copyright © WildGums 2016 - 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: NeutralResourcesLanguage("en-US")]
 
 // Version information for an assembly consists of the following four values:
 //

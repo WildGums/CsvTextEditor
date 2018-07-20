@@ -56,9 +56,9 @@ namespace CsvTextEditor
                 if (string.IsNullOrWhiteSpace(location) || !_fileService.Exists(location))
                 {
                     _openFileService.Filter = "Text Files (*.csv)|*csv";
-
                     _openFileService.IsMultiSelect = false;
-                    if (_openFileService.DetermineFile())
+
+                    if (await _openFileService.DetermineFileAsync())
                     {
                         location = _openFileService.FileName;
                     }

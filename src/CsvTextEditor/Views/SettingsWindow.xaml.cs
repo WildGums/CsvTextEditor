@@ -13,7 +13,7 @@ namespace CsvTextEditor.Views
     /// <summary>
     /// Interaction logic for SettingsWindow.xaml.
     /// </summary>
-    partial class SettingsWindow : DataWindow
+    public partial class SettingsWindow : DataWindow
     {
         #region Constructors
         /// <summary>

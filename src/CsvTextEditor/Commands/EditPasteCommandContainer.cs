@@ -37,7 +37,7 @@ namespace CsvTextEditor
         {
             if (Clipboard.ContainsText())
             {
-                CsvTextEditorService.Paste();
+                CsvTextEditorInstance.Paste();
             }
 
             base.Execute(parameter);

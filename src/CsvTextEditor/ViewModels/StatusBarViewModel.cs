@@ -24,7 +24,7 @@ namespace CsvTextEditor.ViewModels
         #region Fields
         private readonly IProjectManager _projectManager;
         private readonly IServiceLocator _serviceLocator;
-        private ICsvTextEditorService _csvTextEditorService;
+        private ICsvTextEditorInstance _csvTextEditorInstance;
         private readonly IConfigurationService _configurationService;
         private readonly IUpdateService _updateService;
         #endregion
@@ -50,6 +50,7 @@ namespace CsvTextEditor.ViewModels
         public bool IsUpdatedInstalled { get; private set; }
         public string Version { get; private set; }
         public int Column { get; private set; }
+        public string Heading { get; private set; }
         public int Line { get; private set; }
         #endregion
 
@@ -110,9 +111,9 @@ namespace CsvTextEditor.ViewModels
 
         private Task OnProjectActivatedAsync(object sender, ProjectUpdatedEventArgs args)
         {
-            if (_csvTextEditorService != null)
+            if (_csvTextEditorInstance != null)
             {
-                _csvTextEditorService.CaretTextLocationChanged -= OnCaretTextLocationChanged;
+                _csvTextEditorInstance.CaretTextLocationChanged -= OnCaretTextLocationChanged;
             }
 
             var activeProject = args.NewProject;
@@ -121,17 +122,33 @@ namespace CsvTextEditor.ViewModels
                 return TaskHelper.Completed;
             }
 
-            _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(args.NewProject);
+            _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(args.NewProject);
 
-            _csvTextEditorService.CaretTextLocationChanged += OnCaretTextLocationChanged;
+            _csvTextEditorInstance.CaretTextLocationChanged += OnCaretTextLocationChanged;
 
             return TaskHelper.Completed;
         }
 
         private void OnCaretTextLocationChanged(object sender, CaretTextLocationChangedEventArgs args)
         {
-            Column = args.Column;
-            Line = args.Line;
+            Column = args.Location.Column.Index;
+            Line = args.Location.Line.Index + 1;
+            Heading = HeadingForLocation(args.Location);
+        }
+
+        private string HeadingForLocation(Location location)
+        {
+            var allText = _csvTextEditorInstance.GetText();
+            var indexOfNewLine = allText.IndexOf(Symbols.NewLineEnd);
+
+            if (indexOfNewLine != -1)
+            {
+                var firstLine = allText.Substring(0, indexOfNewLine);
+                var columnHeaders = firstLine.Split(Symbols.Comma);
+                return columnHeaders[location.Column.Index].Trim();
+            }
+
+            return String.Empty;
         }
         #endregion
     }

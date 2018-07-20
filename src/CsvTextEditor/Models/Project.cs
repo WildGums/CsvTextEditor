@@ -56,21 +56,18 @@ namespace CsvTextEditor.Models
                 return true;
             }
 
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return Equals((Project) obj);
+            return obj.GetType() == GetType() && Equals((Project) obj);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return (Location != null ? Location.GetHashCode() : 0);
-            }
+            return (Location != null ? Location.GetHashCode() : 0);
         }
         #endregion
+
+        public void SetIsDirty(bool isDirty)
+        {
+            IsDirty = isDirty;
+        }
     }
 }

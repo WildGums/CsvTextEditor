@@ -7,11 +7,15 @@
 
 namespace CsvTextEditor.ViewModels
 {
+    using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Threading.Tasks;
     using Catel;
     using Catel.Configuration;
+    using Catel.IoC;
     using Catel.MVVM;
+    using Catel.Services;
     using Orc.Squirrel;
     using Services;
 
@@ -21,21 +25,25 @@ namespace CsvTextEditor.ViewModels
         private readonly IConfigurationService _configurationService;
         private readonly IManageUserDataService _manageUserDataService;
         private readonly IUpdateService _updateService;
+        private readonly IOpenFileService _openFileService;
         #endregion
 
         #region Constructors
-        public SettingsViewModel(IConfigurationService configurationService, IManageUserDataService manageUserDataService, IUpdateService updateService)
+        public SettingsViewModel(IConfigurationService configurationService, IManageUserDataService manageUserDataService, IUpdateService updateService, IOpenFileService openFileService)
         {
             Argument.IsNotNull(() => configurationService);
             Argument.IsNotNull(() => manageUserDataService);
             Argument.IsNotNull(() => updateService);
+            Argument.IsNotNull(() => openFileService);
 
             _configurationService = configurationService;
             _manageUserDataService = manageUserDataService;
             _updateService = updateService;
+            _openFileService = openFileService;
 
+            PickEditor = new TaskCommand(PickEditorExecuteAsync);
             OpenApplicationDataDirectory = new Command(OnOpenApplicationDataDirectoryExecute);
-            BackupUserData = new Command(OnBackupUserDataExecute);
+            BackupUserData = new TaskCommand(OnBackupUserDataExecuteAsync);
 
             Title = "Settings";
         }
@@ -44,6 +52,8 @@ namespace CsvTextEditor.ViewModels
         #region Properties
         public bool IsUpdateSystemAvailable { get; private set; }
         public bool CheckForUpdates { get; set; }
+        public bool AutoSaveEditor { get; set; }
+        public string CustomEditor { get; private set; }
         public List<UpdateChannel> AvailableUpdateChannels { get; private set; }
         public UpdateChannel UpdateChannel { get; set; }
         #endregion
@@ -56,11 +66,24 @@ namespace CsvTextEditor.ViewModels
             _manageUserDataService.OpenApplicationDataDirectory();
         }
 
-        public Command BackupUserData { get; private set; }
+        public TaskCommand PickEditor { get; private set; }
 
-        private void OnBackupUserDataExecute()
+        private async Task PickEditorExecuteAsync()
         {
-            _manageUserDataService.BackupUserData();
+            _openFileService.Filter = "Program Files (*.exe)|*exe";
+            _openFileService.IsMultiSelect = false;
+
+            if (await _openFileService.DetermineFileAsync())
+            {
+                CustomEditor = _openFileService.FileName;
+            }       
+        }
+
+        public TaskCommand BackupUserData { get; private set; }
+
+        private async Task OnBackupUserDataExecuteAsync()
+        {
+            await _manageUserDataService.BackupUserDataAsync();
         }
         #endregion
 
@@ -73,12 +96,18 @@ namespace CsvTextEditor.ViewModels
             CheckForUpdates = _updateService.CheckForUpdates;
             AvailableUpdateChannels = new List<UpdateChannel>(_updateService.AvailableChannels);
             UpdateChannel = _updateService.CurrentChannel;
+
+            CustomEditor = _configurationService.GetRoamingValue<string>(Configuration.CustomEditor);
+            AutoSaveEditor = _configurationService.GetRoamingValue(Configuration.AutoSaveEditor, Configuration.AutoSaveEditorDefaultValue);
         }
 
         protected override async Task<bool> SaveAsync()
         {
             _updateService.CheckForUpdates = CheckForUpdates;
             _updateService.CurrentChannel = UpdateChannel;
+
+            _configurationService.SetRoamingValue(Configuration.CustomEditor, CustomEditor);
+            _configurationService.SetRoamingValue(Configuration.AutoSaveEditor, AutoSaveEditor);
 
             return await base.SaveAsync();
         }

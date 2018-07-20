@@ -22,7 +22,7 @@ namespace CsvTextEditor
         private readonly IServiceLocator _serviceLocator;
         private readonly DispatcherTimer _invalidateTimer;
 
-        private ICsvTextEditorService _csvTextEditorService;
+        private ICsvTextEditorInstance _csvTextEditorInstance;
         #endregion
 
         #region Constructors
@@ -39,19 +39,19 @@ namespace CsvTextEditor
         }        
         #endregion
 
-        protected ICsvTextEditorService CsvTextEditorService
+        protected ICsvTextEditorInstance CsvTextEditorInstance
         {
             get
             {
                 var activeProject = _projectManager.ActiveProject;
 
-                if (_csvTextEditorService == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorService>(activeProject))
+                if (_csvTextEditorInstance == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(activeProject))
                 {
-                    _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(activeProject);
+                    _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(activeProject);
                     
                 }
 
-                return _csvTextEditorService;
+                return _csvTextEditorInstance;
             }
         }
 
@@ -59,9 +59,9 @@ namespace CsvTextEditor
         {
             base.ProjectActivated(oldProject, newProject);
 
-            if (_csvTextEditorService != null)
+            if (_csvTextEditorInstance != null)
             {
-                _csvTextEditorService.TextChanged -= CsvTextEditorServiceOnTextChanged;
+                _csvTextEditorInstance.TextChanged -= CsvTextEditorInstanceOnTextChanged;
             }
 
             if (newProject == null)
@@ -69,18 +69,18 @@ namespace CsvTextEditor
                 return;
             }
 
-            if (_csvTextEditorService == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorService>(newProject))
+            if (_csvTextEditorInstance == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(newProject))
             {
-                _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(newProject);
+                _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(newProject);
             }
 
-            if (_csvTextEditorService != null)
+            if (_csvTextEditorInstance != null)
             {
-                _csvTextEditorService.TextChanged += CsvTextEditorServiceOnTextChanged;
+                _csvTextEditorInstance.TextChanged += CsvTextEditorInstanceOnTextChanged;
             }
         }
 
-        private void CsvTextEditorServiceOnTextChanged(object sender, EventArgs eventArgs)
+        private void CsvTextEditorInstanceOnTextChanged(object sender, EventArgs eventArgs)
         {
             _commandManager.InvalidateCommands();
         }
@@ -93,7 +93,7 @@ namespace CsvTextEditor
                 return false;
             }
 
-            var isEditorServiceNull = ReferenceEquals(CsvTextEditorService, null);
+            var isEditorServiceNull = ReferenceEquals(CsvTextEditorInstance, null);
             if (isEditorServiceNull && !_invalidateTimer.IsEnabled)
             {
                 _invalidateTimer.Start();

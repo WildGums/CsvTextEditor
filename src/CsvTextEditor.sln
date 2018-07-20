@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvTextEditor", "CsvTextEditor\CsvTextEditor.csproj", "{768CCB78-F19F-4BE8-B14B-C84E9AC9F0B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvTextEditor", "CsvTextEditor\CsvTextEditor.csproj", "{70261F8B-6554-4C72-BC0B-CFBD7A7DD94C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{60FB727D-A797-4908-AEDF-0CDC78D0A327}"
 	ProjectSection(SolutionItems) = preProject
@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{F61D7A6D-935
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B9C7A403-F0AC-43FA-8FA0-DC0FE9E34405}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvTextEditor.Tests", "CsvTextEditor.Tests\CsvTextEditor.Tests.csproj", "{0AAC6BF9-69E9-4407-9962-7366D22DFC72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvTextEditor.Tests", "CsvTextEditor.Tests\CsvTextEditor.Tests.csproj", "{0AAC6BF9-69E9-4407-9962-7366D22DFC72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +28,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{768CCB78-F19F-4BE8-B14B-C84E9AC9F0B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{768CCB78-F19F-4BE8-B14B-C84E9AC9F0B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{768CCB78-F19F-4BE8-B14B-C84E9AC9F0B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{768CCB78-F19F-4BE8-B14B-C84E9AC9F0B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70261F8B-6554-4C72-BC0B-CFBD7A7DD94C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70261F8B-6554-4C72-BC0B-CFBD7A7DD94C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70261F8B-6554-4C72-BC0B-CFBD7A7DD94C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70261F8B-6554-4C72-BC0B-CFBD7A7DD94C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0AAC6BF9-69E9-4407-9962-7366D22DFC72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0AAC6BF9-69E9-4407-9962-7366D22DFC72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AAC6BF9-69E9-4407-9962-7366D22DFC72}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,9 +41,12 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{768CCB78-F19F-4BE8-B14B-C84E9AC9F0B3} = {F61D7A6D-9351-44E9-A980-CDB5C429B01D}
+		{70261F8B-6554-4C72-BC0B-CFBD7A7DD94C} = {F61D7A6D-9351-44E9-A980-CDB5C429B01D}
 		{F61D7A6D-9351-44E9-A980-CDB5C429B01D} = {96428619-7BFF-43C8-ADA7-E7B7C699293A}
 		{B9C7A403-F0AC-43FA-8FA0-DC0FE9E34405} = {96428619-7BFF-43C8-ADA7-E7B7C699293A}
 		{0AAC6BF9-69E9-4407-9962-7366D22DFC72} = {B9C7A403-F0AC-43FA-8FA0-DC0FE9E34405}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D05FE37-06F2-4C37-BC7B-4AABD7351830}
 	EndGlobalSection
 EndGlobal

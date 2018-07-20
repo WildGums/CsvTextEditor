@@ -15,6 +15,7 @@ namespace CsvTextEditor.Services
     using Catel.IoC;
     using Catel.Logging;
     using Catel.MVVM;
+    using Catel.Services;
     using Catel.Threading;
     using Catel.Windows.Controls;
     using Orc.ProjectManagement;
@@ -30,18 +31,21 @@ namespace CsvTextEditor.Services
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
         private readonly ICommandManager _commandManager;
+        private readonly IPleaseWaitService _pleaseWaitService;
 
         private readonly IServiceLocator _serviceLocator;
         #endregion
 
         #region Constructors
-        public ApplicationInitializationService(IServiceLocator serviceLocator, ICommandManager commandManager)
+        public ApplicationInitializationService(IServiceLocator serviceLocator, ICommandManager commandManager, IPleaseWaitService pleaseWaitService)
         {
             Argument.IsNotNull(() => serviceLocator);
             Argument.IsNotNull(() => commandManager);
+            Argument.IsNotNull(() => pleaseWaitService);
 
             _serviceLocator = serviceLocator;
             _commandManager = commandManager;
+            _pleaseWaitService = pleaseWaitService;
         }
         #endregion
 
@@ -68,11 +72,25 @@ namespace CsvTextEditor.Services
             await base.InitializeAfterCreatingShellAsync();
         }
 
+        public override async Task InitializeAfterShowingShellAsync()
+        {
+            await base.InitializeAfterShowingShellAsync();
+
+            await LoadProjectAsync();
+        }
+
         private void RegisterTypes()
         {
             _serviceLocator.RegisterType<IManageUserDataService, ManageUserDataService>();
             _serviceLocator.RegisterType<IProjectSerializerSelector, ProjectSerializerSelector>();
             _serviceLocator.RegisterType<IMainWindowTitleService, MainWindowTitleService>();
+            _serviceLocator.RegisterType<ISaveProjectChangesService, SaveProjectChangesService>();
+            _serviceLocator.RegisterType<IFileExtensionService, FileExtensionService>();
+            _serviceLocator.RegisterType<IInitialProjectLocationService, InitialProjectLocationService>();
+
+            _serviceLocator.RegisterType<IProjectInitializer, FileProjectInitializer>();
+
+            _serviceLocator.RegisterTypeAndInstantiate<ProjectManagementCloseApplicationWatcher>();
         }
 
         private void InitializeFonts()
@@ -89,7 +107,6 @@ namespace CsvTextEditor.Services
         {
             Log.Info("Improving performance");
 
-            ModelBase.DefaultSuspendValidationValue = true;
             UserControl.DefaultCreateWarningAndErrorValidatorForViewModelValue = false;
             UserControl.DefaultSkipSearchingForInfoBarMessageControlValue = true;
         }
@@ -101,6 +118,9 @@ namespace CsvTextEditor.Services
             _commandManager.CreateCommandWithGesture(typeof(Commands.File), "Save");
             _commandManager.CreateCommandWithGesture(typeof(Commands.File), "SaveAs");
 
+            _commandManager.CreateCommandWithGesture(typeof(Commands.File), "OpenInTextEditor");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.File), "OpenInExcel");
+
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Undo");
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Redo");
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Copy");
@@ -109,6 +129,9 @@ namespace CsvTextEditor.Services
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "DeleteLine");
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "DuplicateLine");
             _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "FindReplace");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "RemoveBlankLines");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "RemoveDuplicateLines");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "TrimWhitespaces");
 
             _commandManager.CreateCommandWithGesture(typeof(Commands.Settings), "General");
 
@@ -120,6 +143,7 @@ namespace CsvTextEditor.Services
             _serviceLocator.RegisterTypeAndInstantiate<CsvTextEditorAutoCompleteProjectWatcher>();
             _serviceLocator.RegisterTypeAndInstantiate<RecentlyUsedItemsProjectWatcher>();
             _serviceLocator.RegisterTypeAndInstantiate<MainWindowTitleProjectWatcher>();
+            _serviceLocator.RegisterTypeAndInstantiate<CsvTextEditorIsDirtyProjectWatcher>();
         }
 
         [Time]
@@ -127,16 +151,30 @@ namespace CsvTextEditor.Services
         {
             Log.Info("Checking for updates");
 
-            var maximumReleaseDate = DateTime.MaxValue;
-
             var updateService = _serviceLocator.ResolveType<IUpdateService>();
             updateService.Initialize(Settings.Application.AutomaticUpdates.AvailableChannels, Settings.Application.AutomaticUpdates.DefaultChannel,
                 Settings.Application.AutomaticUpdates.CheckForUpdatesDefaultValue);
 
 #pragma warning disable 4014
             // Not dot await, it's a background thread
-            updateService.HandleUpdatesAsync(maximumReleaseDate);
+            updateService.InstallAvailableUpdatesAsync(new SquirrelContext());
 #pragma warning restore 4014
+        }
+
+        protected async Task LoadProjectAsync()
+        {
+            using (_pleaseWaitService.PushInScope())
+            {
+                var projectManager = _serviceLocator.ResolveType<IProjectManager>();
+                if (projectManager == null)
+                {
+                    const string error = "Failed to resolve project manager";
+                    Log.Error(error);
+                    throw new Exception(error);
+                }
+
+                await projectManager.InitializeAsync();
+            }
         }
         #endregion
     }

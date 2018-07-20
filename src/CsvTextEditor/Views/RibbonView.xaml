@@ -4,11 +4,11 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:local="clr-namespace:CsvTextEditor.Views"
-                   xmlns:catel="http://catel.codeplex.com"
+                   xmlns:catel="http://schemas.catelproject.com"
                    xmlns:fluent="urn:fluent-ribbon"
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                   xmlns:orc="http://www.wildgums.net.au/orc"
-                   xmlns:orchestra="https://github.com/orcomp/orchestra"
+                   xmlns:orccontrols="http://schemas.wildgums.com/orc/controls"
+                   xmlns:orchestra="http://schemas.wildgums.com/orchestra"
                    xmlns:csvTextEditor="clr-namespace:CsvTextEditor"
                    mc:Ignorable="d"
                    d:DesignHeight="300"
@@ -28,7 +28,7 @@
                     <fluent:Button Header="Save"
                                    Command="{catel:CommandManagerBinding File.Save}" />
 
-                    <fluent:Button Header="SaveAs"
+                    <fluent:Button Header="Save As"
                                    Command="{catel:CommandManagerBinding File.SaveAs}" />
                 </fluent:BackstageTabControl>
             </fluent:Backstage>
@@ -36,6 +36,25 @@
 
         <fluent:Ribbon.Tabs>
             <fluent:RibbonTabItem Header="View">
+                <fluent:RibbonGroupBox Header="File">
+
+                    <fluent:Button Header="Save"
+                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Save}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding File.Save}" />
+
+
+                    <fluent:SplitButton Header="Open in editor"
+                                        LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Edit}, FontFamily=FontAwesome}" 
+                                        Command="{catel:CommandManagerBinding File.OpenInTextEditor}"
+                                        IsEnabled="{Binding IsActiveProjectExists}">
+                        <fluent:Gallery ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                            <fluent:Button Header="Excel" 
+                                           LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.FileExcelO}, FontFamily=FontAwesome}" 
+                                           Command="{catel:CommandManagerBinding File.OpenInExcel}"/>
+                        </fluent:Gallery>
+                    </fluent:SplitButton>
+                </fluent:RibbonGroupBox>
+
                 <fluent:RibbonGroupBox Header="Edit">
                     <fluent:Button Header="Copy"
                                    LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Copy}, FontFamily=FontAwesome}"
@@ -57,9 +76,15 @@
                                    LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.MailForward}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding Edit.Redo}" />
 
-                    <fluent:Button Header="Find and replace"
+                    <fluent:Button x:Name="FindAndReplaceButton" Header="Find and replace"
                                    LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Search}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding Edit.FindReplace}" />
+
+                    <fluent:SplitButton Header="Quick Format" LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.AlignJustify}, FontFamily=FontAwesome}" IsEnabled="{Binding ElementName=FindAndReplaceButton, Path=IsEnabled}">
+                        <fluent:MenuItem Header="Remove blank lines" Icon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Remove}}" Command="{catel:CommandManagerBinding Edit.RemoveBlankLines}" />
+                        <fluent:MenuItem Header="Remove duplicate lines" Icon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Remove}}" Command="{catel:CommandManagerBinding Edit.RemoveDuplicateLines}" />
+                        <fluent:MenuItem Header="Trim whitespaces" Icon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.AlignJustify}}" Command="{catel:CommandManagerBinding Edit.TrimWhitespaces}" />
+                    </fluent:SplitButton>
                 </fluent:RibbonGroupBox>
 
                 <fluent:RibbonGroupBox Header="Settings">

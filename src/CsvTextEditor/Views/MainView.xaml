@@ -3,13 +3,23 @@
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                   xmlns:catel="http://catel.codeplex.com"
+                   xmlns:catel="http://schemas.catelproject.com"
                    xmlns:csvTextEditor="clr-namespace:Orc.CsvTextEditor;assembly=Orc.CsvTextEditor"
+                   xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                   xmlns:behaviors="clr-namespace:CsvTextEditor.Behaviors"
                    mc:Ignorable="d"
                    d:DesignHeight="300"
                    d:DesignWidth="300">
 
+    <i:Interaction.Behaviors>
+        <!--<behaviors:ExternalFileDragDropBehavior/>-->
+    </i:Interaction.Behaviors>
+    
     <csvTextEditor:CsvTextEditorControl x:Name="CsvTextEditorControl"
                                         Text="{Binding Text, Mode=TwoWay}"
-                                        Scope="{Binding Project, Mode=OneWay}"/>
+                                        Scope="{Binding Project, Mode=OneWay}" >
+        <i:Interaction.Behaviors>
+            <behaviors:ExternalFileDragDropBehavior/>
+        </i:Interaction.Behaviors>
+    </csvTextEditor:CsvTextEditorControl>
 </catel:UserControl>

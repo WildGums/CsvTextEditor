@@ -28,12 +28,12 @@ namespace CsvTextEditor
                 return false;
             }
 
-            return CsvTextEditorService?.HasSelection ?? false;
+            return CsvTextEditorInstance?.HasSelection ?? false;
         }
 
         protected override void Execute(object parameter)
         {
-            CsvTextEditorService.Cut();
+            CsvTextEditorInstance.Cut();
 
             base.Execute(parameter);
         }
