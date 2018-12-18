@@ -21,6 +21,26 @@ private bool HasUwpApps()
 
 //-------------------------------------------------------------
 
+private async Task PrepareForUwpAppsAsync()
+{
+    if (!HasUwpApps())
+    {
+        return;
+    }
+
+    // Check whether projects should be processed, `.ToList()` 
+    // is required to prevent issues with foreach
+    foreach (var uwpApp in UwpApps.ToList())
+    {
+        if (!ShouldProcessProject(uwpApp))
+        {
+            UwpApps.Remove(uwpApp);
+        }
+    }
+}
+
+//-------------------------------------------------------------
+
 public void UpdateAppxManifestVersion(string path, string version)
 {
     Information("Updating AppxManifest version @ '{0}' to '{1}'", path, version);
@@ -114,11 +134,20 @@ private void BuildUwpApps()
 
         var msBuildSettings = new MSBuildSettings {
             Verbosity = Verbosity.Quiet, // Verbosity.Diagnostic
-            ToolVersion = MSBuildToolVersion.VS2017,
+            ToolVersion = MSBuildToolVersion.Default,
             Configuration = ConfigurationName,
             MSBuildPlatform = MSBuildPlatform.x86, // Always require x86, see platform for actual target platform
             PlatformTarget = platform.Value
         };
+
+        var toolPath = GetVisualStudioPath(msBuildSettings.ToolVersion);
+        if (!string.IsNullOrWhiteSpace(toolPath))
+        {
+            msBuildSettings.ToolPath = toolPath;
+        }
+
+        // Always disable SourceLink
+        msBuildSettings.WithProperty("EnableSourceLink", "false");
 
         // See https://docs.microsoft.com/en-us/windows/uwp/packaging/auto-build-package-uwp-apps for all the details
         //msBuildSettings.Properties["UseDotNetNativeToolchain"] = new List<string>(new [] { "false" });

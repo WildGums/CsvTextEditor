@@ -112,40 +112,12 @@ Task("RestorePackages")
     var solutions = GetFiles("./**/*.sln");
     
     var allFiles = new List<FilePath>();
-    allFiles.AddRange(projects);
+    //allFiles.AddRange(projects);
     allFiles.AddRange(solutions);
 
     foreach(var file in allFiles)
     {
-        Information("Restoring packages for {0}", file);
-        
-        try
-        {
-            var nuGetRestoreSettings = new NuGetRestoreSettings
-            {
-            };
-
-            if (!string.IsNullOrWhiteSpace(NuGetPackageSources))
-            {
-                var sources = new List<string>();
-
-                foreach (var splitted in NuGetPackageSources.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    sources.Add(splitted);
-                }
-                
-                if (sources.Count > 0)
-                {
-                    nuGetRestoreSettings.Source = sources;
-                }
-            }
-
-            NuGetRestore(file, nuGetRestoreSettings);
-        }
-        catch (Exception)
-        {
-            // Ignore
-        }
+        RestoreNuGetPackages(file);
     }
 });
 
@@ -172,12 +144,23 @@ Task("Clean")
         {
             Information("Cleaning output for platform '{0}'", platform.Value);
 
-            MSBuild(SolutionFileName, configurator => 
-                configurator.SetConfiguration(ConfigurationName)
-                    .SetVerbosity(Verbosity.Minimal)
-                    .SetMSBuildPlatform(MSBuildPlatform.x86)
-                    .SetPlatformTarget(platform.Value)
-                    .WithTarget("Clean"));
+            var msBuildSettings = new MSBuildSettings {
+                Verbosity = Verbosity.Minimal,
+                ToolVersion = MSBuildToolVersion.Default,
+                Configuration = ConfigurationName,
+                MSBuildPlatform = MSBuildPlatform.x86, // Always require x86, see platform for actual target platform
+                PlatformTarget = platform.Value
+            };
+
+            var toolPath = GetVisualStudioPath(msBuildSettings.ToolVersion);
+            if (!string.IsNullOrWhiteSpace(toolPath))
+            {
+                msBuildSettings.ToolPath = toolPath;
+            }
+
+            msBuildSettings.Targets.Add("Clean");
+
+            MSBuild(SolutionFileName, msBuildSettings);
         }
         catch (System.Exception ex)
         {
@@ -255,7 +238,13 @@ Task("CodeSign")
         filesToSign.AddRange(projectFilesToSign);
     }
 
-    Information("Found '{0}' files to code sign, this can take a few minutes...", filesToSign.Count);
+    if (filesToSign.Count == 0)
+    {
+        Information("Found no files to sign, skipping code signing process...");
+        return;
+    }
+
+    Information("Found '{0}' files to code sign using subject name '{1}', this can take a few minutes...", filesToSign.Count, CodeSignCertificateSubjectName);
 
     var signToolSignSettings = new SignToolSignSettings 
     {

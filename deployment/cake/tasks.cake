@@ -16,8 +16,6 @@
 
 //-------------------------------------------------------------
 
-var Target = GetBuildServerVariable("Target", "Default");
-
 Information("Running target '{0}'", Target);
 Information("Using output directory '{0}'", OutputRootDirectory);
 
@@ -36,6 +34,13 @@ ValidateDockerImagesInput();
 
 private void BuildTestProjects()
 {
+    // In case of a local build and we have included / excluded anything, skip tests
+    if (IsLocalBuild && (Include.Length > 0 || Exclude.Length > 0))
+    {
+        Information("Skipping test project because this is a local build with specific includes / excludes");
+        return;
+    }
+
     foreach (var testProject in TestProjects)
     {
         LogSeparator("Building test project '{0}'", testProject);
@@ -45,11 +50,20 @@ private void BuildTestProjects()
         var msBuildSettings = new MSBuildSettings
         {
             Verbosity = Verbosity.Quiet, // Verbosity.Diagnostic
-            ToolVersion = MSBuildToolVersion.VS2017,
+            ToolVersion = MSBuildToolVersion.Default,
             Configuration = ConfigurationName,
             MSBuildPlatform = MSBuildPlatform.x86, // Always require x86, see platform for actual target platform
             PlatformTarget = PlatformTarget.MSIL
         };
+
+        var toolPath = GetVisualStudioPath(msBuildSettings.ToolVersion);
+        if (!string.IsNullOrWhiteSpace(toolPath))
+        {
+            msBuildSettings.ToolPath = toolPath;
+        }
+
+        // Always disable SourceLink
+        msBuildSettings.WithProperty("EnableSourceLink", "false");
 
         // Force disable SonarQube
         msBuildSettings.WithProperty("SonarQubeExclude", "true");
@@ -68,7 +82,20 @@ private void BuildTestProjects()
 
 //-------------------------------------------------------------
 
+Task("Prepare")
+    .Does(async () =>
+{
+    await PrepareForComponentsAsync();
+    await PrepareForUwpAppsAsync();
+    await PrepareForWebAppsAsync();
+    await PrepareForWpfAppsAsync();
+    await PrepareForDockerImagesAsync();
+});
+
+//-------------------------------------------------------------
+
 Task("UpdateInfo")
+    .IsDependentOn("Prepare")
     .Does(() =>
 {
     UpdateSolutionAssemblyInfo();
@@ -245,21 +272,6 @@ Task("PackageLocal")
     {
         Information("Copying build artifact for '{0}'", component);
     
-        var cacheDirectory = Environment.ExpandEnvironmentVariables(string.Format("%userprofile%/.nuget/packages/{0}/{1}", component, VersionNuGet));
-
-        Information("Checking for existing local NuGet cached version at '{0}'", cacheDirectory);
-
-        if (DirectoryExists(cacheDirectory))
-        {
-            Information("Deleting already existing NuGet cached version from '{0}'", cacheDirectory);
-            
-            DeleteDirectory(cacheDirectory, new DeleteDirectorySettings()
-            {
-                Force = true,
-                Recursive = true
-            });
-        }
-        
         var sourceFile = string.Format("{0}/{1}.{2}.nupkg", OutputRootDirectory, component, VersionNuGet);
         CopyFiles(new [] { sourceFile }, NuGetLocalPackagesDirectory);
     }
