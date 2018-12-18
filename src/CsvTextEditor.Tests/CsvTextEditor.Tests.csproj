@@ -12,8 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ApprovalTests" Version="3.0.15" PrivateAssets="all" />
-    <PackageReference Include="ApprovalUtilities" Version="3.0.15" PrivateAssets="all" />
     <PackageReference Include="ApiApprover" Version="7.1.0" PrivateAssets="all" />
     <PackageReference Include="Catel.Core" Version="5.6.0" />
     <PackageReference Include="Catel.Fody" Version="3.3.0" PrivateAssets="all" />
@@ -23,7 +21,6 @@
     <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="2.1.0" PrivateAssets="all" />
     <PackageReference Include="MethodTimer.Fody" Version="2.1.1" PrivateAssets="all" />
     <PackageReference Include="ModuleInit.Fody" Version="1.8.1" PrivateAssets="all" />
-    <PackageReference Include="Mono.Cecil" Version="0.10.0" PrivateAssets="all" />
     <PackageReference Include="MSBuild.Sdk.Extras" Version="1.5.4" PrivateAssets="all" />
     <PackageReference Include="NUnit" Version="3.10.1" PrivateAssets="all" />
     <PackageReference Include="Obsolete.Fody" Version="4.4.1" PrivateAssets="all" />
