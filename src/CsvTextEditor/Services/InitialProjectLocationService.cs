@@ -25,21 +25,21 @@ namespace CsvTextEditor.Services
         private readonly IDirectoryService _directoryService;
         private readonly ICommandLineParser _commandLineParser;
         private readonly IFileService _fileService;
-        private readonly IStartUpInfoProvider _startUpInfoProvider;
+        private readonly ICommandLineService _commandLineService;
         #endregion
 
         #region Constructors
-        public InitialProjectLocationService(IConfigurationService configurationService, IStartUpInfoProvider startUpInfoProvider,
+        public InitialProjectLocationService(IConfigurationService configurationService, ICommandLineService commandLineService,
             IFileService fileService, IDirectoryService directoryService, ICommandLineParser commandLineParser)
         {
             Argument.IsNotNull(() => configurationService);
-            Argument.IsNotNull(() => startUpInfoProvider);
+            Argument.IsNotNull(() => commandLineService);
             Argument.IsNotNull(() => fileService);
             Argument.IsNotNull(() => directoryService);
             Argument.IsNotNull(() => commandLineParser);
 
             _configurationService = configurationService;
-            _startUpInfoProvider = startUpInfoProvider;
+            _commandLineService = commandLineService;
             _fileService = fileService;
             _directoryService = directoryService;
             _commandLineParser = commandLineParser;
@@ -50,7 +50,7 @@ namespace CsvTextEditor.Services
         public async Task<string> GetInitialProjectLocationAsync()
         {
             var commandLineContext = new CommandLineContext();
-            _commandLineParser.Parse(_startUpInfoProvider.Arguments, commandLineContext);
+            _commandLineParser.Parse(_commandLineService.GetCommandLine(), commandLineContext);
 
             return commandLineContext.InitialFile;
         }
