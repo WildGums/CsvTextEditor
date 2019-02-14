@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
     <TargetFrameworks>net462</TargetFrameworks>
     <AssemblyName>CsvTextEditor</AssemblyName>
@@ -6,6 +6,12 @@
     <DefaultLanguage>en-US</DefaultLanguage>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <UseWpf>true</UseWpf>
+    <ExtrasEnableImplicitWpfReferences>true</ExtrasEnableImplicitWpfReferences>
+    <ExtrasEnableImplicitWinFormsReferences>true</ExtrasEnableImplicitWinFormsReferences>
+  </PropertyGroup>
+  
   <PropertyGroup>
     <!-- SonarQube requires a project guid -->
     <ProjectGuid>70261F8B-6554-4C72-BC0B-CFBD7A7DD94C</ProjectGuid>
@@ -29,7 +35,6 @@
     <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="3.0.3" PrivateAssets="all" />
     <PackageReference Include="MethodTimer.Fody" Version="2.3.0" PrivateAssets="all" />
     <PackageReference Include="ModuleInit.Fody" Version="1.9.0" PrivateAssets="all" />
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.5.4" PrivateAssets="All" />
     <PackageReference Include="Obsolete.Fody" Version="4.4.3" PrivateAssets="all" />
     <PackageReference Include="Orc.Analytics" Version="3.0.0" />
     <PackageReference Include="Orc.CommandLine" Version="3.0.1" />
@@ -62,6 +67,5 @@
     </EmbeddedResource>
   </ItemGroup>
   
-  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />
 </Project>
