@@ -29,7 +29,7 @@
     <PackageReference Include="ModuleInit.Fody" Version="1.9.0" PrivateAssets="all" />
     <PackageReference Include="NUnit" Version="3.11.0" PrivateAssets="all" />
     <PackageReference Include="Obsolete.Fody" Version="4.4.3" PrivateAssets="all" />
-    <PackageReference Include="Orc.Csv" Version="3.3.1" />
+    <PackageReference Include="Orc.Csv" Version="3.4.0" />
     <PackageReference Include="PublicApiGenerator" Version="8.1.0" PrivateAssets="all" />    
     <PackageReference Include="WpfAnalyzers" Version="2.2.0.2" PrivateAssets="all" />
   </ItemGroup>
