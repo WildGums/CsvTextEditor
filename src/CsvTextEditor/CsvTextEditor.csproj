@@ -44,7 +44,7 @@
     <PackageReference Include="Orc.ProjectManagement" Version="3.2.0" />
     <PackageReference Include="Orc.Squirrel.Xaml" Version="3.1.0" />
     <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="3.2.0" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="5.1.5" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="5.2.0" />
     <PackageReference Include="WpfAnalyzers" Version="2.2.0.2" PrivateAssets="all" />
   </ItemGroup>
 
