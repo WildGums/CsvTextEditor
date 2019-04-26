@@ -1,15 +1,45 @@
+#pragma warning disable 1998
+
 #l "apps-uwp-variables.cake"
 
-#addin nuget:?package=MagicChunks&version=2.0.0.119
-#addin nuget:?package=Newtonsoft.Json&version=11.0.2
-#addin nuget:?package=WindowsAzure.Storage&version=9.1.1
-#addin nuget:?package=Cake.WindowsAppStore&version=1.4.0
+#addin "nuget:?package=MagicChunks&version=2.0.0.119"
+#addin "nuget:?package=Newtonsoft.Json&version=11.0.2"
+#addin "nuget:?package=Microsoft.Azure.KeyVault.Core&version=1.0.0"
+#addin "nuget:?package=WindowsAzure.Storage&version=9.1.1"
+#addin "nuget:?package=Cake.WindowsAppStore&version=1.4.0"
+
+//-------------------------------------------------------------
+
+private void ValidateUwpAppsInput()
+{
+    // No validation required (yet)
+}
 
 //-------------------------------------------------------------
 
 private bool HasUwpApps()
 {
-    return UwpApps != null && UwpApps.Length > 0;
+    return UwpApps != null && UwpApps.Count > 0;
+}
+
+//-------------------------------------------------------------
+
+private async Task PrepareForUwpAppsAsync()
+{
+    if (!HasUwpApps())
+    {
+        return;
+    }
+
+    // Check whether projects should be processed, `.ToList()` 
+    // is required to prevent issues with foreach
+    foreach (var uwpApp in UwpApps.ToList())
+    {
+        if (!ShouldProcessProject(uwpApp))
+        {
+            UwpApps.Remove(uwpApp);
+        }
+    }
 }
 
 //-------------------------------------------------------------
@@ -107,11 +137,16 @@ private void BuildUwpApps()
 
         var msBuildSettings = new MSBuildSettings {
             Verbosity = Verbosity.Quiet, // Verbosity.Diagnostic
-            ToolVersion = MSBuildToolVersion.VS2017,
+            ToolVersion = MSBuildToolVersion.Default,
             Configuration = ConfigurationName,
             MSBuildPlatform = MSBuildPlatform.x86, // Always require x86, see platform for actual target platform
             PlatformTarget = platform.Value
         };
+
+        ConfigureMsBuild(msBuildSettings, uwpApp);
+
+        // Always disable SourceLink
+        msBuildSettings.WithProperty("EnableSourceLink", "false");
 
         // See https://docs.microsoft.com/en-us/windows/uwp/packaging/auto-build-package-uwp-apps for all the details
         //msBuildSettings.Properties["UseDotNetNativeToolchain"] = new List<string>(new [] { "false" });
@@ -133,7 +168,7 @@ private void BuildUwpApps()
         appxUploadFileName = GetAppxUploadFileName(artifactsDirectory, uwpApp, VersionMajorMinorPatch);
         if (appxUploadFileName == null)
         {
-            Error("Couldn't determine the appxupload file using base directory '{0}'", artifactsDirectory);
+            throw new Exception(string.Format("Couldn't determine the appxupload file using base directory '{0}'", artifactsDirectory));
         }
 
         Information("Created appxupload file '{0}'", appxUploadFileName, artifactsDirectory);
@@ -150,6 +185,40 @@ private void PackageUwpApps()
     }
     
     // No specific implementation required for now, build already wraps it up
+}
+
+//-------------------------------------------------------------
+
+private void DeployUwpApps()
+{
+    if (!HasUwpApps())
+    {
+        return;
+    }
+    
+    foreach (var uwpApp in UwpApps)
+    {
+        if (!ShouldDeployProject(uwpApp))
+        {
+            Information("UWP app '{0}' should not be deployed", uwpApp);
+            continue;
+        }
+
+        LogSeparator("Deploying UWP app '{0}'", uwpApp);
+
+        var artifactsDirectory = GetArtifactsDirectory(OutputRootDirectory);
+        var appxUploadFileName = GetAppxUploadFileName(artifactsDirectory, uwpApp, VersionMajorMinorPatch);
+
+        Information("Creating Windows Store app submission");
+
+        CreateWindowsStoreAppSubmission(appxUploadFileName, new WindowsStoreAppSubmissionSettings
+        {
+            ApplicationId = WindowsStoreAppId,
+            ClientId = WindowsStoreClientId,
+            ClientSecret = WindowsStoreClientSecret,
+            TenantId = WindowsStoreTenantId
+        });        
+    }
 }
 
 //-------------------------------------------------------------
@@ -178,4 +247,13 @@ Task("PackageUwpApps")
     .Does(() =>
 {
     PackageUwpApps();
+});
+
+//-------------------------------------------------------------
+
+Task("DeployUwpApps")
+    .IsDependentOn("PackageUwpApps")
+    .Does(() =>
+{
+    DeployUwpApps();
 });

@@ -24,7 +24,7 @@ namespace CsvTextEditor
         #region Methods
         protected override void Execute(object parameter)
         {
-            CsvTextEditorInstance.ShowTool<FindReplaceTextEditorTool>();
+            CsvTextEditorInstance.ShowTool<FindReplaceTool>();
         }
         #endregion
     }
