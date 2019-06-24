@@ -41,7 +41,7 @@
     <PackageReference Include="Orc.CsvTextEditor" Version="3.1.0" />
     <PackageReference Include="Orc.FilterBuilder.Xaml" Version="3.1.1" />
     <PackageReference Include="Orc.Notifications" Version="3.1.0" />
-    <PackageReference Include="Orc.ProjectManagement" Version="3.2.3" />
+    <PackageReference Include="Orc.ProjectManagement" Version="3.2.4" />
     <PackageReference Include="Orc.Squirrel.Xaml" Version="3.1.0" />
     <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="3.2.2" />
     <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="5.2.3" />
