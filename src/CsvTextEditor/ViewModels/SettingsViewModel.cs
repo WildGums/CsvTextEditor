@@ -17,27 +17,28 @@ namespace CsvTextEditor.ViewModels
     using Catel.MVVM;
     using Catel.Services;
     using Orc.Squirrel;
+    using Orchestra.Services;
     using Services;
 
     public class SettingsViewModel : ViewModelBase
     {
         #region Fields
         private readonly IConfigurationService _configurationService;
-        private readonly IManageUserDataService _manageUserDataService;
+        private readonly IManageAppDataService _manageAppDataService;
         private readonly IUpdateService _updateService;
         private readonly IOpenFileService _openFileService;
         #endregion
 
         #region Constructors
-        public SettingsViewModel(IConfigurationService configurationService, IManageUserDataService manageUserDataService, IUpdateService updateService, IOpenFileService openFileService)
+        public SettingsViewModel(IConfigurationService configurationService, IManageAppDataService manageAppDataService, IUpdateService updateService, IOpenFileService openFileService)
         {
             Argument.IsNotNull(() => configurationService);
-            Argument.IsNotNull(() => manageUserDataService);
+            Argument.IsNotNull(() => manageAppDataService);
             Argument.IsNotNull(() => updateService);
             Argument.IsNotNull(() => openFileService);
 
             _configurationService = configurationService;
-            _manageUserDataService = manageUserDataService;
+            _manageAppDataService = manageAppDataService;
             _updateService = updateService;
             _openFileService = openFileService;
 
@@ -63,7 +64,7 @@ namespace CsvTextEditor.ViewModels
 
         private void OnOpenApplicationDataDirectoryExecute()
         {
-            _manageUserDataService.OpenApplicationDataDirectory();
+            _manageAppDataService.OpenApplicationDataDirectory(Catel.IO.ApplicationDataTarget.UserRoaming);
         }
 
         public TaskCommand PickEditor { get; private set; }
@@ -83,7 +84,7 @@ namespace CsvTextEditor.ViewModels
 
         private async Task OnBackupUserDataExecuteAsync()
         {
-            await _manageUserDataService.BackupUserDataAsync();
+            await _manageAppDataService.BackupUserDataAsync(Catel.IO.ApplicationDataTarget.UserRoaming);
         }
         #endregion
 

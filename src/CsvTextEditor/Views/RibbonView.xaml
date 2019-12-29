@@ -39,17 +39,17 @@
                 <fluent:RibbonGroupBox Header="File">
 
                     <fluent:Button Header="Save"
-                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Save}, FontFamily=FontAwesome}"
+                                   LargeIcon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.Save}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding File.Save}" />
 
 
                     <fluent:SplitButton Header="Open in editor"
-                                        LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Edit}, FontFamily=FontAwesome}" 
+                                        LargeIcon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.Edit}, FontFamily=FontAwesome}" 
                                         Command="{catel:CommandManagerBinding File.OpenInTextEditor}"
                                         IsEnabled="{Binding IsActiveProjectExists}">
                         <fluent:Gallery ScrollViewer.VerticalScrollBarVisibility="Hidden">
                             <fluent:Button Header="Excel" 
-                                           LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.FileExcelO}, FontFamily=FontAwesome}" 
+                                           LargeIcon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.FileExcelO}, FontFamily=FontAwesome}" 
                                            Command="{catel:CommandManagerBinding File.OpenInExcel}"/>
                         </fluent:Gallery>
                     </fluent:SplitButton>
@@ -57,43 +57,43 @@
 
                 <fluent:RibbonGroupBox Header="Edit">
                     <fluent:Button Header="Copy"
-                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Copy}, FontFamily=FontAwesome}"
+                                   LargeIcon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.Copy}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding Edit.Copy}" />
 
                     <fluent:Button Header="Cut"
-                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Cut}, FontFamily=FontAwesome}"
+                                   LargeIcon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.Cut}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding Edit.Cut}" />
 
                     <fluent:Button Header="Paste"
-                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Paste}, FontFamily=FontAwesome}"
+                                   LargeIcon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.Paste}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding Edit.Paste}" />
 
                     <fluent:Button Header="Undo"
-                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.MailReply}, FontFamily=FontAwesome}"
+                                   LargeIcon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.MailReply}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding Edit.Undo}" />
 
                     <fluent:Button Header="Redo"
-                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.MailForward}, FontFamily=FontAwesome}"
+                                   LargeIcon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.MailForward}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding Edit.Redo}" />
 
                     <fluent:Button x:Name="FindAndReplaceButton" Header="Find and replace"
-                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Search}, FontFamily=FontAwesome}"
+                                   LargeIcon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.Search}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding Edit.FindReplace}" />
 
-                    <fluent:SplitButton Header="Quick Format" LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.AlignJustify}, FontFamily=FontAwesome}" IsEnabled="{Binding ElementName=FindAndReplaceButton, Path=IsEnabled}">
-                        <fluent:MenuItem Header="Remove blank lines" Icon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Remove}}" Command="{catel:CommandManagerBinding Edit.RemoveBlankLines}" />
-                        <fluent:MenuItem Header="Remove duplicate lines" Icon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Remove}}" Command="{catel:CommandManagerBinding Edit.RemoveDuplicateLines}" />
-                        <fluent:MenuItem Header="Trim whitespaces" Icon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.AlignJustify}}" Command="{catel:CommandManagerBinding Edit.TrimWhitespaces}" />
+                    <fluent:SplitButton Header="Quick Format" LargeIcon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.AlignJustify}, FontFamily=FontAwesome}" IsEnabled="{Binding ElementName=FindAndReplaceButton, Path=IsEnabled}">
+                        <fluent:MenuItem Header="Remove blank lines" Icon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.Remove}}" Command="{catel:CommandManagerBinding Edit.RemoveBlankLines}" />
+                        <fluent:MenuItem Header="Remove duplicate lines" Icon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.Remove}}" Command="{catel:CommandManagerBinding Edit.RemoveDuplicateLines}" />
+                        <fluent:MenuItem Header="Trim whitespaces" Icon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.AlignJustify}}" Command="{catel:CommandManagerBinding Edit.TrimWhitespaces}" />
                     </fluent:SplitButton>
                 </fluent:RibbonGroupBox>
 
                 <fluent:RibbonGroupBox Header="Settings">
                     <fluent:Button Header="Settings" 
-                                   LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.Cog}, FontFamily=FontAwesome}"
+                                   LargeIcon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.Cog}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding Settings.General}" />
                     
                     <fluent:SplitButton Header="Shortcuts" 
-                                        LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.KeyboardO}, FontFamily=FontAwesome}"
+                                        LargeIcon="{orccontrols:FontImage {x:Static csvTextEditor:FontAwesome.KeyboardO}, FontFamily=FontAwesome}"
                                         Command="{Binding ShowKeyboardMappings}" >
                         <orchestra:KeyboardMappingsOverviewView />
                     </fluent:SplitButton>

@@ -81,7 +81,6 @@ namespace CsvTextEditor.Services
 
         private void RegisterTypes()
         {
-            _serviceLocator.RegisterType<IManageUserDataService, ManageUserDataService>();
             _serviceLocator.RegisterType<IProjectSerializerSelector, ProjectSerializerSelector>();
             _serviceLocator.RegisterType<IMainWindowTitleService, MainWindowTitleService>();
             _serviceLocator.RegisterType<ISaveProjectChangesService, SaveProjectChangesService>();
@@ -95,11 +94,9 @@ namespace CsvTextEditor.Services
 
         private void InitializeFonts()
         {
-            FontImage.RegisterFont("FontAwesome", new FontFamily(new Uri("pack://application:,,,/CsvTextEditor;component/Resources/Fonts/", UriKind.RelativeOrAbsolute), "./#FontAwesome"));
-
-            FontImage.DefaultFontFamily = "FontAwesome";
-
-            FontImage.DefaultBrush = new SolidColorBrush(Color.FromArgb(255, 87, 87, 87));
+            Orc.Controls.FontImage.RegisterFont("FontAwesome", new FontFamily(new Uri("pack://application:,,,/CsvTextEditor;component/Resources/Fonts/", UriKind.RelativeOrAbsolute), "./#FontAwesome"));
+            Orc.Controls.FontImage.DefaultFontFamily = "FontAwesome";
+            Orc.Controls.FontImage.DefaultBrush = new SolidColorBrush(Color.FromArgb(255, 87, 87, 87));
         }
 
         [Time]
