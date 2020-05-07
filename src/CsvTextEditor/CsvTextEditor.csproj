@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <PackageReference Include="Catel.Analyzers" Version="1.0.0" PrivateAssets="all" />
-    <PackageReference Include="Catel.MVVM" Version="5.12.2" />
+    <PackageReference Include="Catel.MVVM" Version="5.12.5" />
     <PackageReference Include="Catel.Fody" Version="4.3.0" PrivateAssets="all" />
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="Fody" Version="6.1.1" PrivateAssets="all">
