@@ -71,12 +71,15 @@ namespace CsvTextEditor.ViewModels
 
         private async Task PickEditorExecuteAsync()
         {
-            _openFileService.Filter = "Program Files (*.exe)|*exe";
-            _openFileService.IsMultiSelect = false;
-
-            if (await _openFileService.DetermineFileAsync())
+            var result = await _openFileService.DetermineFileAsync(new DetermineOpenFileContext
             {
-                CustomEditor = _openFileService.FileName;
+                Filter = "Program Files (*.exe)|*exe",
+                IsMultiSelect = false
+            });
+
+            if (result.Result)
+            {
+                CustomEditor = result.FileName;
             }       
         }
 
