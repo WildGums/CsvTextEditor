@@ -25,7 +25,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Catel.Analyzers" Version="1.0.0" PrivateAssets="all" />
     <PackageReference Include="Catel.MVVM" Version="5.12.5" />
     <PackageReference Include="Catel.Fody" Version="4.4.2" PrivateAssets="all" />
     <PackageReference Include="FastMember" Version="1.5.0" />
@@ -45,7 +44,6 @@
     <PackageReference Include="Orc.Squirrel.Xaml" Version="3.2.0" />
     <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="3.3.1" />
     <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="5.3.1" />
-    <PackageReference Include="WpfAnalyzers" Version="3.1.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
