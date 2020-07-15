@@ -94,9 +94,9 @@ namespace CsvTextEditor.Services
 
         private void InitializeFonts()
         {
-            Orc.Controls.FontImage.RegisterFont("FontAwesome", new FontFamily(new Uri("pack://application:,,,/CsvTextEditor;component/Resources/Fonts/", UriKind.RelativeOrAbsolute), "./#FontAwesome"));
-            Orc.Controls.FontImage.DefaultFontFamily = "FontAwesome";
-            Orc.Controls.FontImage.DefaultBrush = new SolidColorBrush(Color.FromArgb(255, 87, 87, 87));
+            Orc.Theming.FontImage.RegisterFont("FontAwesome", new FontFamily(new Uri("pack://application:,,,/CsvTextEditor;component/Resources/Fonts/", UriKind.RelativeOrAbsolute), "./#FontAwesome"));
+            Orc.Theming.FontImage.DefaultFontFamily = "FontAwesome";
+            Orc.Theming.FontImage.DefaultBrush = new SolidColorBrush(Color.FromArgb(255, 87, 87, 87));
         }
 
         [Time]

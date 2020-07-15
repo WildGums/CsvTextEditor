@@ -7,7 +7,8 @@
                    xmlns:catel="http://schemas.catelproject.com"
                    xmlns:orchestra="http://schemas.wildgums.com/orchestra"
                    xmlns:gum="clr-namespace:CsvTextEditor"
-                   xmlns:orccontrols="http://schemas.wildgums.com/orc/controls"
+                   xmlns:orccontrols="http://schemas.wildgums.com/orc/controls" 
+                   xmlns:orctheming="http://schemas.wildgums.com/orc/theming"
                    mc:Ignorable="d" 
                    d:DesignHeight="300" d:DesignWidth="300">
 
@@ -21,7 +22,7 @@
 
         <orchestra:RibbonBackstageTabItemHeader Grid.Row="0" HeaderText="Recent documents" 
                                                 HeaderTextStyleKey="RibbonBackstageSubHeaderLabelStyle"
-                                                Icon="{orccontrols:FontImage {x:Static gum:FontAwesome.FolderOpenO}, FontFamily=FontAwesome}" />
+                                                Icon="{orctheming:FontImage {x:Static gum:FontAwesome.FolderOpenO}, FontFamily=FontAwesome}" />
 
         <ItemsControl Grid.Row="1"
                       ItemsSource="{Binding PinnedItems}"
@@ -44,7 +45,7 @@
                                                              Width="24" 
                                                              Height="24" 
                                                              ShowBorder="False">
-                                <Image Source="{orccontrols:FontImage {x:Static gum:FontAwesome.ThumbTack}, FontFamily=FontAwesome}" />
+                                <Image Source="{orctheming:FontImage {x:Static gum:FontAwesome.ThumbTack}, FontFamily=FontAwesome}" />
                             </orchestra:RibbonBackstageButton>
 
                             <Label Grid.Column="1"
@@ -57,7 +58,7 @@
                                                              Height="24"
                                                              ToolTip="Open in explorer" 
                                                              ShowBorder="False">
-                                <Image Source="{orccontrols:FontImage {x:Static gum:FontAwesome.FolderOpenO}, FontFamily=FontAwesome}" />
+                                <Image Source="{orctheming:FontImage {x:Static gum:FontAwesome.FolderOpenO}, FontFamily=FontAwesome}" />
                             </orchestra:RibbonBackstageButton>
                         </Grid>
                     </orchestra:RibbonBackstageButton>
@@ -93,7 +94,7 @@
                                                              Width="24" 
                                                              Height="24" 
                                                              ShowBorder="False">
-                                <Image Source="{orccontrols:FontImage {x:Static gum:FontAwesome.ThumbTack}, FontFamily=FontAwesome}" >
+                                <Image Source="{orctheming:FontImage {x:Static gum:FontAwesome.ThumbTack}, FontFamily=FontAwesome}" >
                                     <Image.RenderTransform>
                                         <RotateTransform Angle="90" 
                                                          CenterX="9" 
@@ -112,7 +113,7 @@
                                                              Height="24" 
                                                              ToolTip="Open in explorer" 
                                                              ShowBorder="False">
-                                <Image Source="{orccontrols:FontImage {x:Static gum:FontAwesome.FolderOpenO}, FontFamily=FontAwesome}" />
+                                <Image Source="{orctheming:FontImage {x:Static gum:FontAwesome.FolderOpenO}, FontFamily=FontAwesome}" />
                             </orchestra:RibbonBackstageButton>
                         </Grid>
                     </orchestra:RibbonBackstageButton>
