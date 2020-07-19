@@ -7,12 +7,15 @@
 
 namespace CsvTextEditor.ViewModels
 {
+    using System;
     using System.Threading.Tasks;
     using Catel;
     using Catel.Fody;
+    using Catel.IoC;
     using Catel.MVVM;
     using Catel.Services;
     using Models;
+    using Orc.CsvTextEditor;
     using Orc.ProjectManagement;
 
     public class MainViewModel : ViewModelBase
@@ -37,6 +40,8 @@ namespace CsvTextEditor.ViewModels
         [Expose(nameof(Models.Project.Text))]
         public Project Project { get; set; }
 
+        public ICsvTextEditorInstance CsvTextEditorInstance { get; set; }
+
         #region Methods
         protected override Task InitializeAsync()
         {
@@ -45,9 +50,31 @@ namespace CsvTextEditor.ViewModels
             return base.InitializeAsync();
         }
 
-        private Task OnProjectActivationAsync(object sender, ProjectUpdatingCancelEventArgs e)
+        protected override Task OnClosedAsync(bool? result)
         {
-            return _dispatcherService.InvokeAsync(() => Project = (Project)e.NewProject);
+            _projectManager.ProjectActivationAsync -= OnProjectActivationAsync;
+
+            return base.OnClosedAsync(result);
+        }
+
+        private async Task OnProjectActivationAsync(object sender, ProjectUpdatingCancelEventArgs e)
+        {
+            var newProject = (Project)e.NewProject;
+            if (newProject is null)
+            {
+                return;
+            }
+
+            Project = newProject;
+
+            var serviceLocator = this.GetServiceLocator();
+            var csvTextEditorInstanceProvider = serviceLocator.ResolveType<ICsvTextEditorInstanceProvider>();
+
+            CsvTextEditorInstance = csvTextEditorInstanceProvider.GetInstance(Project);
+            if (CsvTextEditorInstance.GetEditor() != null)
+            {
+                CsvTextEditorInstance.SetText(Project.Text);
+            }
         }
 
         protected override Task CloseAsync()

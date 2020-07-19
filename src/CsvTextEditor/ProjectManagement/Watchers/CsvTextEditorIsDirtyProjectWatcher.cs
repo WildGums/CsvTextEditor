@@ -60,16 +60,24 @@ namespace CsvTextEditor.ProjectManagement
         protected override Task OnActivatedAsync(IProject oldProject, IProject newProject)
         {
             if (_csvTextEditorInstance != null)
+            {
                 _csvTextEditorInstance.TextChanged -= CsvTextEditorInstanceOnTextChanged;
+            }
 
             if (newProject == null)
+            {
                 return TaskHelper.Completed;
+            }
 
             if (_csvTextEditorInstance == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(newProject))
+            {
                 _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(newProject);
+            }
 
             if (_csvTextEditorInstance != null)
+            {
                 _csvTextEditorInstance.TextChanged += CsvTextEditorInstanceOnTextChanged;
+            }
 
             return base.OnActivatedAsync(oldProject, newProject);
         }
