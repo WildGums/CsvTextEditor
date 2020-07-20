@@ -4,6 +4,11 @@ private static string _signToolFileName;
 
 public static void SignFiles(BuildContext buildContext, string signToolCommand, IEnumerable<FilePath> fileNames, string additionalCommandLineArguments = null)
 {
+    if (fileNames.Any())
+    {
+        buildContext.Information($"Signing '{fileNames.Count()}' files, this could take a while...");
+    }
+
     foreach (var fileName in fileNames)
     {
         SignFile(buildContext, signToolCommand, fileName.FullPath, additionalCommandLineArguments);
@@ -13,7 +18,12 @@ public static void SignFiles(BuildContext buildContext, string signToolCommand, 
 //-------------------------------------------------------------
 
 public static void SignFiles(BuildContext buildContext, string signToolCommand, IEnumerable<string> fileNames, string additionalCommandLineArguments = null)
-{
+{    
+    if (fileNames.Any())
+    {
+        buildContext.Information($"Signing '{fileNames.Count()}' files, this could take a while...");
+    }
+    
     foreach (var fileName in fileNames)
     {
         SignFile(buildContext, signToolCommand, fileName, additionalCommandLineArguments);

@@ -278,10 +278,10 @@ Task("CodeSign")
             // Empty, we need to override with project name for valid default value
             codeSignWildCard = projectToCodeSign;
         }
-    
-        var projectFilesToSign = new List<FilePath>();
 
         var outputDirectory = string.Format("{0}/{1}", buildContext.General.OutputRootDirectory, projectToCodeSign);
+
+        var projectFilesToSign = new List<FilePath>();
 
         var exeSignFilesSearchPattern = string.Format("{0}/**/*{1}*.exe", outputDirectory, codeSignWildCard);
         Information(exeSignFilesSearchPattern);
