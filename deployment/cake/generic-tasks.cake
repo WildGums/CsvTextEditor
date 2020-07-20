@@ -241,7 +241,7 @@ Task("CleanupCode")
 //-------------------------------------------------------------
 
 Task("CodeSign")
-    .ContinueOnError()
+    //.ContinueOnError()
     .Does<BuildContext>(buildContext =>
 {
     if (buildContext.General.IsCiBuild)
