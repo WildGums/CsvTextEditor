@@ -87,8 +87,6 @@ public class SquirrelInstaller : IInstaller
         {
             signToolCommand = string.Format("/a /t {0} /n {1}", BuildContext.General.CodeSign.TimeStampUri, 
                 BuildContext.General.CodeSign.CertificateSubjectName);
-
-            SignFiles(BuildContext, $"sign {signToolCommand}", projectFilesToSign);
         }
 
         // Create NuGet package

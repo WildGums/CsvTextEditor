@@ -6,7 +6,7 @@ public static void SignFiles(BuildContext buildContext, string signToolCommand, 
 {
     if (fileNames.Any())
     {
-        buildContext.Information($"Signing '{fileNames.Count()}' files, this could take a while...");
+        buildContext.CakeContext.Information($"Signing '{fileNames.Count()}' files, this could take a while...");
     }
 
     foreach (var fileName in fileNames)
@@ -21,7 +21,7 @@ public static void SignFiles(BuildContext buildContext, string signToolCommand, 
 {    
     if (fileNames.Any())
     {
-        buildContext.Information($"Signing '{fileNames.Count()}' files, this could take a while...");
+        buildContext.CakeContext.Information($"Signing '{fileNames.Count()}' files, this could take a while...");
     }
     
     foreach (var fileName in fileNames)

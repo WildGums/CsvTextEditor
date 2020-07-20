@@ -32,11 +32,11 @@ public class InnoSetupInstaller : IInstaller
         var innoSetupTemplateDirectory = System.IO.Path.Combine(".", "deployment", "innosetup", projectName);
         if (!BuildContext.CakeContext.DirectoryExists(innoSetupTemplateDirectory))
         {
-            BuildContext.CakeContext.Information("Skip packaging of app '{0}' using Inno Setup since no Inno Setup template is present");
+            BuildContext.CakeContext.Information($"Skip packaging of app '{projectName}' using Inno Setup since no Inno Setup template is present");
             return;
         }
 
-        BuildContext.CakeContext.LogSeparator("Packaging app '{0}' using Inno Setup", projectName);
+        BuildContext.CakeContext.LogSeparator($"Packaging app '{projectName}' using Inno Setup");
 
         var installersOnDeploymentsShare = System.IO.Path.Combine(BuildContext.Wpf.DeploymentsShare, projectName, "installer");
         BuildContext.CakeContext.CreateDirectory(installersOnDeploymentsShare);
