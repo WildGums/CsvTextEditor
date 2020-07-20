@@ -263,7 +263,7 @@ Task("CodeSign")
         return;
     }
 
-    List<FilePath> filesToSign = new List<FilePath>();
+    var filesToSign = new List<FilePath>();
 
     // Note: only code-sign components & wpf apps, skip test projects & uwp apps
     var projectsToCodeSign = new List<string>();
@@ -304,14 +304,18 @@ Task("CodeSign")
 
     Information("Found '{0}' files to code sign using subject name '{1}', this can take a few minutes...", filesToSign.Count, certificateSubjectName);
 
-    var signToolSignSettings = new SignToolSignSettings 
-    {
-        AppendSignature = false,
-        TimeStampUri = new Uri(buildContext.General.CodeSign.TimeStampUri),
-        CertSubjectName = certificateSubjectName
-    };
+    var signToolCommand = string.Format("sign /a /t {0} /n {1}", buildContext.General.CodeSign.TimeStampUri, certificateSubjectName);
 
-    Sign(filesToSign, signToolSignSettings);
+    SignFiles(buildContext, signToolCommand, filesToSign);
+
+    // var signToolSignSettings = new SignToolSignSettings 
+    // {
+    //     AppendSignature = false,
+    //     TimeStampUri = new Uri(buildContext.General.CodeSign.TimeStampUri),
+    //     CertSubjectName = certificateSubjectName
+    // };
+
+    // Sign(filesToSign, signToolSignSettings);
 
     // Note parallel doesn't seem to be faster in an example repository:
     // 1 thread:   1m 30s

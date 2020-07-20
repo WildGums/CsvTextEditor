@@ -107,6 +107,7 @@ public class SquirrelInstaller : IInstaller
 
         // Squirrelify!
         var squirrelSettings = new SquirrelSettings();
+        squirrelSettings.Silent = false;
         squirrelSettings.NoMsi = false;
         squirrelSettings.ReleaseDirectory = squirrelReleasesRoot;
         squirrelSettings.LoadingGif = System.IO.Path.Combine(".", "deployment", "squirrel", "loading.gif");
