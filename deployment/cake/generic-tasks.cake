@@ -296,14 +296,6 @@ Task("CodeSign")
         filesToSign.AddRange(projectFilesToSign);
     }
 
-    if (filesToSign.Count == 0)
-    {
-        Information("Found no files to sign, skipping code signing process...");
-        return;
-    }
-
-    Information("Found '{0}' files to code sign using subject name '{1}', this can take a few minutes...", filesToSign.Count, certificateSubjectName);
-
     var signToolCommand = string.Format("sign /a /t {0} /n {1}", buildContext.General.CodeSign.TimeStampUri, certificateSubjectName);
 
     SignFiles(buildContext, signToolCommand, filesToSign);

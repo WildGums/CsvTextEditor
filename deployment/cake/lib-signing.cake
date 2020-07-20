@@ -52,7 +52,8 @@ public static void SignFile(BuildContext buildContext, string signToolCommand, s
         // Check
         var checkProcessSettings = new ProcessSettings
         {
-            Arguments = $"verify /pa \"{fileName}\""
+            Arguments = $"verify /pa \"{fileName}\"",
+            Silent = true
         };
 
         using (var checkProcess = buildContext.CakeContext.StartAndReturnProcess(_signToolFileName, checkProcessSettings))
