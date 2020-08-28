@@ -42,7 +42,7 @@
     <PackageReference Include="MethodTimer.Fody" Version="3.1.2" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="ModuleInit.Fody" Version="2.1.0" PrivateAssets="all">
+    <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="Orc.Analytics" Version="4.0.2" />
