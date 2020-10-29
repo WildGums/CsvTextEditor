@@ -24,6 +24,7 @@ namespace CsvTextEditor.Services
     using ProjectManagement;
     using Orc.Squirrel;
     using MethodTimer;
+    using Orc.Theming;
     using Settings = CsvTextEditor.Settings;
 
     public class ApplicationInitializationService : ApplicationInitializationServiceBase
@@ -81,7 +82,6 @@ namespace CsvTextEditor.Services
 
         private void RegisterTypes()
         {
-            _serviceLocator.RegisterType<IManageUserDataService, ManageUserDataService>();
             _serviceLocator.RegisterType<IProjectSerializerSelector, ProjectSerializerSelector>();
             _serviceLocator.RegisterType<IMainWindowTitleService, MainWindowTitleService>();
             _serviceLocator.RegisterType<ISaveProjectChangesService, SaveProjectChangesService>();

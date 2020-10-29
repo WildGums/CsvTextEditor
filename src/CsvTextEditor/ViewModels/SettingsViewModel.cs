@@ -13,31 +13,33 @@ namespace CsvTextEditor.ViewModels
     using System.Threading.Tasks;
     using Catel;
     using Catel.Configuration;
+    using Catel.IO;
     using Catel.IoC;
     using Catel.MVVM;
     using Catel.Services;
     using Orc.Squirrel;
+    using Orchestra.Services;
     using Services;
 
     public class SettingsViewModel : ViewModelBase
     {
         #region Fields
         private readonly IConfigurationService _configurationService;
-        private readonly IManageUserDataService _manageUserDataService;
+        private readonly IManageAppDataService _manageAppDataService;
         private readonly IUpdateService _updateService;
         private readonly IOpenFileService _openFileService;
         #endregion
 
         #region Constructors
-        public SettingsViewModel(IConfigurationService configurationService, IManageUserDataService manageUserDataService, IUpdateService updateService, IOpenFileService openFileService)
+        public SettingsViewModel(IConfigurationService configurationService, IManageAppDataService manageAppDataService, IUpdateService updateService, IOpenFileService openFileService)
         {
             Argument.IsNotNull(() => configurationService);
-            Argument.IsNotNull(() => manageUserDataService);
+            Argument.IsNotNull(() => manageAppDataService);
             Argument.IsNotNull(() => updateService);
             Argument.IsNotNull(() => openFileService);
 
             _configurationService = configurationService;
-            _manageUserDataService = manageUserDataService;
+            _manageAppDataService = manageAppDataService;
             _updateService = updateService;
             _openFileService = openFileService;
 
@@ -63,27 +65,31 @@ namespace CsvTextEditor.ViewModels
 
         private void OnOpenApplicationDataDirectoryExecute()
         {
-            _manageUserDataService.OpenApplicationDataDirectory();
+            _manageAppDataService.OpenApplicationDataDirectory(ApplicationDataTarget.UserLocal);
         }
 
         public TaskCommand PickEditor { get; private set; }
 
         private async Task PickEditorExecuteAsync()
         {
-            _openFileService.Filter = "Program Files (*.exe)|*exe";
-            _openFileService.IsMultiSelect = false;
-
-            if (await _openFileService.DetermineFileAsync())
+            var fileContext = new DetermineOpenFileContext
             {
-                CustomEditor = _openFileService.FileName;
-            }       
+                Filter = "Program Files (*.exe)|*exe",
+                IsMultiSelect = false
+            };
+
+            var fileOneResult = await _openFileService.DetermineFileAsync(fileContext);
+            if (fileOneResult.Result)
+            {
+                CustomEditor = fileOneResult.FileName;
+            }   
         }
 
         public TaskCommand BackupUserData { get; private set; }
 
         private async Task OnBackupUserDataExecuteAsync()
         {
-            await _manageUserDataService.BackupUserDataAsync();
+            await _manageAppDataService.BackupUserDataAsync(ApplicationDataTarget.UserLocal);
         }
         #endregion
 
