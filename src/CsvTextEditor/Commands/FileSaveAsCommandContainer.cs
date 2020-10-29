@@ -40,14 +40,16 @@ namespace CsvTextEditor
                 return;
             }
 
-            _saveFileService.Filter = "Text Files (*.csv)|*csv";
-            
-            // Note: seems to work strange
-            _saveFileService.AddExtension = true;
-
-            if (await _saveFileService.DetermineFileAsync())
+            var fileContext = new DetermineSaveFileContext
             {
-                var fileName = _saveFileService.FileName;
+                Filter = "Text Files (*.csv)|*csv",
+                AddExtension = true
+            };
+
+            var fileOneResult = await _saveFileService.DetermineFileAsync(fileContext);
+            if (fileOneResult.Result)
+            {
+                var fileName = fileOneResult.FileName;
 
                 // Note: manually ensure we are using correct extension
                 fileName = Path.ChangeExtension(fileName, "csv");

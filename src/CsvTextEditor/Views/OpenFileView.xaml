@@ -8,6 +8,7 @@
              xmlns:orchestra="http://schemas.wildgums.com/orchestra"
              xmlns:fluent="urn:fluent-ribbon"
              xmlns:csvTextEditor="clr-namespace:CsvTextEditor"
+             xmlns:orctheming="http://schemas.wildgums.com/orc/theming"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -21,12 +22,12 @@
 
             <orchestra:RibbonBackstageTabControl Grid.Row="1">
                 <orchestra:RibbonBackstageTabItem HeaderText="Recent documents" 
-                                                  Icon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.ClockO}, FontFamily=FontAwesome}">
+                                                  Icon="{orctheming:FontImage {x:Static csvTextEditor:FontAwesome.ClockO}, FontFamily=FontAwesome}">
                     <local:RecentlyUsedItemsView />
                 </orchestra:RibbonBackstageTabItem>
 
                 <orchestra:RibbonBackstageTabItem HeaderText="Computer" 
-                                                  Icon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.FolderO}, FontFamily=FontAwesome}">
+                                                  Icon="{orctheming:FontImage {x:Static csvTextEditor:FontAwesome.FolderO}, FontFamily=FontAwesome}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -39,7 +40,7 @@
 
                         <fluent:Button Grid.Row="1" 
                                        Header="Open..." 
-                                       LargeIcon="{orchestra:FontImage {x:Static csvTextEditor:FontAwesome.FolderOpenO}, FontFamily=FontAwesome}"
+                                       LargeIcon="{orctheming:FontImage {x:Static csvTextEditor:FontAwesome.FolderOpenO}, FontFamily=FontAwesome}"
                                        Command="{catel:CommandManagerBinding File.Open}"
                                        Style="{DynamicResource ButtonBackstageStyle}"
                                        HorizontalAlignment="Left" />
