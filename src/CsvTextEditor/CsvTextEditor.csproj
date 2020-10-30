@@ -28,7 +28,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Catel.MVVM" Version="5.12.10" />
     <PackageReference Include="Catel.Fody" Version="4.5.0" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
@@ -47,7 +46,7 @@
     </PackageReference>
     <PackageReference Include="Orc.Analytics" Version="4.0.2" />
     <PackageReference Include="Orc.CommandLine" Version="4.0.0" />
-    <PackageReference Include="Orc.CsvTextEditor" Version="4.1.0-alpha0317" />
+    <PackageReference Include="Orc.CsvTextEditor" Version="4.1.0-alpha0302" />
     <PackageReference Include="Orc.FilterBuilder.Xaml" Version="4.0.1" />
     <PackageReference Include="Orc.Notifications" Version="4.0.0" />
     <PackageReference Include="Orc.ProjectManagement" Version="4.0.2" />
