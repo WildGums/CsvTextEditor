@@ -42,7 +42,7 @@ namespace CsvTextEditor
                 externalToolPath = null;
             }
 
-            var toolPath = string.IsNullOrEmpty(externalToolPath) ? null : _fileExtensionService.GetRegisteredTool("txt");
+            var toolPath = !string.IsNullOrEmpty(externalToolPath) ? externalToolPath : _fileExtensionService.GetRegisteredTool("txt");
 
             if(!string.IsNullOrEmpty(toolPath))
             {
