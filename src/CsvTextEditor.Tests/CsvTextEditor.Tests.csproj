@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net50-windows</TargetFrameworks>
     <AssemblyName>CsvTextEditor.Tests</AssemblyName>
     <RootNamespace>CsvTextEditor.Tests</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
@@ -16,7 +16,7 @@
     <ExtrasEnableImplicitWpfReferences>true</ExtrasEnableImplicitWpfReferences>
     <ExtrasEnableImplicitWinFormsReferences>true</ExtrasEnableImplicitWinFormsReferences>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="ApprovalTests" Version="5.4.3" />
     <PackageReference Include="Catel.Fody" Version="4.5.0" PrivateAssets="all" />

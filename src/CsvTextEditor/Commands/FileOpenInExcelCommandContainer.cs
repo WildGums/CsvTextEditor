@@ -15,7 +15,7 @@ namespace CsvTextEditor
     {
 
         public FileOpenInExcelCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IFileExtensionService fileExtensionService,
-            IFileService fileService, IProcessService processService) 
+            IFileService fileService, IProcessService processService)
             : base(Commands.File.OpenInExcel, "xls", commandManager, projectManager, fileExtensionService, fileService, processService)
         {
         }
