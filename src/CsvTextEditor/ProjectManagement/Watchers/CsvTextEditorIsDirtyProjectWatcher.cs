@@ -89,7 +89,7 @@ namespace CsvTextEditor.ProjectManagement
             {
                 return;
             }
-                          
+
             if (_csvTextEditorInstance.IsDirty &&
                 _configurationService.GetRoamingValue<bool>(Configuration.AutoSaveEditor))
             {
@@ -103,7 +103,12 @@ namespace CsvTextEditor.ProjectManagement
         {
             var project = (Project) ProjectManager.ActiveProject;
 
-            project?.SetIsDirty(_csvTextEditorInstance.IsDirty);
+            if (project != null)
+            {
+                project.SetIsDirty(_csvTextEditorInstance.IsDirty);
+                project.Text = _csvTextEditorInstance.GetText();
+            }
+
             _mainWindowTitleService.UpdateTitle();
         }
 
