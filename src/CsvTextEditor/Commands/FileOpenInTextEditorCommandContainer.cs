@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace CsvTextEditor
 {
+    using System.Diagnostics;
     using Catel;
     using Catel.Configuration;
     using Catel.MVVM;
@@ -34,10 +35,23 @@ namespace CsvTextEditor
 
         protected override void Execute(object parameter)
         {
-            var externalToolPath = _configurationService.GetRoamingValue<string>(Configuration.CustomEditor);
+            var externalToolPath = _configurationService.GetRoamingValue<string>(Configuration.CustomEditor, null);
 
-            var toolPath = externalToolPath ?? _fileExtensionService.GetRegisteredTool("txt");
-            _processService.StartProcess(toolPath, _projectManager.ActiveProject.Location);
+            if(string.Equals(externalToolPath, "null"))
+            {
+                externalToolPath = null;
+            }
+
+            var toolPath = string.IsNullOrEmpty(externalToolPath) ? null : _fileExtensionService.GetRegisteredTool("txt");
+
+            if(!string.IsNullOrEmpty(toolPath))
+            {
+                _processService.StartProcess(toolPath, _projectManager.ActiveProject.Location);
+            }
+            else
+            {
+                Process.Start("notepad.exe", _projectManager.ActiveProject.Location);
+            }
         }
     }
 }
