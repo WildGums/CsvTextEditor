@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>net50-windows</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <SelfContained>true</SelfContained>
@@ -14,12 +14,12 @@
     <ExtrasEnableImplicitWpfReferences>true</ExtrasEnableImplicitWpfReferences>
     <ExtrasEnableImplicitWinFormsReferences>true</ExtrasEnableImplicitWinFormsReferences>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <!-- SonarQube requires a project guid -->
     <ProjectGuid>70261F8B-6554-4C72-BC0B-CFBD7A7DD94C</ProjectGuid>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <StartupObject />
@@ -46,7 +46,7 @@
     </PackageReference>
     <PackageReference Include="Orc.Analytics" Version="4.0.2" />
     <PackageReference Include="Orc.CommandLine" Version="4.0.0" />
-    <PackageReference Include="Orc.CsvTextEditor" Version="4.1.0-alpha0302" />
+    <PackageReference Include="Orc.CsvTextEditor" Version="4.1.0-alpha0317" />
     <PackageReference Include="Orc.FilterBuilder.Xaml" Version="4.0.1" />
     <PackageReference Include="Orc.Notifications" Version="4.0.0" />
     <PackageReference Include="Orc.ProjectManagement" Version="4.0.2" />

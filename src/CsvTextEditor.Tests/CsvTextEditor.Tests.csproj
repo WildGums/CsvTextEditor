@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>net50-windows</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <AssemblyName>CsvTextEditor.Tests</AssemblyName>
     <RootNamespace>CsvTextEditor.Tests</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
