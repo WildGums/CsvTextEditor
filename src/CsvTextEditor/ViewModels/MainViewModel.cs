@@ -73,7 +73,7 @@ namespace CsvTextEditor.ViewModels
             CsvTextEditorInstance = csvTextEditorInstanceProvider.GetInstance(Project);
             if (CsvTextEditorInstance.GetEditor() != null)
             {
-                CsvTextEditorInstance.SetText(Project.Text);
+                CsvTextEditorInstance.SetInitialText(Project.Text);
             }
         }
 
