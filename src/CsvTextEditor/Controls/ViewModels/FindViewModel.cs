@@ -71,7 +71,7 @@ namespace CsvTextEditor.ViewModels
             }
             else if (e.HasPropertyChanged(nameof(SearchTerm)))
             {
-                _//csvTextEditorInstance.High
+                //csvTextEditorInstance.High
             }
 
             base.OnPropertyChanged(e);
