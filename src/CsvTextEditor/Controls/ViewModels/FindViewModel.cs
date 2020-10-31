@@ -63,15 +63,15 @@ namespace CsvTextEditor.ViewModels
                     var headers = firstLine.Split(Symbols.Comma).Select(x => x.Trim()).ToArray();
 
                     var selectedHeaderIndex = Array.IndexOf(headers, SelectedColumnHeader);
+                    var startHeaderIndex = firstLine.IndexOf(SelectedColumnHeader);
 
                     _csvTextEditorInstance.GotoPosition(1, selectedHeaderIndex);
-
-                    //TODO: highlight the text
+                    _csvTextEditorInstance.SetSelection(startHeaderIndex, SelectedColumnHeader.Length);
                 }
             }
             else if (e.HasPropertyChanged(nameof(SearchTerm)))
             {
-                //csvTextEditorInstance.High
+                _csvTextEditorInstance.SetSelectedText(SearchTerm);
             }
 
             base.OnPropertyChanged(e);

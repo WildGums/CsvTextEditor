@@ -33,7 +33,7 @@
         <TextBlock Text="Text:"
                     Margin="2,5,2,2"/>
 
-        <TextBox Text="{Binding SearchTerm}"
+        <TextBox Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}"
                     Margin="2"/>
     </orccontrols:StackGrid>
 
