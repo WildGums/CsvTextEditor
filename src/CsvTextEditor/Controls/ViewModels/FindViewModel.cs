@@ -9,8 +9,11 @@ namespace CsvTextEditor.ViewModels
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using Catel;
+    using Catel.Collections;
+    using Catel.Data;
     using Catel.IoC;
     using Catel.Linq;
     using Catel.MVVM;
@@ -41,9 +44,39 @@ namespace CsvTextEditor.ViewModels
 
         public List<string> ColumnHeaders { get; set; }
         public string SelectedColumnHeader { get; set; }
+
+        public string SearchTerm { get; set; }
         #endregion
 
         #region Methods
+
+        protected override void OnPropertyChanged(AdvancedPropertyChangedEventArgs e)
+        {
+            if (e.HasPropertyChanged(nameof(SelectedColumnHeader)))
+            {
+                var allText = _csvTextEditorInstance.GetText();
+                var indexOfNewLine = allText.IndexOf(Symbols.NewLineEnd);
+
+                if (indexOfNewLine != -1)
+                {
+                    var firstLine = allText.Substring(0, indexOfNewLine);
+                    var headers = firstLine.Split(Symbols.Comma).Select(x => x.Trim()).ToArray();
+
+                    var selectedHeaderIndex = Array.IndexOf(headers, SelectedColumnHeader);
+
+                    _csvTextEditorInstance.GotoPosition(1, selectedHeaderIndex);
+
+                    //TODO: highlight the text
+                }
+            }
+            else if (e.HasPropertyChanged(nameof(SearchTerm)))
+            {
+                _//csvTextEditorInstance.High
+            }
+
+            base.OnPropertyChanged(e);
+        }
+
         private void OnTypeRegistered(object sender, TypeRegisteredEventArgs e)
         {
             if (e.ServiceType != typeof(ICsvTextEditorInstance))
@@ -70,7 +103,7 @@ namespace CsvTextEditor.ViewModels
             if (indexOfNewLine != -1)
             {
                 var firstLine = allText.Substring(0, indexOfNewLine);
-                ColumnHeaders = firstLine.Split(Symbols.Comma).Select(x => x).ToList();
+                ColumnHeaders = firstLine.Split(Symbols.Comma).Select(x => x.Trim()).OrderBy(x => x).ToList();
             }
         }
 
