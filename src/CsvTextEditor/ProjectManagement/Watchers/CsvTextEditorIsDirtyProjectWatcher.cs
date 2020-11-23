@@ -29,7 +29,7 @@ namespace CsvTextEditor.ProjectManagement
         private readonly IProjectManager _projectManager;
         private readonly IServiceLocator _serviceLocator;
         private ICsvTextEditorInstance _csvTextEditorInstance;
-        private DispatcherTimer _autoSaveTimer;
+        private readonly DispatcherTimer _autoSaveTimer;
         #endregion
 
         #region Constructors
