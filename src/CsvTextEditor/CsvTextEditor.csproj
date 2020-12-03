@@ -44,7 +44,7 @@
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Orc.Analytics" Version="4.0.2" />
+    <PackageReference Include="Orc.Analytics" Version="4.1.0" />
     <PackageReference Include="Orc.CommandLine" Version="4.0.0" />
     <PackageReference Include="Orc.CsvTextEditor" Version="4.1.0-alpha0328" />
     <PackageReference Include="Orc.FilterBuilder.Xaml" Version="4.0.1" />
