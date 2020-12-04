@@ -7,41 +7,27 @@
 
 namespace CsvTextEditor.Services
 {
-    using System.IO;
     using System.Threading.Tasks;
     using Catel;
-    using Catel.Configuration;
     using Catel.Logging;
-    using Catel.Services;
     using Orc.CommandLine;
-    using Orc.FileSystem;
 
     public class InitialProjectLocationService : Orc.ProjectManagement.IInitialProjectLocationService
     {
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
-        private readonly IConfigurationService _configurationService;
-        private readonly IDirectoryService _directoryService;
         private readonly ICommandLineParser _commandLineParser;
-        private readonly IFileService _fileService;
         private readonly ICommandLineService _commandLineService;
         #endregion
 
         #region Constructors
-        public InitialProjectLocationService(IConfigurationService configurationService, ICommandLineService commandLineService,
-            IFileService fileService, IDirectoryService directoryService, ICommandLineParser commandLineParser)
+        public InitialProjectLocationService(ICommandLineService commandLineService, ICommandLineParser commandLineParser)
         {
-            Argument.IsNotNull(() => configurationService);
             Argument.IsNotNull(() => commandLineService);
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => directoryService);
             Argument.IsNotNull(() => commandLineParser);
 
-            _configurationService = configurationService;
             _commandLineService = commandLineService;
-            _fileService = fileService;
-            _directoryService = directoryService;
             _commandLineParser = commandLineParser;
         }
         #endregion

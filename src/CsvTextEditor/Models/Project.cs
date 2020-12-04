@@ -10,7 +10,7 @@ namespace CsvTextEditor.Models
     using System;
     using Orc.ProjectManagement;
 
-    public class Project : ProjectBase, IProject, IEquatable<Project>
+    public sealed class Project : ProjectBase, IProject, IEquatable<Project>
     {
         #region Constructors
         public Project(string location)

@@ -20,7 +20,7 @@ namespace CsvTextEditor.Views
             var typeFactory = this.GetTypeFactory();
 
             var csvTextEditorInstanceProvider
-                = typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorInstanceProvider>(CsvTextEditor);
+                = typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorInstanceProvider>();
 
             serviceLocator.RegisterInstance<ICsvTextEditorInstanceProvider>(csvTextEditorInstanceProvider);
         }

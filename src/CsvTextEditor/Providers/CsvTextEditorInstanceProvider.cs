@@ -16,18 +16,15 @@ namespace CsvTextEditor
     public class CsvTextEditorInstanceProvider : ICsvTextEditorInstanceProvider
     {
         #region Fields
-        private readonly CsvTextEditorControl _editor;
         private readonly IServiceLocator _serviceLocator;
         private readonly ITypeFactory _typeFactory;
         #endregion
 
         #region Constructors
-        public CsvTextEditorInstanceProvider(CsvTextEditorControl editor, IServiceLocator serviceLocator, ITypeFactory typeFactory)
+        public CsvTextEditorInstanceProvider(IServiceLocator serviceLocator, ITypeFactory typeFactory)
         {
-            Argument.IsNotNull(() => editor);
             Argument.IsNotNull(() => serviceLocator);
 
-            _editor = editor;
             _serviceLocator = serviceLocator;
             _typeFactory = typeFactory;
         }

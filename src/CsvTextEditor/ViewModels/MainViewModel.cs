@@ -7,13 +7,11 @@
 
 namespace CsvTextEditor.ViewModels
 {
-    using System;
     using System.Threading.Tasks;
     using Catel;
     using Catel.Fody;
     using Catel.IoC;
     using Catel.MVVM;
-    using Catel.Services;
     using Models;
     using Orc.CsvTextEditor;
     using Orc.ProjectManagement;
@@ -22,17 +20,14 @@ namespace CsvTextEditor.ViewModels
     {
         #region Fields
         private readonly IProjectManager _projectManager;
-        private readonly IDispatcherService _dispatcherService;
         #endregion
 
         #region Constructors
-        public MainViewModel(IProjectManager projectManager, IDispatcherService dispatcherService)
+        public MainViewModel(IProjectManager projectManager)
         {
             Argument.IsNotNull(() => projectManager);
-            Argument.IsNotNull(() => dispatcherService);
 
             _projectManager = projectManager;
-            _dispatcherService = dispatcherService;
         }
         #endregion
 

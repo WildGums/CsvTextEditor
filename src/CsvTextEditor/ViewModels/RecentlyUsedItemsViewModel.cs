@@ -39,7 +39,7 @@ namespace CsvTextEditor.ViewModels
 
             PinItem = new Command<string>(OnPinItemExecute);
             UnpinItem = new Command<string>(OnUnpinItemExecute);
-            OpenInExplorer = new Command<string>(OnOpenInExplorerExecute);
+            OpenInExplorer = new TaskCommand<string>(OnOpenInExplorerExecuteAsync);
         }
 
         public List<RecentlyUsedItem> RecentlyUsedItems { get; private set; }
@@ -64,14 +64,9 @@ namespace CsvTextEditor.ViewModels
             _recentlyUsedItemsService.UnpinItem(parameter);
         }
 
-        public Command<string> OpenInExplorer { get; private set; }
+        public TaskCommand<string> OpenInExplorer { get; private set; }
 
-#pragma warning disable AsyncFixer03 // Avoid fire & forget async void methods
-#pragma warning disable AvoidAsyncVoid
-
-        private async void OnOpenInExplorerExecute(string parameter)
-#pragma warning restore AsyncFixer03 // Avoid fire & forget async void methods
-#pragma warning restore AvoidAsyncVoid
+        private async Task OnOpenInExplorerExecuteAsync(string parameter)
         {
             if (!_fileService.Exists(parameter))
             {
