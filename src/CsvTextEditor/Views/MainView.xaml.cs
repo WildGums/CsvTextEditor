@@ -15,14 +15,6 @@ namespace CsvTextEditor.Views
         public MainView()
         {
             InitializeComponent();
-
-            var serviceLocator = this.GetServiceLocator();
-            var typeFactory = this.GetTypeFactory();
-
-            var csvTextEditorInstanceProvider
-                = typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorInstanceProvider>();
-
-            serviceLocator.RegisterInstance<ICsvTextEditorInstanceProvider>(csvTextEditorInstanceProvider);
         }
         #endregion
     }

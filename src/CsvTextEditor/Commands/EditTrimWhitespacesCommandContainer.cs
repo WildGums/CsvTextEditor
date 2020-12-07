@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="EditTrimWhitespacesCommandContainer.cs" company="WildGums">
 //   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
 // </copyright>
@@ -16,9 +16,9 @@ namespace CsvTextEditor
     public class EditTrimWhitespacesCommandContainer : QuickFormatCommandContainerBase
     {
         #region Constructors
-        public EditTrimWhitespacesCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IServiceLocator serviceLocator,
+        public EditTrimWhitespacesCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider,
             INotificationService notificationService)
-            : base(Commands.Edit.TrimWhitespaces, commandManager, projectManager, serviceLocator, notificationService)
+            : base(Commands.Edit.TrimWhitespaces, commandManager, projectManager, notificationService, csvTextEditorInstanceProvider)
         {
         }
 

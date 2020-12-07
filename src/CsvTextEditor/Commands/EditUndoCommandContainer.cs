@@ -14,8 +14,8 @@ namespace CsvTextEditor
     public class EditUndoCommandContainer : EditProjectCommandContainerBase
     {
         #region Constructors
-        public EditUndoCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IServiceLocator serviceLocator)
-            : base(Commands.Edit.Undo, commandManager, projectManager, serviceLocator)
+        public EditUndoCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
+            : base(Commands.Edit.Undo, commandManager, projectManager, csvTextEditorInstanceProvider)
         {
         }
         #endregion

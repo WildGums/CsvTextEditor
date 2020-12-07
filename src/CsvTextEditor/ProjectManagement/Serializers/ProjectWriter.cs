@@ -20,17 +20,17 @@ namespace CsvTextEditor.ProjectManagement
     {
         #region Fields
         private readonly IFileService _fileService;
-        private readonly IServiceLocator _serviceLocator;
+        private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
         #endregion
 
         #region Constructors
-        public ProjectWriter(IFileService fileService, IServiceLocator serviceLocator)
+        public ProjectWriter(IFileService fileService, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
         {
             Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => serviceLocator);
+            Argument.IsNotNull(() => csvTextEditorInstanceProvider);
 
             _fileService = fileService;
-            _serviceLocator = serviceLocator;
+            _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
         }
         #endregion
 
@@ -39,11 +39,8 @@ namespace CsvTextEditor.ProjectManagement
         {
             _fileService.WriteAllText(location, project.Text);
 
-            if (_serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(project))
-            {
-                var csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(project);
-                csvTextEditorInstance.ResetIsDirty();
-            }
+            var csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance(project);
+            csvTextEditorInstance.ResetIsDirty();
 
             return TaskHelper<bool>.FromResult(true);
         }

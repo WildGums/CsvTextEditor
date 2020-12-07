@@ -11,22 +11,27 @@ namespace CsvTextEditor.ViewModels
     using Catel;
     using Catel.IoC;
     using Catel.MVVM;
+    using CsvTextEditor.Models;
     using Orc.CsvTextEditor;
 
     public class ProjectStatisticViewModel : ViewModelBase
     {
         #region Fields
         private readonly IServiceLocator _serviceLocator;
-
+        private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
+        
         private ICsvTextEditorInstance _csvTextEditorInstance;
+        private int _textChangesSubscribed = 0;
         #endregion
 
         #region Constructors
-        public ProjectStatisticViewModel(IServiceLocator serviceLocator)
+        public ProjectStatisticViewModel(IServiceLocator serviceLocator, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
         {
             Argument.IsNotNull(() => serviceLocator);
+            Argument.IsNotNull(() => csvTextEditorInstanceProvider);
 
             _serviceLocator = serviceLocator;
+            _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
 
             _serviceLocator.TypeRegistered += OnTypeRegistered;
         }
@@ -37,7 +42,7 @@ namespace CsvTextEditor.ViewModels
         public int RowsCount { get; private set; }
         #endregion
 
-        #region Methods
+        #region Methods        
         private void OnTypeRegistered(object sender, TypeRegisteredEventArgs e)
         {
             if (e.ServiceType != typeof(ICsvTextEditorInstance))
@@ -45,13 +50,15 @@ namespace CsvTextEditor.ViewModels
                 return;
             }
 
-            if (_csvTextEditorInstance != null)
+            if (_csvTextEditorInstance != null && _textChangesSubscribed > 0)
             {
                 _csvTextEditorInstance.TextChanged -= OnTextChanged;
+                _textChangesSubscribed--;
             }
 
-            _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(e.Tag);
+            _csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance((Project)e.Tag);
             _csvTextEditorInstance.TextChanged += OnTextChanged;
+            _textChangesSubscribed++;
 
             UpdateStatistic();
         }

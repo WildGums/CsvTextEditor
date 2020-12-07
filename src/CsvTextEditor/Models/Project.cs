@@ -67,7 +67,14 @@ namespace CsvTextEditor.Models
 
         public void SetIsDirty(bool isDirty)
         {
-            IsDirty = isDirty;
+            if (isDirty)
+            {
+                MarkAsDirty();
+            }
+            else
+            {
+                ClearIsDirty();
+            }
         }
     }
 }

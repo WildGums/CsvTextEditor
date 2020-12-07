@@ -15,8 +15,8 @@ namespace CsvTextEditor
     public class EditPasteCommandContainer : EditProjectCommandContainerBase
     {
         #region Constructors
-        public EditPasteCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IServiceLocator serviceLocator)
-            : base(Commands.Edit.Paste, commandManager, projectManager, serviceLocator)
+        public EditPasteCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
+            : base(Commands.Edit.Paste, commandManager, projectManager, csvTextEditorInstanceProvider)
         {
         }
         #endregion

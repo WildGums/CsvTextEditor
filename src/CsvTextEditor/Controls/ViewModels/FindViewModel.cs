@@ -17,22 +17,27 @@ namespace CsvTextEditor.ViewModels
     using Catel.IoC;
     using Catel.Linq;
     using Catel.MVVM;
+    using CsvTextEditor.Models;
     using Orc.CsvTextEditor;
 
     public class FindViewModel : ViewModelBase
     {
         #region Fields
         private readonly IServiceLocator _serviceLocator;
-
+        private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
+        
         private ICsvTextEditorInstance _csvTextEditorInstance;
+        private int _textChangedSubscribed = 0;
         #endregion
 
         #region Constructors
-        public FindViewModel(IServiceLocator serviceLocator)
+        public FindViewModel(IServiceLocator serviceLocator, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
         {
             Argument.IsNotNull(() => serviceLocator);
+            Argument.IsNotNull(() => csvTextEditorInstanceProvider);
 
             _serviceLocator = serviceLocator;
+            _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
 
             _serviceLocator.TypeRegistered += OnTypeRegistered;
         }
@@ -75,7 +80,7 @@ namespace CsvTextEditor.ViewModels
             }
 
             base.OnPropertyChanged(e);
-        }
+        }        
 
         private void OnTypeRegistered(object sender, TypeRegisteredEventArgs e)
         {
@@ -84,13 +89,15 @@ namespace CsvTextEditor.ViewModels
                 return;
             }
 
-            if (_csvTextEditorInstance != null)
+            if (_csvTextEditorInstance != null && _textChangedSubscribed > 0)
             {
                 _csvTextEditorInstance.TextChanged -= OnTextChanged;
+                _textChangedSubscribed--;
             }
 
-            _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(e.Tag);
+            _csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance((Project)e.Tag);
             _csvTextEditorInstance.TextChanged += OnTextChanged;
+            _textChangedSubscribed++;
 
             UpdateStatistic();
         }

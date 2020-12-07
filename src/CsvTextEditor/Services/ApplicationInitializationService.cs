@@ -88,6 +88,8 @@ namespace CsvTextEditor.Services
             _serviceLocator.RegisterType<IInitialProjectLocationService, InitialProjectLocationService>();
 
             _serviceLocator.RegisterType<IProjectInitializer, FileProjectInitializer>();
+            
+            _serviceLocator.RegisterType<ICsvTextEditorInstanceProvider, CsvTextEditorInstanceProvider>();
 
             _serviceLocator.RegisterTypeAndInstantiate<ProjectManagementCloseApplicationWatcher>();
         }

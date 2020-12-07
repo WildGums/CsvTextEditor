@@ -26,29 +26,28 @@ namespace CsvTextEditor.ProjectManagement
         private readonly IMainWindowTitleService _mainWindowTitleService;
         private readonly ISaveProjectChangesService _saveProjectChangesService;
         private readonly IConfigurationService _configurationService;
+        private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
         private readonly IProjectManager _projectManager;
-        private readonly IServiceLocator _serviceLocator;
         private ICsvTextEditorInstance _csvTextEditorInstance;
         private readonly DispatcherTimer _autoSaveTimer;
         #endregion
 
         #region Constructors
-        public CsvTextEditorIsDirtyProjectWatcher(IProjectManager projectManager, IServiceLocator serviceLocator, IMainWindowTitleService mainWindowTitleService,
-            ISaveProjectChangesService saveProjectChangesService, IConfigurationService configurationService)
+        public CsvTextEditorIsDirtyProjectWatcher(IProjectManager projectManager, IMainWindowTitleService mainWindowTitleService,
+            ISaveProjectChangesService saveProjectChangesService, IConfigurationService configurationService, 
+            ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
             : base(projectManager)
         {
-            Argument.IsNotNull(() => serviceLocator);
             Argument.IsNotNull(() => mainWindowTitleService);
             Argument.IsNotNull(() => saveProjectChangesService);
             Argument.IsNotNull(() => configurationService);
             Argument.IsNotNull(() => projectManager);
 
             _projectManager = projectManager;
-            _serviceLocator = serviceLocator;
             _mainWindowTitleService = mainWindowTitleService;
             _saveProjectChangesService = saveProjectChangesService;
             _configurationService = configurationService;
-
+            _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
             _autoSaveTimer = new DispatcherTimer();
             _autoSaveTimer.Tick += AutoSaveIfNeeded;
             _autoSaveTimer.Interval = configurationService.GetRoamingValue(Configuration.AutoSaveInterval, Configuration.AutoSaveIntervalDefaultValue);
@@ -59,20 +58,17 @@ namespace CsvTextEditor.ProjectManagement
         #region Methods
         protected override Task OnActivatedAsync(IProject oldProject, IProject newProject)
         {
-            if (_csvTextEditorInstance != null)
+            if (oldProject != null && _csvTextEditorInstance != null)
             {
                 _csvTextEditorInstance.TextChanged -= CsvTextEditorInstanceOnTextChanged;
             }
 
             if (newProject == null)
             {
-                return TaskHelper.Completed;
+                return base.OnActivatedAsync(oldProject, newProject);
             }
 
-            if (_csvTextEditorInstance == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(newProject))
-            {
-                _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(newProject);
-            }
+            _csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance((Project)newProject);
 
             if (_csvTextEditorInstance != null)
             {
