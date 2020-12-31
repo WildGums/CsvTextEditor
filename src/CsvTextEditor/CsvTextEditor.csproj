@@ -51,7 +51,7 @@
     <PackageReference Include="Orc.Notifications" Version="4.1.0" />
     <PackageReference Include="Orc.ProjectManagement" Version="4.1.1" />
     <PackageReference Include="Orc.Squirrel.Xaml" Version="4.1.0" />
-    <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="4.1.0" />
+    <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="4.1.1" />
     <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="6.2.0" />
   </ItemGroup>
 
