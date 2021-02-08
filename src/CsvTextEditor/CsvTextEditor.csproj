@@ -47,7 +47,7 @@
     <PackageReference Include="Orc.Analytics" Version="4.1.0" />
     <PackageReference Include="Orc.CommandLine" Version="4.1.1" />
     <PackageReference Include="Orc.CsvTextEditor" Version="4.1.0" />
-    <PackageReference Include="Orc.FilterBuilder.Xaml" Version="4.1.0" />
+    <PackageReference Include="Orc.FilterBuilder.Xaml" Version="4.1.1" />
     <PackageReference Include="Orc.Notifications" Version="4.1.0" />
     <PackageReference Include="Orc.ProjectManagement" Version="4.1.1" />
     <PackageReference Include="Orc.Squirrel.Xaml" Version="4.1.0" />
