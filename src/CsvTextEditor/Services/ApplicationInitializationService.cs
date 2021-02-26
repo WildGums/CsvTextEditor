@@ -25,6 +25,8 @@ namespace CsvTextEditor.Services
     using Orc.Squirrel;
     using MethodTimer;
     using Settings = CsvTextEditor.Settings;
+    using Fluent;
+    using CsvTextEditor.Views;
 
     public class ApplicationInitializationService : ApplicationInitializationServiceBase
     {
@@ -65,8 +67,13 @@ namespace CsvTextEditor.Services
 
         public override async Task InitializeAfterCreatingShellAsync()
         {
-            var mainWindowTitleService = _serviceLocator.ResolveType<IMainWindowTitleService>();
+            var shellWindow = System.Windows.Application.Current.MainWindow as RibbonWindow;
 
+            var windowCommands = new WindowCommands();
+            windowCommands.Items.Add(new WindowCommandsView());
+            shellWindow.WindowCommands = windowCommands;
+
+            var mainWindowTitleService = _serviceLocator.ResolveType<IMainWindowTitleService>();
             mainWindowTitleService.UpdateTitle();
 
             await base.InitializeAfterCreatingShellAsync();

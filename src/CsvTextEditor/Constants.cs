@@ -17,14 +17,23 @@ namespace CsvTextEditor
     {
         public static class Application
         {
+            public static class General
+            {
+                public const string EnableAnalytics = "General.EnableAnalytics";
+                public const bool EnableAnalyticsDefaultValue = true;
+
+                public const string ThemeBaseColor = "General.ThemeBaseColor";
+                public const string ThemeBaseColorDefaultValue = "Light";
+            }
+
             public static class AutomaticUpdates
             {
                 public const bool CheckForUpdatesDefaultValue = true;
 
                 public static readonly ImmutableArray<UpdateChannel> AvailableChannels = ImmutableArray.Create(
-                    new UpdateChannel("Stable", "http://downloads.sesolutions.net.au/csvtexteditor/stable"),
-                    new UpdateChannel("Beta", "http://downloads.sesolutions.net.au/csvtexteditor/beta"),
-                    new UpdateChannel("Alpha", "http://downloads.sesolutions.net.au/csvtexteditor/alpha")
+                    new UpdateChannel("Stable", "https://downloads.wildgums.com/csvtexteditor/stable"),
+                    new UpdateChannel("Beta", "https://downloads.wildgums.com/csvtexteditor/beta"),
+                    new UpdateChannel("Alpha", "https://downloads.wildgums.com/csvtexteditor/alpha")
                 );
 
                 public static readonly UpdateChannel DefaultChannel = AvailableChannels[0];
@@ -110,7 +119,6 @@ namespace CsvTextEditor
 
         public static class Settings
         {
- 
             public const string General = "Settings.General";
             public static readonly InputGesture GeneralInputGesture = new InputGesture(Key.S, ModifierKeys.Alt | ModifierKeys.Control);
         }
