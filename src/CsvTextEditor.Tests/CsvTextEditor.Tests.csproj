@@ -30,7 +30,7 @@
     <PackageReference Include="NUnit" Version="3.13.2" PrivateAssets="all" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="Obsolete.Fody" Version="5.2.1" PrivateAssets="all" />
-    <PackageReference Include="Orc.Csv" Version="4.1.2" />
+    <PackageReference Include="Orc.Csv" Version="4.2.0" />
     <PackageReference Include="PublicApiGenerator" Version="10.2.0" PrivateAssets="all" />
     <PackageReference Include="System.Security.Permissions" Version="5.0.0" PrivateAssets="all" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" PrivateAssets="all" />
