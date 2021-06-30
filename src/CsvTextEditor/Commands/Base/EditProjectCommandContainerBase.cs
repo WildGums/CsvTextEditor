@@ -54,19 +54,19 @@ namespace CsvTextEditor
         {
             base.ProjectActivated(oldProject, newProject);
 
-            if (_csvTextEditorInstance != null && oldProject != null)
+            if (_csvTextEditorInstance is not null && oldProject is not null)
             {
                 _csvTextEditorInstance.TextChanged -= CsvTextEditorInstanceOnTextChanged;
             }
 
-            if (newProject == null)
+            if (newProject is null)
             {
                 return;
             }
 
             _csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance(newProject);
 
-            if (_csvTextEditorInstance != null)
+            if (_csvTextEditorInstance is not null)
             {
                 _csvTextEditorInstance.TextChanged += CsvTextEditorInstanceOnTextChanged;
             }

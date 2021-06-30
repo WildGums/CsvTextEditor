@@ -76,7 +76,7 @@ namespace CsvTextEditor.Services
             Argument.IsNotNull(() => project);
             Argument.IsNotNullOrEmpty(() => message);
 
-            if (project == null || !project.IsDirty)
+            if (project is null || !project.IsDirty)
                 return true;
 
             var caption = AssemblyHelper.GetEntryAssembly().Title();

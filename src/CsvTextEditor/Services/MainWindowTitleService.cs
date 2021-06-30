@@ -41,7 +41,7 @@ namespace CsvTextEditor.Services
                 var app = System.Windows.Application.Current;
                 var title = _defaulTitle;
 
-                if (project != null)
+                if (project is not null)
                 {
                     title += $" - {project.Title}";
 

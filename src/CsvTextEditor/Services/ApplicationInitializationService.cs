@@ -172,7 +172,7 @@ namespace CsvTextEditor.Services
             using (_pleaseWaitService.PushInScope())
             {
                 var projectManager = _serviceLocator.ResolveType<IProjectManager>();
-                if (projectManager == null)
+                if (projectManager is null)
                 {
                     const string error = "Failed to resolve project manager";
                     Log.Error(error);

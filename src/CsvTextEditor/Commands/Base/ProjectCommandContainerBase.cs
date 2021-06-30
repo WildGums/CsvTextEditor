@@ -51,7 +51,7 @@ namespace CsvTextEditor
 
         protected override bool CanExecute(object parameter)
         {
-            if (_projectManager.ActiveProject == null)
+            if (_projectManager.ActiveProject is null)
             {
                 return false;
             }

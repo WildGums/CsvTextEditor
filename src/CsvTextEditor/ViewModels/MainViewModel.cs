@@ -66,7 +66,7 @@ namespace CsvTextEditor.ViewModels
             var csvTextEditorInstanceProvider = serviceLocator.ResolveType<ICsvTextEditorInstanceProvider>();
 
             CsvTextEditorInstance = csvTextEditorInstanceProvider.GetInstance(Project);
-            if (CsvTextEditorInstance.GetEditor() != null)
+            if (CsvTextEditorInstance.GetEditor() is not null)
             {
                 CsvTextEditorInstance.SetInitialText(Project.Text);
             }

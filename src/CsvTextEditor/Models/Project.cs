@@ -61,7 +61,7 @@ namespace CsvTextEditor.Models
 
         public override int GetHashCode()
         {
-            return (Location != null ? Location.GetHashCode() : 0);
+            return (Location is not null ? Location.GetHashCode() : 0);
         }
         #endregion
 

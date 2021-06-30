@@ -24,7 +24,7 @@ namespace CsvTextEditor
 
         public static void Log(Type type, string methodName, long milliseconds, string message)
         {
-            if (type == null)
+            if (type is null)
             {
                 return;
             }

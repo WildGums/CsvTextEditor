@@ -58,19 +58,19 @@ namespace CsvTextEditor.ProjectManagement
         #region Methods
         protected override Task OnActivatedAsync(IProject oldProject, IProject newProject)
         {
-            if (oldProject != null && _csvTextEditorInstance != null)
+            if (oldProject is not null && _csvTextEditorInstance is not null)
             {
                 _csvTextEditorInstance.TextChanged -= CsvTextEditorInstanceOnTextChanged;
             }
 
-            if (newProject == null)
+            if (newProject is null)
             {
                 return base.OnActivatedAsync(oldProject, newProject);
             }
 
             _csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance((Project)newProject);
 
-            if (_csvTextEditorInstance != null)
+            if (_csvTextEditorInstance is not null)
             {
                 _csvTextEditorInstance.TextChanged += CsvTextEditorInstanceOnTextChanged;
             }
@@ -81,7 +81,7 @@ namespace CsvTextEditor.ProjectManagement
         private void AutoSaveIfNeeded(object sender, EventArgs e)
         {
 
-            if (_csvTextEditorInstance == null)
+            if (_csvTextEditorInstance is null)
             {
                 return;
             }
@@ -99,7 +99,7 @@ namespace CsvTextEditor.ProjectManagement
         {
             var project = (Project) ProjectManager.ActiveProject;
 
-            if (project != null)
+            if (project is not null)
             {
                 project.SetIsDirty(_csvTextEditorInstance.IsDirty);
                 project.Text = _csvTextEditorInstance.GetText();

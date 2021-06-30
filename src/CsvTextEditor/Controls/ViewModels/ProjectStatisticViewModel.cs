@@ -50,7 +50,7 @@ namespace CsvTextEditor.ViewModels
                 return;
             }
 
-            if (_csvTextEditorInstance != null && _textChangesSubscribed > 0)
+            if (_csvTextEditorInstance is not null && _textChangesSubscribed > 0)
             {
                 _csvTextEditorInstance.TextChanged -= OnTextChanged;
                 _textChangesSubscribed--;

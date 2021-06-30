@@ -112,13 +112,13 @@ namespace CsvTextEditor.ViewModels
 
         private Task OnProjectActivatedAsync(object sender, ProjectUpdatedEventArgs args)
         {
-            if (_csvTextEditorInstance != null && args.OldProject != null)
+            if (_csvTextEditorInstance is not null && args.OldProject is not null)
             {
                 _csvTextEditorInstance.CaretTextLocationChanged -= OnCaretTextLocationChanged;
             }
 
             var activeProject = args.NewProject;
-            if (activeProject == null)
+            if (activeProject is null)
             {
                 return TaskHelper.Completed;
             }
