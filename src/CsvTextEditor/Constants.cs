@@ -96,6 +96,7 @@ namespace CsvTextEditor
             //public static readonly InputGesture CutInputGesture = new InputGesture(Key.X, ModifierKeys.Control);
 
             public const string Paste = "Edit.Paste";
+            //public static readonly InputGesture PasteInputGesture = new (Key.V, ModifierKeys.Control);
 
             public const string FindReplace = "Edit.FindReplace";
             public static readonly InputGesture FindReplaceInputGesture = new InputGesture(Key.F, ModifierKeys.Control);

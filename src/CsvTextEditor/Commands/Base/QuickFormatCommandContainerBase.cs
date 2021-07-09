@@ -1,16 +1,8 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="QuickFormatCommandContainerBase.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
     using System;
     using System.Diagnostics;
     using Catel;
-    using Catel.IoC;
     using Catel.MVVM;
     using Orc.Notifications;
     using Orc.ProjectManagement;
@@ -47,7 +39,7 @@ namespace CsvTextEditor
         {
             _stopwatch.Restart();
 
-            EcecuteOperation();
+            ExecuteOperation();
 
             _stopwatch.Stop();
 
@@ -58,7 +50,7 @@ namespace CsvTextEditor
             base.Execute(parameter);
         }
 
-        protected abstract void EcecuteOperation();
+        protected abstract void ExecuteOperation();
         protected abstract string GetOperationDescription();
 
         private void ShowNotification(string message)

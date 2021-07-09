@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FileSaveAsCommandContainer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
     using System.IO;
     using System.Threading.Tasks;
@@ -34,8 +27,7 @@ namespace CsvTextEditor
         #region Methods
         protected override async Task ExecuteAsync(object parameter)
         {
-            var project = _projectManager.ActiveProject as Project;
-            if (ReferenceEquals(project, null))
+            if (!(_projectManager.ActiveProject is Project project))
             {
                 return;
             }
