@@ -63,10 +63,10 @@ namespace CsvTextEditor
         public static class File
         {
             public const string Close = "File.Close";
-            public static readonly InputGesture CloseInputGesture = new InputGesture(Key.X, ModifierKeys.Alt);
+            public static readonly InputGesture CloseInputGesture = new (Key.F4, ModifierKeys.Control);
 
             public const string Open = "File.Open";
-            public static readonly InputGesture OpenInputGesture = new InputGesture(Key.O, ModifierKeys.Control);
+            public static readonly InputGesture OpenInputGesture = new (Key.O, ModifierKeys.Control);
 
             public const string OpenInTextEditor = "File.OpenInTextEditor";
             public static readonly InputGesture OpenInTextEditorInputGesture = null;
@@ -75,7 +75,7 @@ namespace CsvTextEditor
             public static readonly InputGesture OpenInExcelInputGesture = null;
 
             public const string Save = "File.Save";
-            public static readonly InputGesture SaveInputGesture = new InputGesture(Key.S, ModifierKeys.Control);
+            public static readonly InputGesture SaveInputGesture = new (Key.S, ModifierKeys.Control);
 
             public const string SaveAs = "File.SaveAs";
             public static readonly InputGesture SaveAsInputGesture = null;
@@ -96,6 +96,7 @@ namespace CsvTextEditor
             //public static readonly InputGesture CutInputGesture = new InputGesture(Key.X, ModifierKeys.Control);
 
             public const string Paste = "Edit.Paste";
+            //public static readonly InputGesture PasteInputGesture = new (Key.V, ModifierKeys.Control);
 
             public const string FindReplace = "Edit.FindReplace";
             public static readonly InputGesture FindReplaceInputGesture = new InputGesture(Key.F, ModifierKeys.Control);

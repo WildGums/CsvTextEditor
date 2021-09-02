@@ -11,35 +11,31 @@ namespace CsvTextEditor.ViewModels
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using System.Threading.Tasks;
     using Catel;
-    using Catel.Collections;
     using Catel.Data;
-    using Catel.IoC;
-    using Catel.Linq;
     using Catel.MVVM;
-    using CsvTextEditor.Models;
+    using Models;
     using Orc.CsvTextEditor;
+    using Orc.ProjectManagement;
 
     public class FindViewModel : ViewModelBase
     {
         #region Fields
-        private readonly IServiceLocator _serviceLocator;
         private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
-        
+        private readonly IProjectManager _projectManager;
+
         private ICsvTextEditorInstance _csvTextEditorInstance;
-        private int _textChangedSubscribed = 0;
         #endregion
 
         #region Constructors
-        public FindViewModel(IServiceLocator serviceLocator, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
+        public FindViewModel(ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider, IProjectManager projectManager)
         {
-            Argument.IsNotNull(() => serviceLocator);
             Argument.IsNotNull(() => csvTextEditorInstanceProvider);
+            Argument.IsNotNull(() => projectManager);
 
-            _serviceLocator = serviceLocator;
             _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
-
-            _serviceLocator.TypeRegistered += OnTypeRegistered;
+            _projectManager = projectManager;
         }
         #endregion
 
@@ -54,6 +50,34 @@ namespace CsvTextEditor.ViewModels
         #endregion
 
         #region Methods
+        protected override Task InitializeAsync()
+        {
+            _projectManager.ProjectActivationAsync += OnProjectActivationAsync;
+
+            return base.InitializeAsync();
+        }
+
+        protected override Task CloseAsync()
+        {
+            _projectManager.ProjectActivationAsync -= OnProjectActivationAsync;
+
+            return base.CloseAsync();
+        }
+
+        private async Task OnProjectActivationAsync(object sender, ProjectUpdatingCancelEventArgs e)
+        {
+            if (_csvTextEditorInstance is not null)
+            {
+                _csvTextEditorInstance.TextChanged -= OnTextChanged;
+            }
+
+            var project = e.NewProject as Project;
+
+            _csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance(project);
+            _csvTextEditorInstance.TextChanged += OnTextChanged;
+
+            UpdateStatistic();
+        }
 
         protected override void OnPropertyChanged(AdvancedPropertyChangedEventArgs e)
         {
@@ -82,26 +106,6 @@ namespace CsvTextEditor.ViewModels
             base.OnPropertyChanged(e);
         }        
 
-        private void OnTypeRegistered(object sender, TypeRegisteredEventArgs e)
-        {
-            if (e.ServiceType != typeof(ICsvTextEditorInstance))
-            {
-                return;
-            }
-
-            if (_csvTextEditorInstance is not null && _textChangedSubscribed > 0)
-            {
-                _csvTextEditorInstance.TextChanged -= OnTextChanged;
-                _textChangedSubscribed--;
-            }
-
-            _csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance((Project)e.Tag);
-            _csvTextEditorInstance.TextChanged += OnTextChanged;
-            _textChangedSubscribed++;
-
-            UpdateStatistic();
-        }
-
         private void UpdateColumnHeaders()
         {
             var allText = _csvTextEditorInstance.GetText();
@@ -111,6 +115,10 @@ namespace CsvTextEditor.ViewModels
             {
                 var firstLine = allText.Substring(0, indexOfNewLine);
                 ColumnHeaders = firstLine.Split(Symbols.Comma).Select(x => x.Trim()).OrderBy(x => x).ToList();
+            }
+            else
+            {
+                ColumnHeaders = new List<string>();
             }
         }
 

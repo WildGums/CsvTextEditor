@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FileSaveCommandContainer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
     using System.Threading.Tasks;
     using Catel.MVVM;
@@ -26,8 +19,7 @@ namespace CsvTextEditor
         {
             await base.ExecuteAsync(parameter);
 
-            var project = _projectManager.ActiveProject as Project;
-            if (!ReferenceEquals(project, null))
+            if (_projectManager.ActiveProject is Project project)
             {
                 await _projectManager.SaveAsync(project);
             }

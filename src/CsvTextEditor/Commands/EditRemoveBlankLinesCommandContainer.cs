@@ -1,13 +1,5 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="EditRemoveBlankLinesCommandContainer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
-    using Catel.IoC;
     using Catel.MVVM;
     using Orc.CsvTextEditor.Operations;
     using Orc.Notifications;
@@ -26,7 +18,7 @@ namespace CsvTextEditor
 
         #region Methods
 
-        protected override void EcecuteOperation()
+        protected override void ExecuteOperation()
         {
             CsvTextEditorInstance.ExecuteOperation<RemoveBlankLinesOperation>();
         }

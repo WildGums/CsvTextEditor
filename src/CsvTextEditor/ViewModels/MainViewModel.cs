@@ -55,11 +55,6 @@ namespace CsvTextEditor.ViewModels
         private async Task OnProjectActivationAsync(object sender, ProjectUpdatingCancelEventArgs e)
         {
             var newProject = (Project)e.NewProject;
-            if (newProject is null)
-            {
-                return;
-            }
-
             Project = newProject;
 
             var serviceLocator = this.GetServiceLocator();
@@ -68,7 +63,7 @@ namespace CsvTextEditor.ViewModels
             CsvTextEditorInstance = csvTextEditorInstanceProvider.GetInstance(Project);
             if (CsvTextEditorInstance.GetEditor() is not null)
             {
-                CsvTextEditorInstance.SetInitialText(Project.Text);
+                CsvTextEditorInstance.SetInitialText(Project?.Text ?? string.Empty);
             }
         }
 
