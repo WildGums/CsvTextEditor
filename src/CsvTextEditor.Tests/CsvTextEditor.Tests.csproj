@@ -28,7 +28,7 @@
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all" />
     <PackageReference Include="NUnit" Version="3.13.3" PrivateAssets="all" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="Orc.Csv" Version="4.4.0-alpha0120" />
+    <PackageReference Include="Orc.Csv" Version="4.4.0" />
     <PackageReference Include="PublicApiGenerator" Version="10.3.0" PrivateAssets="all" />
   </ItemGroup>
 
