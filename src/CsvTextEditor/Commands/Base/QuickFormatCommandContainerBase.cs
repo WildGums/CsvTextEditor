@@ -20,7 +20,7 @@
             INotificationService notificationService, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
             : base(commandName, commandManager, projectManager, csvTextEditorInstanceProvider)
         {
-            Argument.IsNotNull(() => notificationService);
+            ArgumentNullException.ThrowIfNull(notificationService);
 
             _notificationService = notificationService;
 

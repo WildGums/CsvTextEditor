@@ -23,8 +23,8 @@ namespace CsvTextEditor.Services
 
         public FileExtensionService(IFileService fileService, IDirectoryService directoryService)
         {
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => directoryService);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(directoryService);
 
             _fileService = fileService;
             _directoryService = directoryService;

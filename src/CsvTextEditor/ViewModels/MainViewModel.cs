@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainViewModel.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.ViewModels
+﻿namespace CsvTextEditor.ViewModels
 {
+    using System;
     using System.Threading.Tasks;
     using Catel;
     using Catel.Fody;
@@ -18,26 +12,21 @@ namespace CsvTextEditor.ViewModels
 
     public class MainViewModel : ViewModelBase
     {
-        #region Fields
         private readonly IProjectManager _projectManager;
-        #endregion
 
-        #region Constructors
         public MainViewModel(IProjectManager projectManager)
         {
-            Argument.IsNotNull(() => projectManager);
+            ArgumentNullException.ThrowIfNull(projectManager);
 
             _projectManager = projectManager;
         }
-        #endregion
-
+       
         [Model]
         [Expose(nameof(Models.Project.Text))]
         public Project Project { get; set; }
 
         public ICsvTextEditorInstance CsvTextEditorInstance { get; set; }
 
-        #region Methods
         protected override Task InitializeAsync()
         {
             _projectManager.ProjectActivationAsync += OnProjectActivationAsync;
@@ -57,7 +46,9 @@ namespace CsvTextEditor.ViewModels
             var newProject = (Project)e.NewProject;
             Project = newProject;
 
+#pragma warning disable IDISP001 // Dispose created
             var serviceLocator = this.GetServiceLocator();
+#pragma warning restore IDISP001 // Dispose created
             var csvTextEditorInstanceProvider = serviceLocator.ResolveType<ICsvTextEditorInstanceProvider>();
 
             CsvTextEditorInstance = csvTextEditorInstanceProvider.GetInstance(Project);
@@ -73,6 +64,5 @@ namespace CsvTextEditor.ViewModels
 
             return base.CloseAsync();
         }
-        #endregion
     }
 }

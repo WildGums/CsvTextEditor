@@ -1,7 +1,7 @@
 ﻿namespace CsvTextEditor
 {
+    using System;
     using System.Diagnostics;
-    using Catel;
     using Catel.Configuration;
     using Catel.MVVM;
     using Catel.Services;
@@ -19,9 +19,9 @@
             IFileService fileService, IProcessService processService, IConfigurationService configurationService)
             : base(Commands.File.OpenInTextEditor, "txt", commandManager, projectManager, fileExtensionService, fileService, processService)
         {
-            Argument.IsNotNull(() => fileExtensionService);
-            Argument.IsNotNull(() => configurationService);
-            Argument.IsNotNull(() => processService);
+            ArgumentNullException.ThrowIfNull(fileExtensionService);
+            ArgumentNullException.ThrowIfNull(configurationService);
+            ArgumentNullException.ThrowIfNull(processService);
 
             _fileExtensionService = fileExtensionService;
             _processService = processService;
@@ -32,20 +32,25 @@
         {
             var externalToolPath = _configurationService.GetRoamingValue<string>(Configuration.CustomEditor, null);
 
-            if(string.Equals(externalToolPath, "null"))
+            if (string.Equals(externalToolPath, "null"))
             {
                 externalToolPath = null;
             }
 
             var toolPath = !string.IsNullOrEmpty(externalToolPath) ? externalToolPath : _fileExtensionService.GetRegisteredTool("txt");
 
-            if(!string.IsNullOrEmpty(toolPath))
+            if (!string.IsNullOrEmpty(toolPath))
             {
                 _processService.StartProcess(toolPath, _projectManager.ActiveProject.Location);
             }
             else
             {
-                Process.Start("notepad.exe", _projectManager.ActiveProject.Location);
+                _processService.StartProcess(new ProcessContext
+                {
+                    FileName = "notepad.exe",
+                    Arguments = _projectManager.ActiveProject.Location,
+                    UseShellExecute = true
+                });
             }
         }
     }

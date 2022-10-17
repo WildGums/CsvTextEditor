@@ -27,8 +27,8 @@ namespace CsvTextEditor.ViewModels
         #region Constructors
         public ProjectStatisticViewModel(IServiceLocator serviceLocator, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
         {
-            Argument.IsNotNull(() => serviceLocator);
-            Argument.IsNotNull(() => csvTextEditorInstanceProvider);
+            ArgumentNullException.ThrowIfNull(serviceLocator);
+            ArgumentNullException.ThrowIfNull(csvTextEditorInstanceProvider);
 
             _serviceLocator = serviceLocator;
             _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;

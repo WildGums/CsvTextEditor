@@ -1,5 +1,6 @@
 ﻿namespace CsvTextEditor
 {
+    using System;
     using Catel;
     using Catel.MVVM;
     using Catel.Services;
@@ -18,9 +19,9 @@
             : base(commandName, commandManager, projectManager)
         {
             Argument.IsNotNullOrEmpty(() => fileExtension);
-            Argument.IsNotNull(() => fileExtensionService);
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => processService);
+            ArgumentNullException.ThrowIfNull(fileExtensionService);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(processService);
 
             _fileService = fileService;
             _processService = processService;

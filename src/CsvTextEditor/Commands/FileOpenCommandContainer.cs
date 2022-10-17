@@ -11,30 +11,25 @@
 
     public class FileOpenCommandContainer : ProjectCommandContainerBase
     {
-        #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
         private readonly IFileService _fileService;
         private readonly IOpenFileService _openFileService;
-        private readonly IPleaseWaitService _pleaseWaitService;
-        #endregion
+        private readonly IBusyIndicatorService _busyIndicatorService;
 
-        #region Constructors
         public FileOpenCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IOpenFileService openFileService,
-            IFileService fileService, IPleaseWaitService pleaseWaitService)
+            IFileService fileService, IBusyIndicatorService busyIndicatorService)
             : base(Commands.File.Open, commandManager, projectManager)
         {
-            Argument.IsNotNull(() => openFileService);
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => pleaseWaitService);
+            ArgumentNullException.ThrowIfNull(openFileService);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(busyIndicatorService);
 
             _openFileService = openFileService;
             _fileService = fileService;
-            _pleaseWaitService = pleaseWaitService;
+            _busyIndicatorService = busyIndicatorService;
         }
-        #endregion
 
-        #region Methods
         protected override bool CanExecute(object parameter)
         {
             return true;
@@ -62,7 +57,7 @@
 
                 if (!string.IsNullOrWhiteSpace(location))
                 {
-                    using (_pleaseWaitService.PushInScope())
+                    using (_busyIndicatorService.PushInScope())
                     {
                         await _projectManager.LoadAsync(location);
                     }
@@ -73,6 +68,5 @@
                 Log.Error(ex, "Failed to open file");
             }
         }
-        #endregion
     }
 }

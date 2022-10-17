@@ -38,10 +38,10 @@ namespace CsvTextEditor.ProjectManagement
             ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
             : base(projectManager)
         {
-            Argument.IsNotNull(() => mainWindowTitleService);
-            Argument.IsNotNull(() => saveProjectChangesService);
-            Argument.IsNotNull(() => configurationService);
-            Argument.IsNotNull(() => projectManager);
+            ArgumentNullException.ThrowIfNull(mainWindowTitleService);
+            ArgumentNullException.ThrowIfNull(saveProjectChangesService);
+            ArgumentNullException.ThrowIfNull(configurationService);
+            ArgumentNullException.ThrowIfNull(projectManager);
 
             _projectManager = projectManager;
             _mainWindowTitleService = mainWindowTitleService;

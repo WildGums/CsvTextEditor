@@ -15,8 +15,8 @@
 
         public WindowCommandsViewModel(IBaseColorSchemeService baseColorSchemeService, IConfigurationService configurationService)
         {
-            Argument.IsNotNull(() => baseColorSchemeService);
-            Argument.IsNotNull(() => configurationService);
+            ArgumentNullException.ThrowIfNull(baseColorSchemeService);
+            ArgumentNullException.ThrowIfNull(configurationService);
 
             _baseColorSchemeService = baseColorSchemeService;
             _configurationService = configurationService;

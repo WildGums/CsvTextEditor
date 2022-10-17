@@ -7,6 +7,7 @@
     <AssemblyName>CsvTextEditor</AssemblyName>
     <RootNamespace>CsvTextEditor</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -44,25 +45,15 @@
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Orc.Analytics" Version="4.3.1" />
-    <PackageReference Include="Orc.CommandLine" Version="4.2.0" />
-    <PackageReference Include="Orc.CsvTextEditor" Version="4.4.0" />
-    <PackageReference Include="Orc.FilterBuilder.Xaml" Version="4.5.0" />
-    <PackageReference Include="Orc.Notifications" Version="4.3.1" />
-    <PackageReference Include="Orc.ProjectManagement" Version="4.4.0" />
-    <PackageReference Include="Orc.Squirrel.Xaml" Version="4.2.0" />
-    <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="4.3.0" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="6.8.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="NETStandard.Library" Version="2.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Controls\Views\FindView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
+    <PackageReference Include="Orc.Analytics" Version="5.0.0-alpha0069" />
+    <PackageReference Include="Orc.CommandLine" Version="5.0.0-alpha0048" />
+    <PackageReference Include="Orc.CsvTextEditor" Version="5.0.0-alpha0054" />
+    <PackageReference Include="Orc.FilterBuilder.Xaml" Version="5.0.0-alpha0016" />
+    <PackageReference Include="Orc.Notifications" Version="5.0.0-alpha0061" />
+    <PackageReference Include="Orc.ProjectManagement" Version="5.0.0-alpha0070" />
+    <PackageReference Include="Orc.Squirrel.Xaml" Version="5.0.0-alpha0064" />
+    <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="5.0.0-alpha0018" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.0.0-alpha0051" />
   </ItemGroup>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />

@@ -32,8 +32,8 @@ namespace CsvTextEditor.ViewModels
         #region Constructors
         public RibbonViewModel(IUIVisualizerService uiVisualizerService, IProjectManager projectManager, ICommandManager commandManager, ICommandInfoService commandInfoService)
         {
-            Argument.IsNotNull(() => uiVisualizerService);
-            Argument.IsNotNull(() => projectManager);
+            ArgumentNullException.ThrowIfNull(uiVisualizerService);
+            ArgumentNullException.ThrowIfNull(projectManager);
 
             _uiVisualizerService = uiVisualizerService;
             _projectManager = projectManager;
@@ -55,7 +55,7 @@ namespace CsvTextEditor.ViewModels
         {
             Project = (Project)e.NewProject;
 
-            return TaskHelper.Completed;
+            return Task.CompletedTask;
         }
         #endregion
 

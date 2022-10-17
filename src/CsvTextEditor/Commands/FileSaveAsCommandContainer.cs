@@ -1,5 +1,6 @@
 ﻿namespace CsvTextEditor
 {
+    using System;
     using System.IO;
     using System.Threading.Tasks;
     using Catel;
@@ -10,21 +11,16 @@
 
     public class FileSaveAsCommandContainer : ProjectCommandContainerBase
     {
-        #region Fields
         private readonly ISaveFileService _saveFileService;
-        #endregion
 
-        #region Constructors
         public FileSaveAsCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ISaveFileService saveFileService)
             : base(Commands.File.SaveAs, commandManager, projectManager)
         {
-            Argument.IsNotNull(() => saveFileService);
+            ArgumentNullException.ThrowIfNull(saveFileService);
 
             _saveFileService = saveFileService;
         }
-        #endregion
 
-        #region Methods
         protected override async Task ExecuteAsync(object parameter)
         {
             if (!(_projectManager.ActiveProject is Project project))
@@ -50,6 +46,5 @@
 
             await base.ExecuteAsync(parameter);
         }
-        #endregion
     }
 }

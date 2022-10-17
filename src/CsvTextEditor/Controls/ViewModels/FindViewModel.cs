@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FindViewModel.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.ViewModels
+﻿namespace CsvTextEditor.ViewModels
 {
     using System;
     using System.Collections.Generic;
@@ -31,8 +24,8 @@ namespace CsvTextEditor.ViewModels
         #region Constructors
         public FindViewModel(ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider, IProjectManager projectManager)
         {
-            Argument.IsNotNull(() => csvTextEditorInstanceProvider);
-            Argument.IsNotNull(() => projectManager);
+            ArgumentNullException.ThrowIfNull(csvTextEditorInstanceProvider);
+            ArgumentNullException.ThrowIfNull(projectManager);
 
             _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
             _projectManager = projectManager;
@@ -79,7 +72,7 @@ namespace CsvTextEditor.ViewModels
             UpdateStatistic();
         }
 
-        protected override void OnPropertyChanged(AdvancedPropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             if (e.HasPropertyChanged(nameof(SelectedColumnHeader)))
             {

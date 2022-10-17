@@ -1,28 +1,19 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainWindowTitleService.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.Services
+﻿namespace CsvTextEditor.Services
 {
+    using System;
     using Catel;
     using Catel.Reflection;
     using Orc.ProjectManagement;
 
     public class MainWindowTitleService : IMainWindowTitleService
     {
-        #region Fields
         private readonly string _defaulTitle;
         private readonly IProjectManager _projectManager;
         private readonly ShellActivatedActionQueue _shellActivatedActionQueue;
-        #endregion
 
-        #region Constructors
         public MainWindowTitleService(IProjectManager projectManager)
         {
-            Argument.IsNotNull(() => projectManager);
+            ArgumentNullException.ThrowIfNull(projectManager);
 
             _projectManager = projectManager;
 
@@ -30,9 +21,7 @@ namespace CsvTextEditor.Services
 
             _defaulTitle = AssemblyHelper.GetEntryAssembly().Title();
         }
-        #endregion
 
-        #region Methods
         public void UpdateTitle()
         {
             _shellActivatedActionQueue.EnqueueAction(() =>
@@ -54,6 +43,5 @@ namespace CsvTextEditor.Services
                 app.MainWindow.SetCurrentValue(System.Windows.Window.TitleProperty, title);
             });
         }
-        #endregion
     }
 }

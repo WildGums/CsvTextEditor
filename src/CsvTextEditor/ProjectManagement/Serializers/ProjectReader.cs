@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ProjectReader.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.ProjectManagement
+﻿namespace CsvTextEditor.ProjectManagement
 {
+    using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
     using Catel;
@@ -19,23 +13,18 @@ namespace CsvTextEditor.ProjectManagement
 
     public class ProjectReader : ProjectReaderBase
     {
-        #region Fields
         private readonly IFileService _fileService;
         private readonly INotificationService _notificationService;
-        #endregion
 
-        #region Constructors
         public ProjectReader(IFileService fileService, INotificationService notificationService)
         {
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => notificationService);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(notificationService);
 
             _fileService = fileService;
             _notificationService = notificationService;
         }
-        #endregion
 
-        #region Methods
         protected override async Task<IProject> ReadFromLocationAsync(string location)
         {
 
@@ -58,6 +47,5 @@ namespace CsvTextEditor.ProjectManagement
             return null;
 
         }
-        #endregion
     }
 }

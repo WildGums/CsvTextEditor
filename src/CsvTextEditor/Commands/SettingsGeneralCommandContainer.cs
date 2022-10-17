@@ -21,8 +21,8 @@
         public SettingsGeneralCommandContainer(ICommandManager commandManager, IUIVisualizerService uiVisualizerService, IViewModelFactory viewModelFactory)
             : base(Commands.Settings.General, commandManager)
         {
-            Argument.IsNotNull(() => uiVisualizerService);
-            Argument.IsNotNull(() => viewModelFactory);
+            ArgumentNullException.ThrowIfNull(uiVisualizerService);
+            ArgumentNullException.ThrowIfNull(viewModelFactory);
 
             _uiVisualizerService = uiVisualizerService;
             _viewModelFactory = viewModelFactory;

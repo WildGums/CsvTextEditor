@@ -15,7 +15,7 @@ namespace CsvTextEditor
     {
         public void EnqueueAction(Action action)
         {
-            Argument.IsNotNull(() => action);
+            ArgumentNullException.ThrowIfNull(action);
 
             EnqueueShellActivatedAction(w => action());
         }

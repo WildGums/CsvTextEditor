@@ -32,8 +32,8 @@ namespace CsvTextEditor.ProjectManagement
             IDispatcherService dispatcherService, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
             : base(projectManager)
         {
-            Argument.IsNotNull(() => dispatcherService);
-            Argument.IsNotNull(() => csvTextEditorInstanceProvider);
+            ArgumentNullException.ThrowIfNull(dispatcherService);
+            ArgumentNullException.ThrowIfNull(csvTextEditorInstanceProvider);
 
             _dispatcherService = dispatcherService;
             _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
@@ -49,7 +49,7 @@ namespace CsvTextEditor.ProjectManagement
 
             if (newProject is null)
             {
-                return TaskHelper.Completed;
+                return Task.CompletedTask;
             }
 
             _csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance((Project)newProject);

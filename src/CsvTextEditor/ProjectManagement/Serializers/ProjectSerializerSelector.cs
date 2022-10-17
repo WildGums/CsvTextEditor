@@ -21,7 +21,7 @@ namespace CsvTextEditor.ProjectManagement
         #region Constructors
         public ProjectSerializerSelector(ITypeFactory typeFactory)
         {
-            Argument.IsNotNull(() => typeFactory);
+            ArgumentNullException.ThrowIfNull(typeFactory);
 
             _typeFactory = typeFactory;
         }

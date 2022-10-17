@@ -1,10 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ProjectManagementCloseApplicationWatcher.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Catel;
@@ -17,24 +13,24 @@ namespace CsvTextEditor
     public class ProjectManagementCloseApplicationWatcher : CloseApplicationWatcherBase
     {
         private readonly IProjectManager _projectManager;
-        private readonly IPleaseWaitService _pleaseWaitService;
+        private readonly IBusyIndicatorService _busyIndicatorService;
         private readonly ISaveProjectChangesService _saveProjectChangesService;
 
-        public ProjectManagementCloseApplicationWatcher(IProjectManager projectManager, IPleaseWaitService pleaseWaitService,
+        public ProjectManagementCloseApplicationWatcher(IProjectManager projectManager, IBusyIndicatorService busyIndicatorService,
             ISaveProjectChangesService saveProjectChangesService)
         {
-            Argument.IsNotNull(() => projectManager);
-            Argument.IsNotNull(() => pleaseWaitService);
-            Argument.IsNotNull(() => saveProjectChangesService);
+            ArgumentNullException.ThrowIfNull(projectManager);
+            ArgumentNullException.ThrowIfNull(busyIndicatorService);
+            ArgumentNullException.ThrowIfNull(saveProjectChangesService);
 
             _projectManager = projectManager;
-            _pleaseWaitService = pleaseWaitService;
+            _busyIndicatorService = busyIndicatorService;
             _saveProjectChangesService = saveProjectChangesService;
         }
 
         protected override async Task<bool> ClosingAsync()
         {
-            using (_pleaseWaitService.PushInScope())
+            using (_busyIndicatorService.PushInScope())
             {
                 var projects = _projectManager.Projects.OfType<Project>().OrderByDescending(x => x.IsDirty).ToArray();
 
@@ -48,7 +44,7 @@ namespace CsvTextEditor
                         return false;
                     }
 
-                    _pleaseWaitService.UpdateStatus(i, projects.Length);
+                    _busyIndicatorService.UpdateStatus(i, projects.Length);
                 }
             }
 

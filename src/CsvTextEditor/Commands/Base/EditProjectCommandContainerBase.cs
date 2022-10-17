@@ -23,7 +23,7 @@
             ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
             : base(commandName, commandManager, projectManager)
         {
-            Argument.IsNotNull(() => csvTextEditorInstanceProvider);
+            ArgumentNullException.ThrowIfNull(csvTextEditorInstanceProvider);
 
             _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
             _invalidateTimer = new DispatcherTimer();
