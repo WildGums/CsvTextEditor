@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="NUnitTest1.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
- //using NUnit.Framework;
-
-namespace Orc.CsvTextEditor.Tests
+﻿namespace Orc.CsvTextEditor.Tests
 {
     using NUnit.Framework;
 

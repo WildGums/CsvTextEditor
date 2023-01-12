@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CsvTextEditorAutoCompleteProjectWatcher.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.ProjectManagement
+﻿namespace CsvTextEditor.ProjectManagement
 {
     using System;
     using System.Threading.Tasks;

@@ -164,9 +164,7 @@
                 var projectManager = _serviceLocator.ResolveType<IProjectManager>();
                 if (projectManager is null)
                 {
-                    const string error = "Failed to resolve project manager";
-                    Log.Error(error);
-                    throw new Exception(error);
+                    throw Log.ErrorAndCreateException<Exception>("Failed to resolve project manager");
                 }
 
                 await projectManager.InitializeAsync();

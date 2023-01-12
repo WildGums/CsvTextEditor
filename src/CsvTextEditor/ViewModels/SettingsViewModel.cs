@@ -77,9 +77,9 @@
             await base.InitializeAsync();
 
             IsUpdateSystemAvailable = _updateService.IsUpdateSystemAvailable;
-            CheckForUpdates = await _updateService.GetCheckForUpdatesAsync();
+            CheckForUpdates = _updateService.IsCheckForUpdatesEnabled;
             AvailableUpdateChannels = new List<UpdateChannel>(_updateService.AvailableChannels);
-            UpdateChannel = await _updateService.GetCurrentChannelAsync();
+            UpdateChannel = _updateService.CurrentChannel;
 
             CustomEditor = _configurationService.GetRoamingValue<string>(Configuration.CustomEditor);
             AutoSaveEditor = _configurationService.GetRoamingValue(Configuration.AutoSaveEditor, Configuration.AutoSaveEditorDefaultValue);
@@ -87,8 +87,8 @@
 
         protected override async Task<bool> SaveAsync()
         {
-            await _updateService.SetCheckForUpdatesAsync(CheckForUpdates);
-            await _updateService.SetCurrentChannelAsync(UpdateChannel);
+            _updateService.IsCheckForUpdatesEnabled = CheckForUpdates;
+            _updateService.CurrentChannel = UpdateChannel;
 
             _configurationService.SetRoamingValue(Configuration.CustomEditor, CustomEditor);
             _configurationService.SetRoamingValue(Configuration.AutoSaveEditor, AutoSaveEditor);

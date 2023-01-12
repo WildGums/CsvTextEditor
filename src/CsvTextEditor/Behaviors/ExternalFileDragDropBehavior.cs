@@ -1,9 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ExternalFileDragDropBehavior.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-namespace CsvTextEditor.Behaviors
+﻿namespace CsvTextEditor.Behaviors
 {
     using System.IO;
     using System.Linq;

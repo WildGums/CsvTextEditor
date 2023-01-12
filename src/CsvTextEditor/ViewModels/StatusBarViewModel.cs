@@ -79,14 +79,14 @@
         {
             string updateInfo = string.Empty;
 
-            var checkForUpdates = await _updateService.GetCheckForUpdatesAsync();
+            var checkForUpdates = _updateService.IsCheckForUpdatesEnabled;
             if (!_updateService.IsUpdateSystemAvailable || !checkForUpdates)
             {
                 updateInfo = "Automatic updates are disabled";
             }
             else
             {
-                var channel = await _updateService.GetCurrentChannelAsync();
+                var channel = _updateService.CurrentChannel;
                 updateInfo = string.Format("Automatic updates are enabled for {0} versions", channel.Name.ToLower());
             }
 
