@@ -50,7 +50,7 @@
     <PackageReference Include="Orc.FilterBuilder.Xaml" Version="5.0.0-alpha0165" />
     <PackageReference Include="Orc.Notifications" Version="5.0.0-alpha0210" />
     <PackageReference Include="Orc.ProjectManagement" Version="5.0.0-alpha0184" />
-    <PackageReference Include="Orc.Squirrel.Xaml" Version="5.0.0-alpha0201" />
+    <PackageReference Include="Orc.Squirrel.Xaml" Version="5.0.0-alpha0207" />
     <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="5.0.0-alpha0190" />
     <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.0.0-alpha0211" />
   </ItemGroup>
