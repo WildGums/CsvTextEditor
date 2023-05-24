@@ -39,7 +39,7 @@
     <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="4.6.0" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="MethodTimer.Fody" Version="3.2.1" PrivateAssets="all">
+    <PackageReference Include="MethodTimer.Fody" Version="3.2.2" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all">
