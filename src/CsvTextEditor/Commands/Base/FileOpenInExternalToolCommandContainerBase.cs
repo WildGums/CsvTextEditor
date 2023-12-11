@@ -29,13 +29,13 @@
             _externalToolPath = fileExtensionService.GetRegisteredTool(fileExtension);
         }
 
-        protected override bool CanExecute(object parameter)
+        public override bool CanExecute(object parameter)
         {
             return !string.IsNullOrEmpty(_externalToolPath) && _fileService.Exists(_externalToolPath)
                    && !string.IsNullOrEmpty(_projectManager.ActiveProject?.Location);
         }
 
-        protected override void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             _processService.StartProcess(_externalToolPath, _projectManager.ActiveProject.Location);
         }

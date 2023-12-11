@@ -14,7 +14,7 @@
         #endregion
 
         #region Methods
-        protected override void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             if (Clipboard.ContainsText())
             {

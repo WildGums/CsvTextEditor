@@ -15,7 +15,7 @@
         #endregion
 
         #region Methods
-        protected override async Task ExecuteAsync(object parameter)
+        public override async Task ExecuteAsync(object parameter)
         {
             await base.ExecuteAsync(parameter);
 

@@ -14,7 +14,7 @@
         #endregion
 
         #region Methods
-        protected override bool CanExecute(object parameter)
+        public override bool CanExecute(object parameter)
         {
             if (!base.CanExecute(parameter))
             {
@@ -24,7 +24,7 @@
             return CsvTextEditorInstance?.HasSelection ?? false;
         }
 
-        protected override void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             CsvTextEditorInstance.Copy();
 

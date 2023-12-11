@@ -35,7 +35,7 @@
         {
         }
 
-        protected override bool CanExecute(object parameter)
+        public override bool CanExecute(object parameter)
         {
             if (_projectManager.ActiveProject is null)
             {

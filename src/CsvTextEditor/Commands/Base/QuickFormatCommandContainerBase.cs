@@ -35,7 +35,7 @@
         #endregion
 
         #region Methods
-        protected sealed override void Execute(object parameter)
+        public sealed override void Execute(object parameter)
         {
             _stopwatch.Restart();
 

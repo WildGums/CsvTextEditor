@@ -28,7 +28,7 @@
             _configurationService = configurationService;
         }
 
-        protected override void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             var externalToolPath = _configurationService.GetRoamingValue<string>(Configuration.CustomEditor, null);
 

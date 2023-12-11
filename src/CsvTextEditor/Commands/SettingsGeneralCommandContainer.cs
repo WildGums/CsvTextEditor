@@ -28,7 +28,7 @@
             _viewModelFactory = viewModelFactory;
         }
 
-        protected override async Task ExecuteAsync(object parameter)
+        public override async Task ExecuteAsync(object parameter)
         {
             var settingsViewModelType = TypeCache.GetTypes(x => string.Equals(x.Name, ViewModelType)).FirstOrDefault();
             if (settingsViewModelType is null)

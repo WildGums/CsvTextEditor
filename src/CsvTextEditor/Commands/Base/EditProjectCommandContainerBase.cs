@@ -71,7 +71,7 @@
         }
 
         #region Methods
-        protected override bool CanExecute(object parameter)
+        public override bool CanExecute(object parameter)
         {
             if (!base.CanExecute(parameter))
             {

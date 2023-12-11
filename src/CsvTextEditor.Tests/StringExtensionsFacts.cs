@@ -12,7 +12,7 @@
         {
             var result = text.TrimEnd(trimStr);
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
 
         [TestCase("here, some; words to test", 0, "here")]
@@ -23,7 +23,7 @@
         {
             var result = text.GetWordFromOffset(positionStart);
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
 
         [TestCase("01,34,67,9\n12,34,56,78", 1, 4, "\n", "0,,67,9\n12,34,56,78")]
@@ -34,7 +34,7 @@
         {
             var result = text.RemoveCommaSeparatedText(positionStart, lenght, newLine);
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
 
         [TestCase("01,34,67,9\n12,34,56,78\n123,456,789,900", 0, 3, 4, "\n", ",01,34,67,9\n,12,34,56,78\n,123,456,789,900")]
@@ -44,7 +44,7 @@
         {
             var result = text.InsertCommaSeparatedColumn(column, lineCount, columnCount, newLine);
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
 
         [TestCase("01,34,67,9\n12,34,56,78\n123,456,789,900", 0, 0, 4, "\n", ",,,\n01,34,67,9\n12,34,56,78\n123,456,789,900")]
@@ -54,7 +54,7 @@
         {
             var result = text.InsertLineWithTextTransfer(insertLineIndex, offsetInLine, columnCount, newLine);
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
 
         [TestCase("01,34,67,9\n12,34,56,78\n123,456,789,900", 0, 11, "\n", "01,34,67,9\n01,34,67,9\n12,34,56,78\n123,456,789,900")]
@@ -64,7 +64,7 @@
         {
             var result = text.DuplicateTextInLine(startOffset, endOffset, newLine);
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
 
         [TestCase("01,34,67,9\n12,34,56,78\n123,456,789,900", 0, 3, 4, "\n", "34,67,9\n34,56,78\n456,789,900")]
@@ -74,7 +74,7 @@
         {
             var result = text.RemoveCommaSeparatedColumn(column, linesCount, columnsCount, newLine);
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
 
         [TestCase("01,34,67,9\n12,34,56,78\n123,456,789,900", 0, 11, "\n", "12,34,56,78\n123,456,789,900")]
@@ -84,7 +84,7 @@
         {
             var result = text.RemoveText(startOffset, endOffset, newLine);
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
 
         [TestCase("01,34,67,9\r\n12,34,56,78\r\n123,456,789,900", "\r\n")]
@@ -94,7 +94,7 @@
         {
             var result = text.GetNewLineSymbol();
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
     }
 }

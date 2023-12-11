@@ -21,7 +21,7 @@
             _saveFileService = saveFileService;
         }
 
-        protected override async Task ExecuteAsync(object parameter)
+        public override async Task ExecuteAsync(object parameter)
         {
             if (!(_projectManager.ActiveProject is Project project))
             {

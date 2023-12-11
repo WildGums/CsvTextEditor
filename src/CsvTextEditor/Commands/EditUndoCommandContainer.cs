@@ -7,15 +7,12 @@ namespace CsvTextEditor
 
     public class EditUndoCommandContainer : EditProjectCommandContainerBase
     {
-        #region Constructors
         public EditUndoCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
             : base(Commands.Edit.Undo, commandManager, projectManager, csvTextEditorInstanceProvider)
         {
         }
-        #endregion
 
-        #region Methods
-        protected override bool CanExecute(object parameter)
+        public override bool CanExecute(object parameter)
         {
             if (!base.CanExecute(parameter))
             {
@@ -25,12 +22,11 @@ namespace CsvTextEditor
             return CsvTextEditorInstance?.CanUndo ?? false;
         }
 
-        protected override void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             CsvTextEditorInstance.Undo();
 
             base.Execute(parameter);
         }
-        #endregion
     }
 }

@@ -14,7 +14,7 @@
         #endregion
 
         #region Methods
-        protected override async Task ExecuteAsync(object parameter)
+        public override async Task ExecuteAsync(object parameter)
         {
             var activeProject = _projectManager.ActiveProject;
             if (activeProject is null)
