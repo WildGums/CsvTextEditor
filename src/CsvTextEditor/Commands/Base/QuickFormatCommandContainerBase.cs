@@ -1,16 +1,8 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="QuickFormatCommandContainerBase.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
     using System;
     using System.Diagnostics;
     using Catel;
-    using Catel.IoC;
     using Catel.MVVM;
     using Orc.Notifications;
     using Orc.ProjectManagement;
@@ -25,10 +17,10 @@ namespace CsvTextEditor
 
         #region Constructors
         protected QuickFormatCommandContainerBase(string commandName, ICommandManager commandManager, IProjectManager projectManager,
-            IServiceLocator serviceLocator, INotificationService notificationService)
-            : base(commandName, commandManager, projectManager, serviceLocator)
+            INotificationService notificationService, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
+            : base(commandName, commandManager, projectManager, csvTextEditorInstanceProvider)
         {
-            Argument.IsNotNull(() => notificationService);
+            ArgumentNullException.ThrowIfNull(notificationService);
 
             _notificationService = notificationService;
 
@@ -43,11 +35,11 @@ namespace CsvTextEditor
         #endregion
 
         #region Methods
-        protected sealed override void Execute(object parameter)
+        public sealed override void Execute(object parameter)
         {
             _stopwatch.Restart();
 
-            EcecuteOperation();
+            ExecuteOperation();
 
             _stopwatch.Stop();
 
@@ -58,7 +50,7 @@ namespace CsvTextEditor
             base.Execute(parameter);
         }
 
-        protected abstract void EcecuteOperation();
+        protected abstract void ExecuteOperation();
         protected abstract string GetOperationDescription();
 
         private void ShowNotification(string message)

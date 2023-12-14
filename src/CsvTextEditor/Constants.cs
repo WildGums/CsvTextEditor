@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Constants.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
     using Orc.Squirrel;
     using System;
@@ -17,14 +10,23 @@ namespace CsvTextEditor
     {
         public static class Application
         {
+            public static class General
+            {
+                public const string EnableAnalytics = "General.EnableAnalytics";
+                public const bool EnableAnalyticsDefaultValue = true;
+
+                public const string ThemeBaseColor = "General.ThemeBaseColor";
+                public const string ThemeBaseColorDefaultValue = "Light";
+            }
+
             public static class AutomaticUpdates
             {
                 public const bool CheckForUpdatesDefaultValue = true;
 
                 public static readonly ImmutableArray<UpdateChannel> AvailableChannels = ImmutableArray.Create(
-                    new UpdateChannel("Stable", "http://downloads.sesolutions.net.au/csvtexteditor/stable"),
-                    new UpdateChannel("Beta", "http://downloads.sesolutions.net.au/csvtexteditor/beta"),
-                    new UpdateChannel("Alpha", "http://downloads.sesolutions.net.au/csvtexteditor/alpha")
+                    new UpdateChannel("Stable", "https://downloads.wildgums.com/csvtexteditor/stable"),
+                    new UpdateChannel("Beta", "https://downloads.wildgums.com/csvtexteditor/beta"),
+                    new UpdateChannel("Alpha", "https://downloads.wildgums.com/csvtexteditor/alpha")
                 );
 
                 public static readonly UpdateChannel DefaultChannel = AvailableChannels[0];
@@ -54,10 +56,10 @@ namespace CsvTextEditor
         public static class File
         {
             public const string Close = "File.Close";
-            public static readonly InputGesture CloseInputGesture = new InputGesture(Key.X, ModifierKeys.Alt);
+            public static readonly InputGesture CloseInputGesture = new (Key.F4, ModifierKeys.Control);
 
             public const string Open = "File.Open";
-            public static readonly InputGesture OpenInputGesture = new InputGesture(Key.O, ModifierKeys.Control);
+            public static readonly InputGesture OpenInputGesture = new (Key.O, ModifierKeys.Control);
 
             public const string OpenInTextEditor = "File.OpenInTextEditor";
             public static readonly InputGesture OpenInTextEditorInputGesture = null;
@@ -66,7 +68,7 @@ namespace CsvTextEditor
             public static readonly InputGesture OpenInExcelInputGesture = null;
 
             public const string Save = "File.Save";
-            public static readonly InputGesture SaveInputGesture = new InputGesture(Key.S, ModifierKeys.Control);
+            public static readonly InputGesture SaveInputGesture = new (Key.S, ModifierKeys.Control);
 
             public const string SaveAs = "File.SaveAs";
             public static readonly InputGesture SaveAsInputGesture = null;
@@ -87,6 +89,7 @@ namespace CsvTextEditor
             //public static readonly InputGesture CutInputGesture = new InputGesture(Key.X, ModifierKeys.Control);
 
             public const string Paste = "Edit.Paste";
+            //public static readonly InputGesture PasteInputGesture = new (Key.V, ModifierKeys.Control);
 
             public const string FindReplace = "Edit.FindReplace";
             public static readonly InputGesture FindReplaceInputGesture = new InputGesture(Key.F, ModifierKeys.Control);
@@ -110,7 +113,6 @@ namespace CsvTextEditor
 
         public static class Settings
         {
- 
             public const string General = "Settings.General";
             public static readonly InputGesture GeneralInputGesture = new InputGesture(Key.S, ModifierKeys.Alt | ModifierKeys.Control);
         }

@@ -1,9 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Shell32.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
     using System;
     using System.Collections.Generic;
@@ -34,7 +29,7 @@ namespace CsvTextEditor
 
         public static string FindExecutable(FileInfo fileInfo)
         {
-            Argument.IsNotNull(() => fileInfo);
+            ArgumentNullException.ThrowIfNull(fileInfo);
 
             var fullName = fileInfo.FullName;
 
@@ -72,7 +67,7 @@ namespace CsvTextEditor
 
         private static void HandleError(FileInfo fileInfo, long errorCode)
         {
-            Argument.IsNotNull(() => fileInfo);
+            ArgumentNullException.ThrowIfNull(fileInfo);
 
             if (!ErrorCodes.TryGetValue(errorCode, out var errorMessage))
             {

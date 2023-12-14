@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SettingsGeneralCommandContainer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
     using System;
     using System.Linq;
@@ -28,17 +21,17 @@ namespace CsvTextEditor
         public SettingsGeneralCommandContainer(ICommandManager commandManager, IUIVisualizerService uiVisualizerService, IViewModelFactory viewModelFactory)
             : base(Commands.Settings.General, commandManager)
         {
-            Argument.IsNotNull(() => uiVisualizerService);
-            Argument.IsNotNull(() => viewModelFactory);
+            ArgumentNullException.ThrowIfNull(uiVisualizerService);
+            ArgumentNullException.ThrowIfNull(viewModelFactory);
 
             _uiVisualizerService = uiVisualizerService;
             _viewModelFactory = viewModelFactory;
         }
 
-        protected override async Task ExecuteAsync(object parameter)
+        public override async Task ExecuteAsync(object parameter)
         {
             var settingsViewModelType = TypeCache.GetTypes(x => string.Equals(x.Name, ViewModelType)).FirstOrDefault();
-            if (settingsViewModelType == null)
+            if (settingsViewModelType is null)
             {
                 throw Log.ErrorAndCreateException<InvalidOperationException>("Cannot find type '{0}'", ViewModelType);
             }

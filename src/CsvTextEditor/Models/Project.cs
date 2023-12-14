@@ -1,16 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Project.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.Models
+﻿namespace CsvTextEditor.Models
 {
     using System;
     using Orc.ProjectManagement;
 
-    public class Project : ProjectBase, IProject, IEquatable<Project>
+    public sealed class Project : ProjectBase, IProject, IEquatable<Project>
     {
         #region Constructors
         public Project(string location)
@@ -61,13 +54,20 @@ namespace CsvTextEditor.Models
 
         public override int GetHashCode()
         {
-            return (Location != null ? Location.GetHashCode() : 0);
+            return (Location is not null ? Location.GetHashCode() : 0);
         }
         #endregion
 
         public void SetIsDirty(bool isDirty)
         {
-            IsDirty = isDirty;
+            if (isDirty)
+            {
+                MarkAsDirty();
+            }
+            else
+            {
+                ClearIsDirty();
+            }
         }
     }
 }

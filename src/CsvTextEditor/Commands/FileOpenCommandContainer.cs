@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FileOpenCommandContainer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
     using System;
     using System.Threading.Tasks;
@@ -18,36 +11,31 @@ namespace CsvTextEditor
 
     public class FileOpenCommandContainer : ProjectCommandContainerBase
     {
-        #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
         private readonly IFileService _fileService;
         private readonly IOpenFileService _openFileService;
-        private readonly IPleaseWaitService _pleaseWaitService;
-        #endregion
+        private readonly IBusyIndicatorService _busyIndicatorService;
 
-        #region Constructors
         public FileOpenCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IOpenFileService openFileService,
-            IFileService fileService, IPleaseWaitService pleaseWaitService)
+            IFileService fileService, IBusyIndicatorService busyIndicatorService)
             : base(Commands.File.Open, commandManager, projectManager)
         {
-            Argument.IsNotNull(() => openFileService);
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => pleaseWaitService);
+            ArgumentNullException.ThrowIfNull(openFileService);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(busyIndicatorService);
 
             _openFileService = openFileService;
             _fileService = fileService;
-            _pleaseWaitService = pleaseWaitService;
+            _busyIndicatorService = busyIndicatorService;
         }
-        #endregion
 
-        #region Methods
-        protected override bool CanExecute(object parameter)
+        public override bool CanExecute(object parameter)
         {
             return true;
         }
 
-        protected override async Task ExecuteAsync(object parameter)
+        public override async Task ExecuteAsync(object parameter)
         {
             try
             {
@@ -55,22 +43,21 @@ namespace CsvTextEditor
 
                 if (string.IsNullOrWhiteSpace(location) || !_fileService.Exists(location))
                 {
-                    var fileContext = new DetermineOpenFileContext
+                    var result = await _openFileService.DetermineFileAsync(new DetermineOpenFileContext
                     {
                         Filter = "Text Files (*.csv)|*csv",
                         IsMultiSelect = false
-                    };
+                    });
 
-                    var fileOneResult = await _openFileService.DetermineFileAsync(fileContext);
-                    if (fileOneResult.Result)
+                    if (result.Result)
                     {
-                        location = fileOneResult.FileName;
+                        location = result.FileName;
                     }
                 }
 
                 if (!string.IsNullOrWhiteSpace(location))
                 {
-                    using (_pleaseWaitService.PushInScope())
+                    using (_busyIndicatorService.PushInScope())
                     {
                         await _projectManager.LoadAsync(location);
                     }
@@ -81,6 +68,5 @@ namespace CsvTextEditor
                 Log.Error(ex, "Failed to open file");
             }
         }
-        #endregion
     }
 }

@@ -1,60 +1,44 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="StatusBarViewModel.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.ViewModels
+﻿namespace CsvTextEditor.ViewModels
 {
     using System.Threading.Tasks;
-    using Catel;
-    using Catel.IoC;
     using Catel.MVVM;
-    using Catel.Threading;
     using Orc.CsvTextEditor;
     using Orc.ProjectManagement;
     using Orchestra;
     using Orc.Squirrel;
     using System;
     using Catel.Configuration;
+    using CsvTextEditor.Models;
 
     public class StatusBarViewModel : ViewModelBase
     {
-        #region Fields
         private readonly IProjectManager _projectManager;
-        private readonly IServiceLocator _serviceLocator;
         private ICsvTextEditorInstance _csvTextEditorInstance;
         private readonly IConfigurationService _configurationService;
         private readonly IUpdateService _updateService;
-        #endregion
+        private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
 
-        #region Constructors
-        public StatusBarViewModel(IProjectManager projectManager, IServiceLocator serviceLocator, IConfigurationService configurationService,
-            IUpdateService updateService)
+        public StatusBarViewModel(IProjectManager projectManager, IConfigurationService configurationService,
+            IUpdateService updateService, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
         {
-            Argument.IsNotNull(() => projectManager);
-            Argument.IsNotNull(() => serviceLocator);
-            Argument.IsNotNull(() => configurationService);
-            Argument.IsNotNull(() => updateService);
+            ArgumentNullException.ThrowIfNull(projectManager);
+            ArgumentNullException.ThrowIfNull(configurationService);
+            ArgumentNullException.ThrowIfNull(updateService);
+            ArgumentNullException.ThrowIfNull(csvTextEditorInstanceProvider);
 
             _projectManager = projectManager;
-            _serviceLocator = serviceLocator;
             _configurationService = configurationService;
             _updateService = updateService;
+            _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
         }
-        #endregion
 
-        #region Properties
         public string ReceivingAutomaticUpdates { get; private set; }
         public bool IsUpdatedInstalled { get; private set; }
         public string Version { get; private set; }
         public int Column { get; private set; }
         public string Heading { get; private set; }
         public int Line { get; private set; }
-        #endregion
 
-        #region Methods
         protected override async Task InitializeAsync()
         {
             await base.InitializeAsync();
@@ -66,7 +50,7 @@ namespace CsvTextEditor.ViewModels
             IsUpdatedInstalled = _updateService.IsUpdatedInstalled;
             Version = VersionHelper.GetCurrentVersion();
 
-            UpdateAutoUpdateInfo();
+            await UpdateAutoUpdateInfoAsync();
         }
 
         protected override async Task CloseAsync()
@@ -78,11 +62,11 @@ namespace CsvTextEditor.ViewModels
             await base.CloseAsync();
         }
 
-        private void OnConfigurationChanged(object sender, ConfigurationChangedEventArgs e)
+        private async void OnConfigurationChanged(object sender, ConfigurationChangedEventArgs e)
         {
             if (e.Key.Contains("Updates"))
             {
-                UpdateAutoUpdateInfo();
+                await UpdateAutoUpdateInfoAsync();
             }
         }
 
@@ -91,19 +75,19 @@ namespace CsvTextEditor.ViewModels
             IsUpdatedInstalled = _updateService.IsUpdatedInstalled;
         }
 
-        private void UpdateAutoUpdateInfo()
+        private async Task UpdateAutoUpdateInfoAsync()
         {
             string updateInfo = string.Empty;
 
-            var checkForUpdates = _updateService.CheckForUpdates;
+            var checkForUpdates = _updateService.IsCheckForUpdatesEnabled;
             if (!_updateService.IsUpdateSystemAvailable || !checkForUpdates)
             {
                 updateInfo = "Automatic updates are disabled";
             }
             else
             {
-                var channel = _updateService.CurrentChannel.Name;
-                updateInfo = string.Format("Automatic updates are enabled for {0} versions", channel.ToLower());
+                var channel = _updateService.CurrentChannel;
+                updateInfo = string.Format("Automatic updates are enabled for {0} versions", channel.Name.ToLower());
             }
 
             ReceivingAutomaticUpdates = updateInfo;
@@ -111,22 +95,22 @@ namespace CsvTextEditor.ViewModels
 
         private Task OnProjectActivatedAsync(object sender, ProjectUpdatedEventArgs args)
         {
-            if (_csvTextEditorInstance != null)
+            if (_csvTextEditorInstance is not null && args.OldProject is not null)
             {
                 _csvTextEditorInstance.CaretTextLocationChanged -= OnCaretTextLocationChanged;
             }
 
             var activeProject = args.NewProject;
-            if (activeProject == null)
+            if (activeProject is null)
             {
-                return TaskHelper.Completed;
+                return Task.CompletedTask;
             }
 
-            _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(args.NewProject);
+            _csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance((Project)args.NewProject);
 
             _csvTextEditorInstance.CaretTextLocationChanged += OnCaretTextLocationChanged;
 
-            return TaskHelper.Completed;
+            return Task.CompletedTask;
         }
 
         private void OnCaretTextLocationChanged(object sender, CaretTextLocationChangedEventArgs args)
@@ -148,8 +132,7 @@ namespace CsvTextEditor.ViewModels
                 return columnHeaders[location.Column.Index].Trim();
             }
 
-            return String.Empty;
+            return string.Empty;
         }
-        #endregion
     }
 }

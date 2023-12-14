@@ -1,13 +1,5 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="EditRemoveBlankLinesCommandContainer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
-    using Catel.IoC;
     using Catel.MVVM;
     using Orc.CsvTextEditor.Operations;
     using Orc.Notifications;
@@ -16,9 +8,9 @@ namespace CsvTextEditor
     public class EditRemoveBlankLinesCommandContainer : QuickFormatCommandContainerBase
     {
         #region Constructors
-        public EditRemoveBlankLinesCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IServiceLocator serviceLocator,
+        public EditRemoveBlankLinesCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider,
             INotificationService notificationService)
-            : base(Commands.Edit.RemoveBlankLines, commandManager, projectManager, serviceLocator, notificationService)
+            : base(Commands.Edit.RemoveBlankLines, commandManager, projectManager, notificationService, csvTextEditorInstanceProvider)
         {
         }
 
@@ -26,7 +18,7 @@ namespace CsvTextEditor
 
         #region Methods
 
-        protected override void EcecuteOperation()
+        protected override void ExecuteOperation()
         {
             CsvTextEditorInstance.ExecuteOperation<RemoveBlankLinesOperation>();
         }

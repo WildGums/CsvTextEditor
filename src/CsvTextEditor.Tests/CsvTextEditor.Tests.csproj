@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>net462</TargetFrameworks>
+    <TargetFrameworks>net8.0-windows</TargetFrameworks>
     <AssemblyName>CsvTextEditor.Tests</AssemblyName>
     <RootNamespace>CsvTextEditor.Tests</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
@@ -9,6 +9,7 @@
     <Description></Description>
     <PackageTags></PackageTags>
     <SonarQubeExclude>true</SonarQubeExclude>
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -16,27 +17,19 @@
     <ExtrasEnableImplicitWpfReferences>true</ExtrasEnableImplicitWpfReferences>
     <ExtrasEnableImplicitWinFormsReferences>true</ExtrasEnableImplicitWinFormsReferences>
   </PropertyGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="ApiApprover" Version="8.1.0" PrivateAssets="all" />
-    <PackageReference Include="Catel.Core" Version="5.12.9" />
-    <PackageReference Include="Catel.Fody" Version="4.0.0" PrivateAssets="all" />
-    <PackageReference Include="Fody" Version="5.0.1" PrivateAssets="all">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="4.0.0" PrivateAssets="all" />
-    <PackageReference Include="MethodTimer.Fody" Version="2.3.3" PrivateAssets="all" />
-    <PackageReference Include="ModuleInit.Fody" Version="1.9.0" PrivateAssets="all" />
-    <PackageReference Include="NUnit" Version="3.11.0" PrivateAssets="all" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
-    <PackageReference Include="Obsolete.Fody" Version="4.4.3" PrivateAssets="all" />
-    <PackageReference Include="Orc.Csv" Version="3.5.0" />
-    <PackageReference Include="PublicApiGenerator" Version="8.1.0" PrivateAssets="all" />    
-    <PackageReference Include="WpfAnalyzers" Version="2.2.0.2" PrivateAssets="all" />
-  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="NETStandard.Library" Version="2.0.1" />
+    <PackageReference Include="Catel.Fody" Version="4.9.0" PrivateAssets="all" />
+    <PackageReference Include="Fody" Version="6.8.0" PrivateAssets="all">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MethodTimer.Fody" Version="3.2.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all" />
+    <PackageReference Include="NUnit" Version="4.0.1" PrivateAssets="all" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="Orc.Csv" Version="5.0.0" />
+    <PackageReference Include="PublicApiGenerator" Version="11.1.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,20 +46,6 @@
     <Compile Remove="*.approved.cs;*.received.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />
+  <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.tests.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.tests.props')" />
 </Project>

@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SaveProjectChangesService.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.Services
+﻿namespace CsvTextEditor.Services
 {
+    using System;
     using System.Threading.Tasks;
     using Catel;
     using Catel.Reflection;
@@ -16,30 +10,25 @@ namespace CsvTextEditor.Services
 
     public class SaveProjectChangesService : ISaveProjectChangesService
     {
-        #region Fields
         private readonly IMessageService _messageService;
-        private readonly IPleaseWaitService _pleaseWaitService;
+        private readonly IBusyIndicatorService _busyIndicatorService;
         private readonly IProjectManager _projectManager;
-        #endregion
 
-        #region Constructors
-        public SaveProjectChangesService(IProjectManager projectManager, IPleaseWaitService pleaseWaitService,
+        public SaveProjectChangesService(IProjectManager projectManager, IBusyIndicatorService busyIndicatorService,
             IMessageService messageService)
         {
-            Argument.IsNotNull(() => projectManager);
-            Argument.IsNotNull(() => pleaseWaitService);
-            Argument.IsNotNull(() => messageService);
+            ArgumentNullException.ThrowIfNull(projectManager);
+            ArgumentNullException.ThrowIfNull(busyIndicatorService);
+            ArgumentNullException.ThrowIfNull(messageService);
 
             _projectManager = projectManager;
-            _pleaseWaitService = pleaseWaitService;
+            _busyIndicatorService = busyIndicatorService;
             _messageService = messageService;
         }
-        #endregion
 
-        #region Methods
         public Task<bool> EnsureChangesSavedAsync(Project project, SaveChangesReason reason)
         {
-            Argument.IsNotNull(() => project);
+            ArgumentNullException.ThrowIfNull(project);
 
             var message = GetPromptText(project, reason);
 
@@ -48,7 +37,7 @@ namespace CsvTextEditor.Services
 
         protected virtual string GetPromptText(Project project, SaveChangesReason reason)
         {
-            Argument.IsNotNull(() => project);
+            ArgumentNullException.ThrowIfNull(project);
 
             var location = project.Location;
 
@@ -73,17 +62,17 @@ namespace CsvTextEditor.Services
 
         private async Task<bool> EnsureChangesSavedAsync(Project project, string message)
         {
-            Argument.IsNotNull(() => project);
+            ArgumentNullException.ThrowIfNull(project);
             Argument.IsNotNullOrEmpty(() => message);
 
-            if (project == null || !project.IsDirty)
+            if (project is null || !project.IsDirty)
                 return true;
 
             var caption = AssemblyHelper.GetEntryAssembly().Title();
 
             MessageResult messageBoxResult;
 
-            using (_pleaseWaitService.HideTemporarily())
+            using (_busyIndicatorService.HideTemporarily())
             {
                 messageBoxResult = await _messageService.ShowAsync(message, caption, MessageButton.YesNoCancel).ConfigureAwait(false);
             }
@@ -102,6 +91,5 @@ namespace CsvTextEditor.Services
 
             return false;
         }
-        #endregion
     }
 }

@@ -1,11 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FileOpenInExternalToolCommandContainerBase.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
+    using System;
     using Catel;
     using Catel.MVVM;
     using Catel.Services;
@@ -24,9 +19,9 @@ namespace CsvTextEditor
             : base(commandName, commandManager, projectManager)
         {
             Argument.IsNotNullOrEmpty(() => fileExtension);
-            Argument.IsNotNull(() => fileExtensionService);
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => processService);
+            ArgumentNullException.ThrowIfNull(fileExtensionService);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(processService);
 
             _fileService = fileService;
             _processService = processService;
@@ -34,13 +29,13 @@ namespace CsvTextEditor
             _externalToolPath = fileExtensionService.GetRegisteredTool(fileExtension);
         }
 
-        protected override bool CanExecute(object parameter)
+        public override bool CanExecute(object parameter)
         {
             return !string.IsNullOrEmpty(_externalToolPath) && _fileService.Exists(_externalToolPath)
                    && !string.IsNullOrEmpty(_projectManager.ActiveProject?.Location);
         }
 
-        protected override void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             _processService.StartProcess(_externalToolPath, _projectManager.ActiveProject.Location);
         }

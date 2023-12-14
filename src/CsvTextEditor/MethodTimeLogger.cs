@@ -1,10 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ModuleInitializer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
 
     using System.Reflection;
@@ -24,7 +18,7 @@ namespace CsvTextEditor
 
         public static void Log(Type type, string methodName, long milliseconds, string message)
         {
-            if (type == null)
+            if (type is null)
             {
                 return;
             }

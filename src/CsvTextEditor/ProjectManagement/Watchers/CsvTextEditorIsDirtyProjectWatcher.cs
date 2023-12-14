@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CsvTextEditorIsDirtyProjectWatcher.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.ProjectManagement
+﻿namespace CsvTextEditor.ProjectManagement
 {
     using System;
     using System.Diagnostics;
@@ -26,29 +19,28 @@ namespace CsvTextEditor.ProjectManagement
         private readonly IMainWindowTitleService _mainWindowTitleService;
         private readonly ISaveProjectChangesService _saveProjectChangesService;
         private readonly IConfigurationService _configurationService;
+        private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
         private readonly IProjectManager _projectManager;
-        private readonly IServiceLocator _serviceLocator;
         private ICsvTextEditorInstance _csvTextEditorInstance;
         private readonly DispatcherTimer _autoSaveTimer;
         #endregion
 
         #region Constructors
-        public CsvTextEditorIsDirtyProjectWatcher(IProjectManager projectManager, IServiceLocator serviceLocator, IMainWindowTitleService mainWindowTitleService,
-            ISaveProjectChangesService saveProjectChangesService, IConfigurationService configurationService)
+        public CsvTextEditorIsDirtyProjectWatcher(IProjectManager projectManager, IMainWindowTitleService mainWindowTitleService,
+            ISaveProjectChangesService saveProjectChangesService, IConfigurationService configurationService, 
+            ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
             : base(projectManager)
         {
-            Argument.IsNotNull(() => serviceLocator);
-            Argument.IsNotNull(() => mainWindowTitleService);
-            Argument.IsNotNull(() => saveProjectChangesService);
-            Argument.IsNotNull(() => configurationService);
-            Argument.IsNotNull(() => projectManager);
+            ArgumentNullException.ThrowIfNull(mainWindowTitleService);
+            ArgumentNullException.ThrowIfNull(saveProjectChangesService);
+            ArgumentNullException.ThrowIfNull(configurationService);
+            ArgumentNullException.ThrowIfNull(projectManager);
 
             _projectManager = projectManager;
-            _serviceLocator = serviceLocator;
             _mainWindowTitleService = mainWindowTitleService;
             _saveProjectChangesService = saveProjectChangesService;
             _configurationService = configurationService;
-
+            _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
             _autoSaveTimer = new DispatcherTimer();
             _autoSaveTimer.Tick += AutoSaveIfNeeded;
             _autoSaveTimer.Interval = configurationService.GetRoamingValue(Configuration.AutoSaveInterval, Configuration.AutoSaveIntervalDefaultValue);
@@ -59,17 +51,22 @@ namespace CsvTextEditor.ProjectManagement
         #region Methods
         protected override Task OnActivatedAsync(IProject oldProject, IProject newProject)
         {
-            if (_csvTextEditorInstance != null)
+            if (oldProject is not null && _csvTextEditorInstance is not null)
+            {
                 _csvTextEditorInstance.TextChanged -= CsvTextEditorInstanceOnTextChanged;
+            }
 
-            if (newProject == null)
-                return TaskHelper.Completed;
+            if (newProject is null)
+            {
+                return base.OnActivatedAsync(oldProject, newProject);
+            }
 
-            if (_csvTextEditorInstance == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(newProject))
-                _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(newProject);
+            _csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance((Project)newProject);
 
-            if (_csvTextEditorInstance != null)
+            if (_csvTextEditorInstance is not null)
+            {
                 _csvTextEditorInstance.TextChanged += CsvTextEditorInstanceOnTextChanged;
+            }
 
             return base.OnActivatedAsync(oldProject, newProject);
         }
@@ -77,11 +74,11 @@ namespace CsvTextEditor.ProjectManagement
         private void AutoSaveIfNeeded(object sender, EventArgs e)
         {
 
-            if (_csvTextEditorInstance == null)
+            if (_csvTextEditorInstance is null)
             {
                 return;
             }
-                          
+
             if (_csvTextEditorInstance.IsDirty &&
                 _configurationService.GetRoamingValue<bool>(Configuration.AutoSaveEditor))
             {
@@ -95,7 +92,12 @@ namespace CsvTextEditor.ProjectManagement
         {
             var project = (Project) ProjectManager.ActiveProject;
 
-            project?.SetIsDirty(_csvTextEditorInstance.IsDirty);
+            if (project is not null)
+            {
+                project.SetIsDirty(_csvTextEditorInstance.IsDirty);
+                project.Text = _csvTextEditorInstance.GetText();
+            }
+
             _mainWindowTitleService.UpdateTitle();
         }
 

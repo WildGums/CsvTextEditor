@@ -1,17 +1,7 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="App.xaml.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
-    using System;
     using System.Diagnostics;
     using System.Windows;
-    using Catel.ApiCop;
-    using Catel.ApiCop.Listeners;
     using Catel.IoC;
     using Catel.Logging;
     using Orchestra.Services;
@@ -23,21 +13,16 @@ namespace CsvTextEditor
     /// </summary>
     public partial class App : Application
     {
-        #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
         private readonly Stopwatch _stopwatch;
-        #endregion
 
-        #region Constructors
         public App()
         {
             _stopwatch = new Stopwatch();
             _stopwatch.Start();
         }
-        #endregion
 
-        #region Methods
 #pragma warning disable AvoidAsyncVoid // Avoid async void
         protected override async void OnStartup(StartupEventArgs e)
 #pragma warning restore AvoidAsyncVoid // Avoid async void
@@ -54,16 +39,5 @@ namespace CsvTextEditor
 
             Log.Info("Elapsed startup stopwatch time: {0}", _stopwatch.Elapsed);
         }
-
-#if DEBUG
-        protected override void OnExit(ExitEventArgs e)
-        {
-            var apiCopListener = new ConsoleApiCopListener();
-            ApiCopManager.AddListener(apiCopListener);
-            ApiCopManager.WriteResults();
-            base.OnExit(e);
-        }
-#endif
-        #endregion
     }
 }

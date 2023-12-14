@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FileSaveAsCommandContainer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
+    using System;
     using System.IO;
     using System.Threading.Tasks;
     using Catel;
@@ -17,39 +11,32 @@ namespace CsvTextEditor
 
     public class FileSaveAsCommandContainer : ProjectCommandContainerBase
     {
-        #region Fields
         private readonly ISaveFileService _saveFileService;
-        #endregion
 
-        #region Constructors
         public FileSaveAsCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ISaveFileService saveFileService)
             : base(Commands.File.SaveAs, commandManager, projectManager)
         {
-            Argument.IsNotNull(() => saveFileService);
+            ArgumentNullException.ThrowIfNull(saveFileService);
 
             _saveFileService = saveFileService;
         }
-        #endregion
 
-        #region Methods
-        protected override async Task ExecuteAsync(object parameter)
+        public override async Task ExecuteAsync(object parameter)
         {
-            var project = _projectManager.ActiveProject as Project;
-            if (ReferenceEquals(project, null))
+            if (!(_projectManager.ActiveProject is Project project))
             {
                 return;
             }
 
-            var fileContext = new DetermineSaveFileContext
+            var result = await _saveFileService.DetermineFileAsync(new DetermineSaveFileContext
             {
                 Filter = "Text Files (*.csv)|*csv",
                 AddExtension = true
-            };
+            });
 
-            var fileOneResult = await _saveFileService.DetermineFileAsync(fileContext);
-            if (fileOneResult.Result)
+            if (result.Result)
             {
-                var fileName = fileOneResult.FileName;
+                var fileName = result.FileName;
 
                 // Note: manually ensure we are using correct extension
                 fileName = Path.ChangeExtension(fileName, "csv");
@@ -59,6 +46,5 @@ namespace CsvTextEditor
 
             await base.ExecuteAsync(parameter);
         }
-        #endregion
     }
 }

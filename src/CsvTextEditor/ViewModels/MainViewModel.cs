@@ -1,43 +1,32 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainViewModel.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.ViewModels
+﻿namespace CsvTextEditor.ViewModels
 {
+    using System;
     using System.Threading.Tasks;
     using Catel;
     using Catel.Fody;
+    using Catel.IoC;
     using Catel.MVVM;
-    using Catel.Services;
     using Models;
+    using Orc.CsvTextEditor;
     using Orc.ProjectManagement;
 
     public class MainViewModel : ViewModelBase
     {
-        #region Fields
         private readonly IProjectManager _projectManager;
-        private readonly IDispatcherService _dispatcherService;
-        #endregion
 
-        #region Constructors
-        public MainViewModel(IProjectManager projectManager, IDispatcherService dispatcherService)
+        public MainViewModel(IProjectManager projectManager)
         {
-            Argument.IsNotNull(() => projectManager);
-            Argument.IsNotNull(() => dispatcherService);
+            ArgumentNullException.ThrowIfNull(projectManager);
 
             _projectManager = projectManager;
-            _dispatcherService = dispatcherService;
         }
-        #endregion
-
+       
         [Model]
         [Expose(nameof(Models.Project.Text))]
         public Project Project { get; set; }
 
-        #region Methods
+        public ICsvTextEditorInstance CsvTextEditorInstance { get; set; }
+
         protected override Task InitializeAsync()
         {
             _projectManager.ProjectActivationAsync += OnProjectActivationAsync;
@@ -45,9 +34,28 @@ namespace CsvTextEditor.ViewModels
             return base.InitializeAsync();
         }
 
-        private Task OnProjectActivationAsync(object sender, ProjectUpdatingCancelEventArgs e)
+        protected override Task OnClosedAsync(bool? result)
         {
-            return _dispatcherService.InvokeAsync(() => Project = (Project)e.NewProject);
+            _projectManager.ProjectActivationAsync -= OnProjectActivationAsync;
+
+            return base.OnClosedAsync(result);
+        }
+
+        private async Task OnProjectActivationAsync(object sender, ProjectUpdatingCancelEventArgs e)
+        {
+            var newProject = (Project)e.NewProject;
+            Project = newProject;
+
+#pragma warning disable IDISP001 // Dispose created
+            var serviceLocator = this.GetServiceLocator();
+#pragma warning restore IDISP001 // Dispose created
+            var csvTextEditorInstanceProvider = serviceLocator.ResolveType<ICsvTextEditorInstanceProvider>();
+
+            CsvTextEditorInstance = csvTextEditorInstanceProvider.GetInstance(Project);
+            if (CsvTextEditorInstance.GetEditor() is not null)
+            {
+                CsvTextEditorInstance.SetInitialText(Project?.Text ?? string.Empty);
+            }
         }
 
         protected override Task CloseAsync()
@@ -56,6 +64,5 @@ namespace CsvTextEditor.ViewModels
 
             return base.CloseAsync();
         }
-        #endregion
     }
 }

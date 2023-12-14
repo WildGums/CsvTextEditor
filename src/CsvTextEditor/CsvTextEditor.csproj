@@ -1,9 +1,13 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>net462</TargetFrameworks>
+    <TargetFrameworks>net8.0-windows</TargetFrameworks>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <SelfContained>true</SelfContained>
     <AssemblyName>CsvTextEditor</AssemblyName>
     <RootNamespace>CsvTextEditor</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -11,12 +15,12 @@
     <ExtrasEnableImplicitWpfReferences>true</ExtrasEnableImplicitWpfReferences>
     <ExtrasEnableImplicitWinFormsReferences>true</ExtrasEnableImplicitWinFormsReferences>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <!-- SonarQube requires a project guid -->
     <ProjectGuid>70261F8B-6554-4C72-BC0B-CFBD7A7DD94C</ProjectGuid>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <StartupObject />
@@ -25,47 +29,32 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Catel.Core" Version="5.12.9" />
-    <PackageReference Include="Catel.MVVM" Version="5.12.9" />
-    <PackageReference Include="Catel.Fody" Version="4.0.0" PrivateAssets="all" />
-    <PackageReference Include="FastMember" Version="1.4.1" />
-    <PackageReference Include="Fody" Version="5.0.1" PrivateAssets="all">
+    <PackageReference Include="Catel.Fody" Version="4.9.0" PrivateAssets="all">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="FastMember" Version="1.5.0" />
+    <PackageReference Include="Fody" Version="6.8.0" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="4.0.0" PrivateAssets="all" />
-    <PackageReference Include="MethodTimer.Fody" Version="2.3.3" PrivateAssets="all" />
-    <PackageReference Include="ModuleInit.Fody" Version="1.9.0" PrivateAssets="all" />
-    <PackageReference Include="Obsolete.Fody" Version="4.4.3" PrivateAssets="all" />
-    <PackageReference Include="Orc.Analytics" Version="3.1.0" />
-    <PackageReference Include="Orc.CommandLine" Version="3.1.0" />
-    <PackageReference Include="Orc.CsvTextEditor" Version="4.0.4-beta0001" />
-    <PackageReference Include="Orc.FilterBuilder.Xaml" Version="3.1.0" />
-    <PackageReference Include="Orc.Notifications" Version="3.1.0" />
-    <PackageReference Include="Orc.ProjectManagement" Version="3.2.0" />
-    <PackageReference Include="Orc.Squirrel.Xaml" Version="3.1.0" />
-    <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="3.2.0" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="6.0.2" />
-    <PackageReference Include="WpfAnalyzers" Version="2.2.0.2" PrivateAssets="all" />
+    <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="4.6.0" PrivateAssets="all">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="MethodTimer.Fody" Version="3.2.2" PrivateAssets="all">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="Orc.CommandLine" Version="5.0.0" />
+    <PackageReference Include="Orc.CsvTextEditor" Version="5.0.0" />
+    <PackageReference Include="Orc.FilterBuilder.Xaml" Version="5.0.0" />
+    <PackageReference Include="Orc.Notifications" Version="5.0.0" />
+    <PackageReference Include="Orc.ProjectManagement" Version="5.0.0" />
+    <PackageReference Include="Orc.Squirrel.Xaml" Version="5.0.0" />
+    <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="5.0.0" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="NETStandard.Library" Version="2.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />
+  <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.mat.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.mat.props')" />
 </Project>

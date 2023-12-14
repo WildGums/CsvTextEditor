@@ -5,16 +5,20 @@
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:catel="http://schemas.catelproject.com"
                    xmlns:csvTextEditor="clr-namespace:Orc.CsvTextEditor;assembly=Orc.CsvTextEditor"
+                   xmlns:xamlbehaviors="http://schemas.microsoft.com/xaml/behaviors"
                    xmlns:behaviors="clr-namespace:CsvTextEditor.Behaviors"
-                   xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
                    mc:Ignorable="d"
                    d:DesignHeight="300"
                    d:DesignWidth="300">
-   
-    <csvTextEditor:CsvTextEditorControl x:Name="CsvTextEditorControl"
-                                        Text="{Binding Text, Mode=TwoWay}">
-        <b:Interaction.Behaviors>
+
+    <xamlbehaviors:Interaction.Behaviors>
+        <!--<behaviors:ExternalFileDragDropBehavior/>-->
+    </xamlbehaviors:Interaction.Behaviors>
+    
+    <csvTextEditor:CsvTextEditorControl x:Name="CsvTextEditor"
+                                        CsvTextEditorInstance="{Binding CsvTextEditorInstance}">
+        <xamlbehaviors:Interaction.Behaviors>
             <behaviors:ExternalFileDragDropBehavior/>
-        </b:Interaction.Behaviors>
+        </xamlbehaviors:Interaction.Behaviors>
     </csvTextEditor:CsvTextEditorControl>
 </catel:UserControl>

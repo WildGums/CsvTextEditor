@@ -6,7 +6,6 @@
                    xmlns:local="clr-namespace:CsvTextEditor.Views"
                    xmlns:catel="http://schemas.catelproject.com"
                    xmlns:fluent="urn:fluent-ribbon"
-                   xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                    xmlns:orccontrols="http://schemas.wildgums.com/orc/controls"
                    xmlns:orchestra="http://schemas.wildgums.com/orchestra"
                    xmlns:csvTextEditor="clr-namespace:CsvTextEditor"
@@ -14,7 +13,7 @@
                    mc:Ignorable="d"
                    d:DesignHeight="300"
                    d:DesignWidth="300">
-    
+
     <fluent:Ribbon x:Name="ribbon"
                    IsQuickAccessToolBarVisible="False"
                    CanCustomizeRibbon="False"
@@ -45,12 +44,12 @@
 
 
                     <fluent:SplitButton Header="Open in editor"
-                                        LargeIcon="{orctheming:FontImage {x:Static csvTextEditor:FontAwesome.Edit}, FontFamily=FontAwesome}" 
+                                        LargeIcon="{orctheming:FontImage {x:Static csvTextEditor:FontAwesome.Edit}, FontFamily=FontAwesome}"
                                         Command="{catel:CommandManagerBinding File.OpenInTextEditor}"
                                         IsEnabled="{Binding IsActiveProjectExists}">
                         <fluent:Gallery ScrollViewer.VerticalScrollBarVisibility="Hidden">
-                            <fluent:Button Header="Excel" 
-                                           LargeIcon="{orctheming:FontImage {x:Static csvTextEditor:FontAwesome.FileExcelO}, FontFamily=FontAwesome}" 
+                            <fluent:Button Header="Excel"
+                                           LargeIcon="{orctheming:FontImage {x:Static csvTextEditor:FontAwesome.FileExcelO}, FontFamily=FontAwesome}"
                                            Command="{catel:CommandManagerBinding File.OpenInExcel}"/>
                         </fluent:Gallery>
                     </fluent:SplitButton>
@@ -89,21 +88,26 @@
                 </fluent:RibbonGroupBox>
 
                 <fluent:RibbonGroupBox Header="Settings">
-                    <fluent:Button Header="Settings" 
+                    <fluent:Button Header="Settings"
                                    LargeIcon="{orctheming:FontImage {x:Static csvTextEditor:FontAwesome.Cog}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding Settings.General}" />
-                    
-                    <fluent:SplitButton Header="Shortcuts" 
+
+                    <fluent:SplitButton Header="Shortcuts"
                                         LargeIcon="{orctheming:FontImage {x:Static csvTextEditor:FontAwesome.KeyboardO}, FontFamily=FontAwesome}"
                                         Command="{Binding ShowKeyboardMappings}" >
                         <orchestra:KeyboardMappingsOverviewView />
                     </fluent:SplitButton>
                 </fluent:RibbonGroupBox>
 
-                <fluent:RibbonGroupBox Header="Statistic" 
+                <fluent:RibbonGroupBox Header="Highlight">
+                    <local:FindView Margin="2,10,2,2"/>
+                </fluent:RibbonGroupBox>
+
+                <fluent:RibbonGroupBox Header="Statistic"
                                        Visibility="{Binding Project, Converter={catel:ReferenceToCollapsingVisibilityConverter}}">
                     <local:ProjectStatisticView Margin="2,10,2,2"/>
                 </fluent:RibbonGroupBox>
+
             </fluent:RibbonTabItem>
         </fluent:Ribbon.Tabs>
     </fluent:Ribbon>

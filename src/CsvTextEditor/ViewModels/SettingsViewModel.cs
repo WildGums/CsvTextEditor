@@ -1,42 +1,27 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SettingsViewModel.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.ViewModels
+﻿namespace CsvTextEditor.ViewModels
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.Configuration;
-    using Catel.IO;
-    using Catel.IoC;
     using Catel.MVVM;
     using Catel.Services;
     using Orc.Squirrel;
     using Orchestra.Services;
-    using Services;
 
     public class SettingsViewModel : ViewModelBase
     {
-        #region Fields
         private readonly IConfigurationService _configurationService;
         private readonly IManageAppDataService _manageAppDataService;
         private readonly IUpdateService _updateService;
         private readonly IOpenFileService _openFileService;
-        #endregion
-
-        #region Constructors
+   
         public SettingsViewModel(IConfigurationService configurationService, IManageAppDataService manageAppDataService, IUpdateService updateService, IOpenFileService openFileService)
         {
-            Argument.IsNotNull(() => configurationService);
-            Argument.IsNotNull(() => manageAppDataService);
-            Argument.IsNotNull(() => updateService);
-            Argument.IsNotNull(() => openFileService);
+            ArgumentNullException.ThrowIfNull(configurationService);
+            ArgumentNullException.ThrowIfNull(manageAppDataService);
+            ArgumentNullException.ThrowIfNull(updateService);
+            ArgumentNullException.ThrowIfNull(openFileService);
 
             _configurationService = configurationService;
             _manageAppDataService = manageAppDataService;
@@ -49,57 +34,50 @@ namespace CsvTextEditor.ViewModels
 
             Title = "Settings";
         }
-        #endregion
 
-        #region Properties
         public bool IsUpdateSystemAvailable { get; private set; }
         public bool CheckForUpdates { get; set; }
         public bool AutoSaveEditor { get; set; }
         public string CustomEditor { get; private set; }
         public List<UpdateChannel> AvailableUpdateChannels { get; private set; }
         public UpdateChannel UpdateChannel { get; set; }
-        #endregion
 
-        #region Commands
         public Command OpenApplicationDataDirectory { get; private set; }
 
         private void OnOpenApplicationDataDirectoryExecute()
         {
-            _manageAppDataService.OpenApplicationDataDirectory(ApplicationDataTarget.UserLocal);
+            _manageAppDataService.OpenApplicationDataDirectory(Catel.IO.ApplicationDataTarget.UserRoaming);
         }
 
         public TaskCommand PickEditor { get; private set; }
 
         private async Task PickEditorExecuteAsync()
         {
-            var fileContext = new DetermineOpenFileContext
+            var result = await _openFileService.DetermineFileAsync(new DetermineOpenFileContext
             {
                 Filter = "Program Files (*.exe)|*exe",
                 IsMultiSelect = false
-            };
+            });
 
-            var fileOneResult = await _openFileService.DetermineFileAsync(fileContext);
-            if (fileOneResult.Result)
+            if (result.Result)
             {
-                CustomEditor = fileOneResult.FileName;
-            }   
+                CustomEditor = result.FileName;
+            }       
         }
 
         public TaskCommand BackupUserData { get; private set; }
 
         private async Task OnBackupUserDataExecuteAsync()
         {
-            await _manageAppDataService.BackupUserDataAsync(ApplicationDataTarget.UserLocal);
+            await _manageAppDataService.BackupUserDataAsync(Catel.IO.ApplicationDataTarget.UserRoaming);
         }
-        #endregion
 
-        #region Methods
         protected override async Task InitializeAsync()
         {
             await base.InitializeAsync();
 
             IsUpdateSystemAvailable = _updateService.IsUpdateSystemAvailable;
-            CheckForUpdates = _updateService.CheckForUpdates;
+            CheckForUpdates = _updateService.IsCheckForUpdatesEnabled;
             AvailableUpdateChannels = new List<UpdateChannel>(_updateService.AvailableChannels);
             UpdateChannel = _updateService.CurrentChannel;
 
@@ -109,7 +87,7 @@ namespace CsvTextEditor.ViewModels
 
         protected override async Task<bool> SaveAsync()
         {
-            _updateService.CheckForUpdates = CheckForUpdates;
+            _updateService.IsCheckForUpdatesEnabled = CheckForUpdates;
             _updateService.CurrentChannel = UpdateChannel;
 
             _configurationService.SetRoamingValue(Configuration.CustomEditor, CustomEditor);
@@ -117,6 +95,5 @@ namespace CsvTextEditor.ViewModels
 
             return await base.SaveAsync();
         }
-        #endregion
     }
 }

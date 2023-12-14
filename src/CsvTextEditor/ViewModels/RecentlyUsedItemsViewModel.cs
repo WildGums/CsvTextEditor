@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RecentlyUsedFilesViewModel.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.ViewModels
+﻿namespace CsvTextEditor.ViewModels
 {
     using System;
     using System.Collections.Generic;
@@ -14,7 +7,7 @@ namespace CsvTextEditor.ViewModels
     using Catel.MVVM;
     using Catel.Services;
     using Orc.FileSystem;
-    using Orchestra.Models;
+    using Orchestra;
     using Orchestra.Services;
 
     public class RecentlyUsedItemsViewModel : ViewModelBase
@@ -27,10 +20,10 @@ namespace CsvTextEditor.ViewModels
         public RecentlyUsedItemsViewModel(IRecentlyUsedItemsService recentlyUsedItemsService, IFileService fileService, 
             IMessageService messageService, IProcessService processService)
         {
-            Argument.IsNotNull(() => recentlyUsedItemsService);
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => messageService);
-            Argument.IsNotNull(() => processService);
+            ArgumentNullException.ThrowIfNull(recentlyUsedItemsService);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(messageService);
+            ArgumentNullException.ThrowIfNull(processService);
 
             _recentlyUsedItemsService = recentlyUsedItemsService;
             _fileService = fileService;
@@ -39,13 +32,12 @@ namespace CsvTextEditor.ViewModels
 
             PinItem = new Command<string>(OnPinItemExecute);
             UnpinItem = new Command<string>(OnUnpinItemExecute);
-            OpenInExplorer = new Command<string>(OnOpenInExplorerExecute);
+            OpenInExplorer = new TaskCommand<string>(OnOpenInExplorerExecuteAsync);
         }
 
         public List<RecentlyUsedItem> RecentlyUsedItems { get; private set; }
         public List<RecentlyUsedItem> PinnedItems { get; private set; }
 
-        #region Commands
         public Command<string> PinItem { get; private set; }
 
         private void OnPinItemExecute(string parameter)
@@ -64,14 +56,9 @@ namespace CsvTextEditor.ViewModels
             _recentlyUsedItemsService.UnpinItem(parameter);
         }
 
-        public Command<string> OpenInExplorer { get; private set; }
+        public TaskCommand<string> OpenInExplorer { get; private set; }
 
-#pragma warning disable AsyncFixer03 // Avoid fire & forget async void methods
-#pragma warning disable AvoidAsyncVoid
-
-        private async void OnOpenInExplorerExecute(string parameter)
-#pragma warning restore AsyncFixer03 // Avoid fire & forget async void methods
-#pragma warning restore AvoidAsyncVoid
+        private async Task OnOpenInExplorerExecuteAsync(string parameter)
         {
             if (!_fileService.Exists(parameter))
             {
@@ -81,7 +68,6 @@ namespace CsvTextEditor.ViewModels
           
             _processService.StartProcess("explorer.exe", $"/select, \"{parameter}\"");
         }
-        #endregion
 
         protected override async Task InitializeAsync()
         {

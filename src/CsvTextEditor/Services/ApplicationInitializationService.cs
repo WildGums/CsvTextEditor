@@ -1,56 +1,44 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ApplicationInitializationService.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.Services
+﻿namespace CsvTextEditor.Services
 {
     using System;
     using System.Threading.Tasks;
     using System.Windows.Media;
     using Catel;
-    using Catel.Data;
     using Catel.IoC;
     using Catel.Logging;
     using Catel.MVVM;
     using Catel.Services;
-    using Catel.Threading;
     using Catel.Windows.Controls;
     using Orc.ProjectManagement;
-    using Orchestra.Markup;
     using Orchestra.Services;
     using ProjectManagement;
     using Orc.Squirrel;
     using MethodTimer;
-    using Orc.Theming;
     using Settings = CsvTextEditor.Settings;
+    using Fluent;
+    using CsvTextEditor.Views;
+    using Orc.Automation.Controls;
+    using System.Collections.Generic;
 
     public class ApplicationInitializationService : ApplicationInitializationServiceBase
     {
-        #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
         private readonly ICommandManager _commandManager;
-        private readonly IPleaseWaitService _pleaseWaitService;
+        private readonly IBusyIndicatorService _busyIndicatorService;
 
         private readonly IServiceLocator _serviceLocator;
-        #endregion
 
-        #region Constructors
-        public ApplicationInitializationService(IServiceLocator serviceLocator, ICommandManager commandManager, IPleaseWaitService pleaseWaitService)
+        public ApplicationInitializationService(IServiceLocator serviceLocator, ICommandManager commandManager, IBusyIndicatorService busyIndicatorService)
         {
-            Argument.IsNotNull(() => serviceLocator);
-            Argument.IsNotNull(() => commandManager);
-            Argument.IsNotNull(() => pleaseWaitService);
+            ArgumentNullException.ThrowIfNull(serviceLocator);
+            ArgumentNullException.ThrowIfNull(commandManager);
+            ArgumentNullException.ThrowIfNull(busyIndicatorService);
 
             _serviceLocator = serviceLocator;
             _commandManager = commandManager;
-            _pleaseWaitService = pleaseWaitService;
+            _busyIndicatorService = busyIndicatorService;
         }
-        #endregion
-
-        #region Methods
+   
         public override async Task InitializeBeforeCreatingShellAsync()
         {
             RegisterTypes();
@@ -58,16 +46,24 @@ namespace CsvTextEditor.Services
             InitializeCommands();
             InitializeWatchers();
 
-            await TaskHelper.RunAndWaitAsync(new Func<Task>[] {
-                ImprovePerformanceAsync,
-                CheckForUpdatesAsync
-            });
+            var tasks = new List<Task>() 
+            {
+                Task.Run(ImprovePerformanceAsync),
+                Task.Run(CheckForUpdatesAsync)
+            };
+
+            await Task.WhenAll(tasks);
         }
 
         public override async Task InitializeAfterCreatingShellAsync()
         {
-            var mainWindowTitleService = _serviceLocator.ResolveType<IMainWindowTitleService>();
+            var shellWindow = System.Windows.Application.Current.MainWindow as RibbonWindow;
 
+            var windowCommands = new WindowCommands();
+            windowCommands.Items.Add(new WindowCommandsView());
+            shellWindow.WindowCommands = windowCommands;
+
+            var mainWindowTitleService = _serviceLocator.ResolveType<IMainWindowTitleService>();
             mainWindowTitleService.UpdateTitle();
 
             await base.InitializeAfterCreatingShellAsync();
@@ -89,17 +85,17 @@ namespace CsvTextEditor.Services
             _serviceLocator.RegisterType<IInitialProjectLocationService, InitialProjectLocationService>();
 
             _serviceLocator.RegisterType<IProjectInitializer, FileProjectInitializer>();
+            
+            _serviceLocator.RegisterType<ICsvTextEditorInstanceProvider, CsvTextEditorInstanceProvider>();
 
             _serviceLocator.RegisterTypeAndInstantiate<ProjectManagementCloseApplicationWatcher>();
         }
 
         private void InitializeFonts()
         {
-            FontImage.RegisterFont("FontAwesome", new FontFamily(new Uri("pack://application:,,,/CsvTextEditor;component/Resources/Fonts/", UriKind.RelativeOrAbsolute), "./#FontAwesome"));
-
-            FontImage.DefaultFontFamily = "FontAwesome";
-
-            FontImage.DefaultBrush = new SolidColorBrush(Color.FromArgb(255, 87, 87, 87));
+            Orc.Theming.FontImage.RegisterFont("FontAwesome", new FontFamily(new Uri("pack://application:,,,/CsvTextEditor;component/Resources/Fonts/", UriKind.RelativeOrAbsolute), "./#FontAwesome"));
+            Orc.Theming.FontImage.DefaultFontFamily = "FontAwesome";
+            Orc.Theming.FontImage.DefaultBrush = new SolidColorBrush(Color.FromArgb(255, 87, 87, 87));
         }
 
         [Time]
@@ -151,8 +147,8 @@ namespace CsvTextEditor.Services
         {
             Log.Info("Checking for updates");
 
-            var updateService = _serviceLocator.ResolveType<IUpdateService>();
-            updateService.Initialize(Settings.Application.AutomaticUpdates.AvailableChannels, Settings.Application.AutomaticUpdates.DefaultChannel,
+            var updateService = _serviceLocator.ResolveRequiredType<IUpdateService>();
+            await updateService.InitializeAsync(Settings.Application.AutomaticUpdates.AvailableChannels, Settings.Application.AutomaticUpdates.DefaultChannel,
                 Settings.Application.AutomaticUpdates.CheckForUpdatesDefaultValue);
 
 #pragma warning disable 4014
@@ -163,19 +159,16 @@ namespace CsvTextEditor.Services
 
         protected async Task LoadProjectAsync()
         {
-            using (_pleaseWaitService.PushInScope())
+            using (_busyIndicatorService.PushInScope())
             {
                 var projectManager = _serviceLocator.ResolveType<IProjectManager>();
-                if (projectManager == null)
+                if (projectManager is null)
                 {
-                    const string error = "Failed to resolve project manager";
-                    Log.Error(error);
-                    throw new Exception(error);
+                    throw Log.ErrorAndCreateException<Exception>("Failed to resolve project manager");
                 }
 
                 await projectManager.InitializeAsync();
             }
         }
-        #endregion
     }
 }

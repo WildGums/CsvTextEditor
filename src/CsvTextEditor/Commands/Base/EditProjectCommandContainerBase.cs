@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="EditProjectCommandContainerBase.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
     using System;
     using System.Windows.Threading;
@@ -19,20 +12,20 @@ namespace CsvTextEditor
     public abstract class EditProjectCommandContainerBase : ProjectCommandContainerBase
     {
         #region Fields
-        private readonly IServiceLocator _serviceLocator;
+        private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
         private readonly DispatcherTimer _invalidateTimer;
 
         private ICsvTextEditorInstance _csvTextEditorInstance;
         #endregion
 
         #region Constructors
-        protected EditProjectCommandContainerBase(string commandName, ICommandManager commandManager, IProjectManager projectManager, IServiceLocator serviceLocator)
+        protected EditProjectCommandContainerBase(string commandName, ICommandManager commandManager, IProjectManager projectManager, 
+            ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
             : base(commandName, commandManager, projectManager)
         {
-            Argument.IsNotNull(() => serviceLocator);
+            ArgumentNullException.ThrowIfNull(csvTextEditorInstanceProvider);
 
-            _serviceLocator = serviceLocator;
-
+            _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
             _invalidateTimer = new DispatcherTimer();
             _invalidateTimer.Interval = TimeSpan.FromMilliseconds(100);
             _invalidateTimer.Tick += OnInvalidateTimerTick;
@@ -44,12 +37,7 @@ namespace CsvTextEditor
             get
             {
                 var activeProject = _projectManager.ActiveProject;
-
-                if (_csvTextEditorInstance == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(activeProject))
-                {
-                    _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(activeProject);
-                    
-                }
+                _csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance((Project)activeProject);
 
                 return _csvTextEditorInstance;
             }
@@ -59,22 +47,19 @@ namespace CsvTextEditor
         {
             base.ProjectActivated(oldProject, newProject);
 
-            if (_csvTextEditorInstance != null)
+            if (_csvTextEditorInstance is not null && oldProject is not null)
             {
                 _csvTextEditorInstance.TextChanged -= CsvTextEditorInstanceOnTextChanged;
             }
 
-            if (newProject == null)
+            if (newProject is null)
             {
                 return;
             }
 
-            if (_csvTextEditorInstance == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(newProject))
-            {
-                _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(newProject);
-            }
+            _csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance(newProject);
 
-            if (_csvTextEditorInstance != null)
+            if (_csvTextEditorInstance is not null)
             {
                 _csvTextEditorInstance.TextChanged += CsvTextEditorInstanceOnTextChanged;
             }
@@ -86,7 +71,7 @@ namespace CsvTextEditor
         }
 
         #region Methods
-        protected override bool CanExecute(object parameter)
+        public override bool CanExecute(object parameter)
         {
             if (!base.CanExecute(parameter))
             {

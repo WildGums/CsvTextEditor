@@ -19,6 +19,7 @@ TestResult.xml
 [Rr]elease/
 [Oo]utput*/
 [Pp]ackages*/
+[Tt]emp/
 bin
 obj
 [Ll]ib/*
@@ -43,6 +44,7 @@ obj
 *.vspscc
 *.xap
 .builds
+*.log
 
 # Visual C++ cache files
 ipch/
@@ -133,5 +135,27 @@ TestResults
 .github/
 BundleArtifacts/
 
+# docker / tye
+.tye
+
+# editors
+.idea
 .vscode
+
+# Binaries
+*.dll
+*.exe
+
+# fody
 FodyWeavers.xsd
+
+# Approval tests
+*.received.*
+
+# ANTLR
+data/dsl/*.class
+data/dsl/*.java
+
+# Nodejs / NPM
+node_modules
+package-lock.json

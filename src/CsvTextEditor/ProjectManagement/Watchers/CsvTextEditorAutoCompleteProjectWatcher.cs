@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CsvTextEditorAutoCompleteProjectWatcher.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.ProjectManagement
+﻿namespace CsvTextEditor.ProjectManagement
 {
     using System;
     using System.Threading.Tasks;
@@ -13,6 +6,7 @@ namespace CsvTextEditor.ProjectManagement
     using Catel.IoC;
     using Catel.Services;
     using Catel.Threading;
+    using CsvTextEditor.Models;
     using Orc.CsvTextEditor;
     using Orc.ProjectManagement;
 
@@ -22,41 +16,38 @@ namespace CsvTextEditor.ProjectManagement
         private const int MaxLineCountWithAutoCompleteEnabled = 1000;
 
         private readonly IDispatcherService _dispatcherService;
-        private readonly IServiceLocator _serviceLocator;
+        private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
         private ICsvTextEditorInstance _csvTextEditorInstance;
         #endregion
 
         #region Constructors
-        public CsvTextEditorAutoCompleteProjectWatcher(IProjectManager projectManager, IServiceLocator serviceLocator,
-            IDispatcherService dispatcherService)
+        public CsvTextEditorAutoCompleteProjectWatcher(IProjectManager projectManager,
+            IDispatcherService dispatcherService, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
             : base(projectManager)
         {
-            Argument.IsNotNull(() => serviceLocator);
-            Argument.IsNotNull(() => dispatcherService);
+            ArgumentNullException.ThrowIfNull(dispatcherService);
+            ArgumentNullException.ThrowIfNull(csvTextEditorInstanceProvider);
 
-            _serviceLocator = serviceLocator;
             _dispatcherService = dispatcherService;
+            _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
         }
         #endregion
 
         protected override Task OnActivatedAsync(IProject oldProject, IProject newProject)
         {
-            if (_csvTextEditorInstance != null)
+            if (_csvTextEditorInstance is not null && oldProject is not null)
             {
                 _csvTextEditorInstance.TextChanged -= CsvTextEditorInstanceOnTextChanged;
             }
 
-            if (newProject == null)
+            if (newProject is null)
             {
-                return TaskHelper.Completed;
+                return Task.CompletedTask;
             }
 
-            if (_csvTextEditorInstance == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(newProject))
-            {
-                _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(newProject);
-            }
+            _csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance((Project)newProject);
 
-            if (_csvTextEditorInstance != null)
+            if (_csvTextEditorInstance is not null)
             {
                 _csvTextEditorInstance.TextChanged += CsvTextEditorInstanceOnTextChanged;
             }

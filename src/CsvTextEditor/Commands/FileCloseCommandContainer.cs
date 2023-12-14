@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FileCloseCommandContainer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
     using System.Threading.Tasks;
     using Catel.MVVM;
@@ -21,9 +14,17 @@ namespace CsvTextEditor
         #endregion
 
         #region Methods
-        protected override Task ExecuteAsync(object parameter)
+        public override async Task ExecuteAsync(object parameter)
         {
-            return base.ExecuteAsync(parameter);
+            var activeProject = _projectManager.ActiveProject;
+            if (activeProject is null)
+            {
+                return;
+            }
+
+            await _projectManager.CloseAsync(activeProject);
+
+            await base.ExecuteAsync(parameter);
         }
         #endregion
     }

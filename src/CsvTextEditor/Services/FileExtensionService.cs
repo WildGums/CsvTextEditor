@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FileExtensionService.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor.Services
+﻿namespace CsvTextEditor.Services
 {
     using System;
     using System.IO;
@@ -23,8 +16,8 @@ namespace CsvTextEditor.Services
 
         public FileExtensionService(IFileService fileService, IDirectoryService directoryService)
         {
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => directoryService);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(directoryService);
 
             _fileService = fileService;
             _directoryService = directoryService;

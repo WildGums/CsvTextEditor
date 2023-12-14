@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="EditRedoCommandContainer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
     using Catel.IoC;
     using Catel.MVVM;
@@ -14,14 +7,14 @@ namespace CsvTextEditor
     public class EditRedoCommandContainer : EditProjectCommandContainerBase
     {
         #region Constructors
-        public EditRedoCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IServiceLocator serviceLocator)
-            : base(Commands.Edit.Redo, commandManager, projectManager, serviceLocator)
+        public EditRedoCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
+            : base(Commands.Edit.Redo, commandManager, projectManager, csvTextEditorInstanceProvider)
         {
         }
         #endregion
 
         #region Methods
-        protected override bool CanExecute(object parameter)
+        public override bool CanExecute(object parameter)
         {
             if (!base.CanExecute(parameter))
             {
@@ -31,7 +24,7 @@ namespace CsvTextEditor
             return CsvTextEditorInstance?.CanRedo ?? false;
         }
 
-        protected override void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             CsvTextEditorInstance.Redo();
 

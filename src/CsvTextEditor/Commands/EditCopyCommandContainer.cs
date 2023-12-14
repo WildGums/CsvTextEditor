@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="EditCopyCommandContainer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
     using Catel.IoC;
     using Catel.MVVM;
@@ -14,14 +7,14 @@ namespace CsvTextEditor
     public class EditCopyCommandContainer : EditProjectCommandContainerBase
     {
         #region Constructors
-        public EditCopyCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IServiceLocator serviceLocator)
-            : base(Commands.Edit.Copy, commandManager, projectManager, serviceLocator)
+        public EditCopyCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
+            : base(Commands.Edit.Copy, commandManager, projectManager, csvTextEditorInstanceProvider)
         {
         }
         #endregion
 
         #region Methods
-        protected override bool CanExecute(object parameter)
+        public override bool CanExecute(object parameter)
         {
             if (!base.CanExecute(parameter))
             {
@@ -31,7 +24,7 @@ namespace CsvTextEditor
             return CsvTextEditorInstance?.HasSelection ?? false;
         }
 
-        protected override void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             CsvTextEditorInstance.Copy();
 

@@ -1,0 +1,40 @@
+<Project>
+  <!-- 
+    This file applies to projects when it gets imported explicitly using the line below:
+
+    <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.tools.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.Build.shared.tools.props')" />
+  -->
+
+  <PropertyGroup>
+    <PackageSummary>$(Description)</PackageSummary>
+    <ProjectSourceUrl>$(PackageProjectUrl)</ProjectSourceUrl>
+    <ExtrasIncludeDefaultProjectBuildOutputInPackTarget>IncludeDefaultProjectBuildOutputInPack</ExtrasIncludeDefaultProjectBuildOutputInPackTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ToolLegalFiles Include="$(OutputPath)\**\legal\*.txt" />
+    <ToolDllFiles Include="$(OutputPath)\$(TargetFrameworks)\**\*.dll" />
+    <ToolExeFiles Include="$(OutputPath)\$(TargetFrameworks)\**\*.exe" />
+  </ItemGroup>
+
+  <Target Name="IncludeDefaultProjectBuildOutputInPack"
+          DependsOnTargets="_GetTargetFrameworksOutput">
+    <Message Text="$(TargetFrameworks)" Importance="high"/>
+    
+    <ItemGroup>
+      <None Include="@(ToolLegalFiles)" Pack="true" PackagePath="\" />
+      
+      <!-- Big assumption that tools only have a single target framework -->
+      
+      <None Include="@(ToolDllFiles)" Pack="true">
+          <TargetPath>$([MSBuild]::MakeRelative('$(OutputPath)\$(TargetFrameworks)\', %(ToolDllFiles.FullPath)))</TargetPath>
+          <PackagePath>tools</PackagePath>
+      </None>
+      
+      <None Include="@(ToolExeFiles)" Pack="true">
+          <TargetPath>$([MSBuild]::MakeRelative('$(OutputPath)\$(TargetFrameworks)\', %(ToolExeFiles.FullPath)))</TargetPath>
+          <PackagePath>tools</PackagePath>
+      </None>
+    </ItemGroup>
+  </Target>
+</Project>
