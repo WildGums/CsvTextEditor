@@ -29,22 +29,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Catel.Fody" Version="4.9.0" PrivateAssets="all">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
+    <PackageReference Include="Catel.Fody" Version="4.9.0" PrivateAssets="all" />
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="Fody" Version="6.8.1" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="4.6.0" PrivateAssets="all">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
-    <PackageReference Include="MethodTimer.Fody" Version="3.2.2" PrivateAssets="all">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
-    <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
+    <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="4.6.0" PrivateAssets="all" />
+    <PackageReference Include="MethodTimer.Fody" Version="3.2.2" PrivateAssets="all" />
+    <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all" />
     <PackageReference Include="Orc.CommandLine" Version="5.0.0" />
     <PackageReference Include="Orc.CsvTextEditor" Version="5.0.0" />
     <PackageReference Include="Orc.FilterBuilder.Xaml" Version="5.0.2" />

@@ -86,7 +86,7 @@
                     return true;
 
                 case MessageResult.Yes:
-                    return await _projectManager.SaveAsync(project.Location).ConfigureAwait(false);
+                    return await _projectManager.SaveActiveProjectAsync(project.Location).ConfigureAwait(false);
             }
 
             return false;
