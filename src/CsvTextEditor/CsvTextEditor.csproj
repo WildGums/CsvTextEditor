@@ -31,11 +31,11 @@
   <ItemGroup>
     <PackageReference Include="Catel.Fody" Version="4.9.0" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageReference Include="FastMember" Version="1.5.0" />
-    <PackageReference Include="Fody" Version="6.9.1" PrivateAssets="all">
+    <PackageReference Include="Fody" Version="6.9.2" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="4.6.0" PrivateAssets="all" />
-    <PackageReference Include="MethodTimer.Fody" Version="3.2.2" PrivateAssets="all" />
+    <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="4.7.0" PrivateAssets="all" />
+    <PackageReference Include="MethodTimer.Fody" Version="3.2.3" PrivateAssets="all" />
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all" />
     <PackageReference Include="Orc.CommandLine" Version="5.0.0" />
     <PackageReference Include="Orc.CsvTextEditor" Version="5.0.0" />
@@ -44,7 +44,7 @@
     <PackageReference Include="Orc.ProjectManagement" Version="5.1.2" />
     <PackageReference Include="Orc.Squirrel.Xaml" Version="5.0.0" />
     <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="5.0.2" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.0.5" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.1.0" />
   </ItemGroup>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />
