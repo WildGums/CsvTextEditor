@@ -29,7 +29,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Catel.Fody" Version="4.9.0" PrivateAssets="all" ExcludeAssets="runtime" />
+    <PackageReference Include="Catel.Fody" Version="4.10.0" PrivateAssets="all" ExcludeAssets="runtime">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="Fody" Version="6.9.2" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -43,8 +45,8 @@
     <PackageReference Include="Orc.Notifications" Version="5.1.0" />
     <PackageReference Include="Orc.ProjectManagement" Version="5.1.2" />
     <PackageReference Include="Orc.Squirrel.Xaml" Version="5.0.0" />
-    <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="5.0.2" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.1.0" />
+    <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="5.1.1" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.2.0" />
   </ItemGroup>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />
