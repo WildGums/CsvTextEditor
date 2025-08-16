@@ -46,7 +46,7 @@
     <PackageReference Include="Orc.ProjectManagement" Version="5.1.2" />
     <PackageReference Include="Orc.Squirrel.Xaml" Version="5.1.0-beta0002" />
     <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="5.1.1" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.2.0" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.2.3" />
   </ItemGroup>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />
