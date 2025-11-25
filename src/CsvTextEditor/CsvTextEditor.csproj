@@ -38,7 +38,6 @@
     </PackageReference>
     <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="4.7.0" PrivateAssets="all" />
     <PackageReference Include="MethodTimer.Fody" Version="3.2.3" PrivateAssets="all" />
-    <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all" />
     <PackageReference Include="Orc.CommandLine" Version="5.0.0" />
     <PackageReference Include="Orc.CsvTextEditor" Version="5.0.0" />
     <PackageReference Include="Orc.FilterBuilder.Xaml" Version="5.1.1" />
