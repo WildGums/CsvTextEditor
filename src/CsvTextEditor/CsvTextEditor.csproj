@@ -29,7 +29,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Catel.Fody" Version="4.10.0" PrivateAssets="all" ExcludeAssets="runtime">
+    <PackageReference Include="Catel.Fody" Version="4.11.0" PrivateAssets="all" ExcludeAssets="runtime">
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="FastMember" Version="1.5.0" />
