@@ -39,13 +39,13 @@
     <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="4.7.0" PrivateAssets="all" />
     <PackageReference Include="MethodTimer.Fody" Version="3.2.3" PrivateAssets="all" />
     <PackageReference Include="Orc.CommandLine" Version="5.0.0" />
-    <PackageReference Include="Orc.CsvTextEditor" Version="5.0.0" />
-    <PackageReference Include="Orc.FilterBuilder.Xaml" Version="5.1.1" />
-    <PackageReference Include="Orc.Notifications" Version="5.1.0" />
-    <PackageReference Include="Orc.ProjectManagement" Version="5.1.2" />
-    <PackageReference Include="Orc.Squirrel.Xaml" Version="5.1.2" />
-    <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="5.1.1" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.2.3" />
+    <PackageReference Include="Orc.CsvTextEditor" Version="5.1.0" />
+    <PackageReference Include="Orc.FilterBuilder.Xaml" Version="5.2.0" />
+    <PackageReference Include="Orc.Notifications" Version="5.2.0" />
+    <PackageReference Include="Orc.ProjectManagement" Version="5.2.0" />
+    <PackageReference Include="Orc.Squirrel.Xaml" Version="5.2.0" />
+    <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="5.2.0" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.3.0" />
   </ItemGroup>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props')" />
