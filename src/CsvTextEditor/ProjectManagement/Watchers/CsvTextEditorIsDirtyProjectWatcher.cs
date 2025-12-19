@@ -83,7 +83,7 @@
                 _configurationService.GetRoamingValue<bool>(Configuration.AutoSaveEditor))
             {
                 var project = (Project)ProjectManager.ActiveProject;
-                _projectManager.SaveAsync(project.Location).ConfigureAwait(false);
+                _projectManager.SaveActiveProjectAsync(project.Location).ConfigureAwait(false);
 
             }
         }

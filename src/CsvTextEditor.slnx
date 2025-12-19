@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/misc/">
+    <File Path="CsvTextEditor.sln.DotSettings" />
+    <File Path="GlobalSuppressions.cs" />
+    <File Path="nuget.config" />
+    <File Path="Settings.StyleCop" />
+    <File Path="SolutionAssemblyInfo.cs" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/App/">
+    <Project Path="CsvTextEditor/CsvTextEditor.csproj" />
+  </Folder>
+  <Folder Name="/src/Tests/">
+    <Project Path="CsvTextEditor.Tests/CsvTextEditor.Tests.csproj" />
+  </Folder>
+</Solution>
