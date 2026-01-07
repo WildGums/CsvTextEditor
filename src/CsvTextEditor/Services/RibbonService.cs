@@ -1,12 +1,11 @@
 ﻿namespace CsvTextEditor.Services
 {
     using System.Windows;
-    using Orchestra.Services;
+    using Orchestra;
     using Views;
 
     public class RibbonService : IRibbonService
     {
-        #region IRibbonService Members
         public FrameworkElement GetRibbon()
         {
             return new RibbonView();
@@ -21,6 +20,5 @@
         {
             return new StatusBarView();
         }
-        #endregion
     }
 }

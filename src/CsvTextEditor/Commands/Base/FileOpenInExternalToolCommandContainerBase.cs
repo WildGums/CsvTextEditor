@@ -1,7 +1,6 @@
 ﻿namespace CsvTextEditor
 {
     using System;
-    using Catel;
     using Catel.MVVM;
     using Catel.Services;
     using Orc.FileSystem;
@@ -14,15 +13,12 @@
         private readonly IProcessService _processService;
         private readonly string _externalToolPath;
 
-        public FileOpenInExternalToolCommandContainerBase(string commandName, string fileExtension, ICommandManager commandManager, IProjectManager projectManager, 
-            IFileExtensionService fileExtensionService, IFileService fileService, IProcessService processService) 
-            : base(commandName, commandManager, projectManager)
+        public FileOpenInExternalToolCommandContainerBase(string commandName, string fileExtension, 
+            ICommandManager commandManager, IProjectManager projectManager, 
+            IFileExtensionService fileExtensionService, IFileService fileService, 
+            IProcessService processService, IServiceProvider serviceProvider) 
+            : base(commandName, commandManager, projectManager, serviceProvider)
         {
-            Argument.IsNotNullOrEmpty(() => fileExtension);
-            ArgumentNullException.ThrowIfNull(fileExtensionService);
-            ArgumentNullException.ThrowIfNull(fileService);
-            ArgumentNullException.ThrowIfNull(processService);
-
             _fileService = fileService;
             _processService = processService;
 

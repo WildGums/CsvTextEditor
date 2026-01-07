@@ -1,19 +1,19 @@
 ﻿namespace CsvTextEditor
 {
+    using System;
     using System.Threading.Tasks;
     using Catel.MVVM;
+    using Catel.Services;
     using Orc.ProjectManagement;
 
     public class FileCloseCommandContainer : ProjectCommandContainerBase
     {
-        #region Constructors
-        public FileCloseCommandContainer(ICommandManager commandManager, IProjectManager projectManager)
-            : base(Commands.File.Close, commandManager, projectManager)
+        public FileCloseCommandContainer(ICommandManager commandManager, IProjectManager projectManager, 
+            IServiceProvider serviceProvider)
+            : base(Commands.File.Close, commandManager, projectManager, serviceProvider)
         {
         }
-        #endregion
 
-        #region Methods
         public override async Task ExecuteAsync(object parameter)
         {
             var activeProject = _projectManager.ActiveProject;
@@ -26,6 +26,5 @@
 
             await base.ExecuteAsync(parameter);
         }
-        #endregion
     }
 }

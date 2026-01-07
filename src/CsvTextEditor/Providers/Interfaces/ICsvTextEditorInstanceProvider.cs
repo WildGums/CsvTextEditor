@@ -5,8 +5,6 @@
 
     public interface ICsvTextEditorInstanceProvider
     {
-        #region Methods
         ICsvTextEditorInstance GetInstance(Project project);
-        #endregion
     }
 }

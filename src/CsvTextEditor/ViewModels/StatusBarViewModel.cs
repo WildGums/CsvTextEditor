@@ -19,13 +19,10 @@
         private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
 
         public StatusBarViewModel(IProjectManager projectManager, IConfigurationService configurationService,
-            IUpdateService updateService, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
+            IUpdateService updateService, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider,
+            IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
-            ArgumentNullException.ThrowIfNull(projectManager);
-            ArgumentNullException.ThrowIfNull(configurationService);
-            ArgumentNullException.ThrowIfNull(updateService);
-            ArgumentNullException.ThrowIfNull(csvTextEditorInstanceProvider);
-
             _projectManager = projectManager;
             _configurationService = configurationService;
             _updateService = updateService;

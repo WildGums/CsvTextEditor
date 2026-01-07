@@ -2,25 +2,19 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Catel;
-    using Catel.IoC;
     using Catel.Services;
-    using Catel.Threading;
     using CsvTextEditor.Models;
     using Orc.CsvTextEditor;
     using Orc.ProjectManagement;
 
     public class CsvTextEditorAutoCompleteProjectWatcher : ProjectWatcherBase
     {
-        #region Fields
         private const int MaxLineCountWithAutoCompleteEnabled = 1000;
 
         private readonly IDispatcherService _dispatcherService;
         private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
         private ICsvTextEditorInstance _csvTextEditorInstance;
-        #endregion
 
-        #region Constructors
         public CsvTextEditorAutoCompleteProjectWatcher(IProjectManager projectManager,
             IDispatcherService dispatcherService, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
             : base(projectManager)
@@ -31,7 +25,6 @@
             _dispatcherService = dispatcherService;
             _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
         }
-        #endregion
 
         protected override Task OnActivatedAsync(IProject oldProject, IProject newProject)
         {

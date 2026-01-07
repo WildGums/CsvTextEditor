@@ -1,19 +1,19 @@
 ﻿namespace CsvTextEditor
 {
+    using System;
     using Catel.IoC;
     using Catel.MVVM;
+    using Catel.Services;
     using Orc.ProjectManagement;
 
     public class EditRedoCommandContainer : EditProjectCommandContainerBase
     {
-        #region Constructors
-        public EditRedoCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
-            : base(Commands.Edit.Redo, commandManager, projectManager, csvTextEditorInstanceProvider)
+        public EditRedoCommandContainer(ICommandManager commandManager, IProjectManager projectManager, 
+            ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider, IServiceProvider serviceProvider, IDispatcherService dispatcherService)
+            : base(Commands.Edit.Redo, commandManager, projectManager, csvTextEditorInstanceProvider, serviceProvider, dispatcherService)
         {
         }
-        #endregion
 
-        #region Methods
         public override bool CanExecute(object parameter)
         {
             if (!base.CanExecute(parameter))
@@ -30,6 +30,5 @@
 
             base.Execute(parameter);
         }
-        #endregion
     }
 }

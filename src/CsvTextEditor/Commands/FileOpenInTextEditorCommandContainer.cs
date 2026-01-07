@@ -1,7 +1,6 @@
 ﻿namespace CsvTextEditor
 {
     using System;
-    using System.Diagnostics;
     using Catel.Configuration;
     using Catel.MVVM;
     using Catel.Services;
@@ -16,13 +15,9 @@
         private readonly IConfigurationService _configurationService;
 
         public FileOpenInTextEditorCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IFileExtensionService fileExtensionService,
-            IFileService fileService, IProcessService processService, IConfigurationService configurationService)
-            : base(Commands.File.OpenInTextEditor, "txt", commandManager, projectManager, fileExtensionService, fileService, processService)
+            IFileService fileService, IProcessService processService, IConfigurationService configurationService, IServiceProvider serviceProvider)
+            : base(Commands.File.OpenInTextEditor, "txt", commandManager, projectManager, fileExtensionService, fileService, processService, serviceProvider)
         {
-            ArgumentNullException.ThrowIfNull(fileExtensionService);
-            ArgumentNullException.ThrowIfNull(configurationService);
-            ArgumentNullException.ThrowIfNull(processService);
-
             _fileExtensionService = fileExtensionService;
             _processService = processService;
             _configurationService = configurationService;

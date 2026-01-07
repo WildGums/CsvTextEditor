@@ -17,10 +17,6 @@
         public SaveProjectChangesService(IProjectManager projectManager, IBusyIndicatorService busyIndicatorService,
             IMessageService messageService)
         {
-            ArgumentNullException.ThrowIfNull(projectManager);
-            ArgumentNullException.ThrowIfNull(busyIndicatorService);
-            ArgumentNullException.ThrowIfNull(messageService);
-
             _projectManager = projectManager;
             _busyIndicatorService = busyIndicatorService;
             _messageService = messageService;

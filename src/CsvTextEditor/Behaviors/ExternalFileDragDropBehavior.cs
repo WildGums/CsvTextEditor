@@ -4,25 +4,18 @@
     using System.Linq;
     using System.Windows;
     using Catel;
-    using Catel.IoC;
     using Catel.Windows.Interactivity;
     using Orc.ProjectManagement;
 
-    public class ExternalFileDragDropBehavior : BehaviorBase<FrameworkElement>
+    public partial class ExternalFileDragDropBehavior : BehaviorBase<FrameworkElement>
     {
-        #region Fields
         private readonly IProjectManager _projectManager;
-        #endregion
 
-        #region Constructors
-        public ExternalFileDragDropBehavior()
+        public ExternalFileDragDropBehavior(IProjectManager projectManager)
         {
-            var serviceLocator = ServiceLocator.Default;
-            _projectManager = serviceLocator.ResolveType<IProjectManager>();
+            _projectManager = projectManager;
         }
-        #endregion
 
-        #region Methods
         protected override void OnAssociatedObjectLoaded()
         {
             base.OnAssociatedObjectLoaded();
@@ -77,6 +70,5 @@
 
             e.Handled = true;
         }
-        #endregion
     }
 }

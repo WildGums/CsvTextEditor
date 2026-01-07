@@ -2,23 +2,22 @@
 {
     using System;
     using System.Diagnostics;
-    using Catel;
     using Catel.MVVM;
+    using Catel.Services;
     using Orc.Notifications;
     using Orc.ProjectManagement;
 
     public abstract class QuickFormatCommandContainerBase : EditProjectCommandContainerBase
     {
-        #region Fields
         private readonly Notification _notification;
         private readonly INotificationService _notificationService;
         private readonly Stopwatch _stopwatch;
-        #endregion
 
-        #region Constructors
-        protected QuickFormatCommandContainerBase(string commandName, ICommandManager commandManager, IProjectManager projectManager,
-            INotificationService notificationService, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
-            : base(commandName, commandManager, projectManager, csvTextEditorInstanceProvider)
+        protected QuickFormatCommandContainerBase(string commandName, ICommandManager commandManager, 
+            IProjectManager projectManager, INotificationService notificationService, 
+            ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider, IServiceProvider serviceProvider,
+            IDispatcherService dispatcherService)
+            : base(commandName, commandManager, projectManager, csvTextEditorInstanceProvider, serviceProvider, dispatcherService)
         {
             ArgumentNullException.ThrowIfNull(notificationService);
 
@@ -32,9 +31,7 @@
 
             _stopwatch = new Stopwatch();
         }
-        #endregion
 
-        #region Methods
         public sealed override void Execute(object parameter)
         {
             _stopwatch.Restart();
@@ -59,6 +56,5 @@
 
             _notificationService.ShowNotification(_notification);
         }
-        #endregion
     }
 }

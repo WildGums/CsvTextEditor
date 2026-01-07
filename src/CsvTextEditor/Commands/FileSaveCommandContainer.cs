@@ -1,5 +1,6 @@
 ﻿namespace CsvTextEditor
 {
+    using System;
     using System.Threading.Tasks;
     using Catel.MVVM;
     using Models;
@@ -7,14 +8,12 @@
 
     public class FileSaveCommandContainer : ProjectCommandContainerBase
     {
-        #region Constructors
-        public FileSaveCommandContainer(ICommandManager commandManager, IProjectManager projectManager)
-            : base(Commands.File.Save, commandManager, projectManager)
+        public FileSaveCommandContainer(ICommandManager commandManager, 
+            IProjectManager projectManager, IServiceProvider serviceProvider)
+            : base(Commands.File.Save, commandManager, projectManager, serviceProvider)
         {
         }
-        #endregion
 
-        #region Methods
         public override async Task ExecuteAsync(object parameter)
         {
             await base.ExecuteAsync(parameter);
@@ -24,6 +23,5 @@
                 await _projectManager.SaveAsync(project);
             }
         }
-        #endregion
     }
 }

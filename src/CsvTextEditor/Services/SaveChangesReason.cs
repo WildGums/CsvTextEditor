@@ -2,7 +2,7 @@
 {
     public enum SaveChangesReason
     {
-        Refreshing,
-        Closing
+        Refreshing = 0,
+        Closing = 1
     }
 }

@@ -5,13 +5,12 @@
     using System.IO;
     using System.Runtime.InteropServices;
     using System.Text;
-    using Catel;
     using Catel.Logging;
+    using Microsoft.Extensions.Logging;
 
     public class Shell32
     {
-        #region Fields
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Logger = LogManager.GetLogger(typeof(Shell32));
 
         private static readonly Dictionary<long, string> ErrorCodes = new Dictionary<long, string>
         {
@@ -21,9 +20,7 @@
             {8, "The system is out of memory or resources."},
             {31, "There is no association for the specified file type with an executable file."}
         };
-        #endregion
 
-        #region Methods
         [DllImport("shell32.dll")]
         private static extern int FindExecutable(string lpFile, string lpDirectory, [Out] StringBuilder lpResult);
 
@@ -33,7 +30,7 @@
 
             var fullName = fileInfo.FullName;
 
-            Log.Debug("Searching executable to open file '{0}'", fullName);
+            Logger.LogDebug("Searching executable to open file '{0}'", fullName);
 
             var result = string.Empty;
 
@@ -55,10 +52,10 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Failed to find executable to open file '{0}'", fullName);
+                Logger.LogError(ex, "Failed to find executable to open file '{0}'", fullName);
             }
 
-            Log.Debug(string.IsNullOrWhiteSpace(result)
+            Logger.LogDebug(string.IsNullOrWhiteSpace(result)
                 ? $"Failed to find executable to open file '{fullName}'"
                 : $"Executable for open file '{fullName}' has been successfully found: '{result}'");
 
@@ -74,8 +71,7 @@
                 errorMessage = $"Error: ({errorCode})";
             }
 
-            Log.Error("Failed to find executable to open file {0}. {1}", fileInfo.FullName, errorMessage);
+            Logger.LogError("Failed to find executable to open file {0}. {1}", fileInfo.FullName, errorMessage);
         }
-        #endregion
     }
 }

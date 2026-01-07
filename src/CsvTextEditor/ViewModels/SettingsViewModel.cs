@@ -7,7 +7,7 @@
     using Catel.MVVM;
     using Catel.Services;
     using Orc.Squirrel;
-    using Orchestra.Services;
+    using Orchestra;
 
     public class SettingsViewModel : ViewModelBase
     {
@@ -16,21 +16,19 @@
         private readonly IUpdateService _updateService;
         private readonly IOpenFileService _openFileService;
    
-        public SettingsViewModel(IConfigurationService configurationService, IManageAppDataService manageAppDataService, IUpdateService updateService, IOpenFileService openFileService)
+        public SettingsViewModel(IConfigurationService configurationService, 
+            IManageAppDataService manageAppDataService, IUpdateService updateService, 
+            IOpenFileService openFileService, IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
-            ArgumentNullException.ThrowIfNull(configurationService);
-            ArgumentNullException.ThrowIfNull(manageAppDataService);
-            ArgumentNullException.ThrowIfNull(updateService);
-            ArgumentNullException.ThrowIfNull(openFileService);
-
             _configurationService = configurationService;
             _manageAppDataService = manageAppDataService;
             _updateService = updateService;
             _openFileService = openFileService;
 
-            PickEditor = new TaskCommand(PickEditorExecuteAsync);
-            OpenApplicationDataDirectory = new Command(OnOpenApplicationDataDirectoryExecute);
-            BackupUserData = new TaskCommand(OnBackupUserDataExecuteAsync);
+            PickEditor = new TaskCommand(serviceProvider, PickEditorExecuteAsync);
+            OpenApplicationDataDirectory = new Command(serviceProvider, OnOpenApplicationDataDirectoryExecute);
+            BackupUserData = new TaskCommand(serviceProvider, OnBackupUserDataExecuteAsync);
 
             Title = "Settings";
         }

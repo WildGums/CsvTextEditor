@@ -1,19 +1,19 @@
 ﻿namespace CsvTextEditor
 {
+    using System;
     using System.Windows;
     using Catel.MVVM;
+    using Catel.Services;
     using Orc.ProjectManagement;
 
     public class EditPasteCommandContainer : EditProjectCommandContainerBase
     {
-        #region Constructors
-        public EditPasteCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
-            : base(Commands.Edit.Paste, commandManager, projectManager, csvTextEditorInstanceProvider)
+        public EditPasteCommandContainer(ICommandManager commandManager, IProjectManager projectManager, 
+            ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider, IServiceProvider serviceProvider, IDispatcherService dispatcherService)
+            : base(Commands.Edit.Paste, commandManager, projectManager, csvTextEditorInstanceProvider, serviceProvider, dispatcherService)
         {
         }
-        #endregion
 
-        #region Methods
         public override void Execute(object parameter)
         {
             if (Clipboard.ContainsText())
@@ -23,6 +23,5 @@
 
             base.Execute(parameter);
         }
-        #endregion
     }
 }

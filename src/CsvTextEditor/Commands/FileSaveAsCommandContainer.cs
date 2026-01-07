@@ -3,7 +3,6 @@
     using System;
     using System.IO;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.MVVM;
     using Catel.Services;
     using Models;
@@ -13,11 +12,10 @@
     {
         private readonly ISaveFileService _saveFileService;
 
-        public FileSaveAsCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ISaveFileService saveFileService)
-            : base(Commands.File.SaveAs, commandManager, projectManager)
+        public FileSaveAsCommandContainer(ICommandManager commandManager, IProjectManager projectManager, 
+            ISaveFileService saveFileService, IServiceProvider serviceProvider)
+            : base(Commands.File.SaveAs, commandManager, projectManager, serviceProvider)
         {
-            ArgumentNullException.ThrowIfNull(saveFileService);
-
             _saveFileService = saveFileService;
         }
 

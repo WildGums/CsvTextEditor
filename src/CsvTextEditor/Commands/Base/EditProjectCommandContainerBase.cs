@@ -2,35 +2,31 @@
 {
     using System;
     using System.Windows.Threading;
-    using Catel;
-    using Catel.IoC;
     using Catel.MVVM;
+    using Catel.Services;
+    using Catel.Windows.Threading;
     using Models;
     using Orc.CsvTextEditor;
     using Orc.ProjectManagement;
 
     public abstract class EditProjectCommandContainerBase : ProjectCommandContainerBase
     {
-        #region Fields
         private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
-        private readonly DispatcherTimer _invalidateTimer;
+        private readonly DispatcherTimerEx _invalidateTimer;
 
         private ICsvTextEditorInstance _csvTextEditorInstance;
-        #endregion
 
-        #region Constructors
-        protected EditProjectCommandContainerBase(string commandName, ICommandManager commandManager, IProjectManager projectManager, 
-            ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
-            : base(commandName, commandManager, projectManager)
+        protected EditProjectCommandContainerBase(string commandName, ICommandManager commandManager, 
+            IProjectManager projectManager, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider, 
+            IServiceProvider serviceProvider, IDispatcherService dispatcherService)
+            : base(commandName, commandManager, projectManager, serviceProvider)
         {
-            ArgumentNullException.ThrowIfNull(csvTextEditorInstanceProvider);
-
             _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
-            _invalidateTimer = new DispatcherTimer();
+
+            _invalidateTimer = new DispatcherTimerEx(dispatcherService);
             _invalidateTimer.Interval = TimeSpan.FromMilliseconds(100);
             _invalidateTimer.Tick += OnInvalidateTimerTick;
         }        
-        #endregion
 
         protected ICsvTextEditorInstance CsvTextEditorInstance
         {
@@ -70,7 +66,6 @@
             _commandManager.InvalidateCommands();
         }
 
-        #region Methods
         public override bool CanExecute(object parameter)
         {
             if (!base.CanExecute(parameter))
@@ -93,6 +88,5 @@
             
             _commandManager.InvalidateCommands();
         }
-        #endregion
     }
 }
