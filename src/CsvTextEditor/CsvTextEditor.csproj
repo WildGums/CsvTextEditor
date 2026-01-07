@@ -29,14 +29,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-
-    <PackageReference Include="Catel.Fody" Version="4.12.0-alpha0121" PrivateAssets="all" />
+    <PackageReference Include="Catel.Fody" Version="4.12.0-alpha0121" PrivateAssets="all">
+      <ExcludeAssets>runtime</ExcludeAssets>
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Catel.SourceGenerators" Version="1.0.0-alpha0033" PrivateAssets="all" />
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="Fody" Version="6.9.3" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="4.7.0" PrivateAssets="all" />
+    <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="4.7.0" PrivateAssets="all">
+      <ExcludeAssets>runtime</ExcludeAssets>
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="MethodTimer.Fody" Version="3.2.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.1" />
