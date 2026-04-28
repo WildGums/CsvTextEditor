@@ -15,8 +15,7 @@
         <!--<behaviors:ExternalFileDragDropBehavior/>-->
     </xamlbehaviors:Interaction.Behaviors>
     
-    <csvTextEditor:CsvTextEditorControl x:Name="CsvTextEditor"
-                                        CsvTextEditorInstance="{Binding CsvTextEditorInstance}">
+    <csvTextEditor:CsvTextEditorControl x:Name="CsvTextEditor">
         <xamlbehaviors:Interaction.Behaviors>
             <behaviors:ExternalFileDragDropBehavior/>
         </xamlbehaviors:Interaction.Behaviors>

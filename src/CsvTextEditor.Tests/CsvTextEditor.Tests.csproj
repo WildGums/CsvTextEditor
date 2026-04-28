@@ -19,15 +19,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Catel.Fody" Version="4.11.0" PrivateAssets="all" />
+    <PackageReference Include="Catel.Fody" Version="7.0.0" PrivateAssets="all" />
     <PackageReference Include="Fody" Version="6.9.3" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MethodTimer.Fody" Version="3.2.3" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
     <PackageReference Include="NUnit" Version="4.5.1" PrivateAssets="all" />
     <PackageReference Include="NUnit3TestAdapter" Version="6.2.0" />
-    <PackageReference Include="Orc.Csv" Version="5.1.0" />
+    <PackageReference Include="Orc.Csv" Version="6.0.0-alpha0090" />
     <PackageReference Include="PublicApiGenerator" Version="11.5.4" PrivateAssets="all" />
   </ItemGroup>
 

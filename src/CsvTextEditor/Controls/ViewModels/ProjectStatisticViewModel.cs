@@ -1,55 +1,64 @@
 ﻿namespace CsvTextEditor.ViewModels
 {
     using System;
-    using Catel;
-    using Catel.IoC;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Catel.MVVM;
-    using CsvTextEditor.Models;
     using Orc.CsvTextEditor;
 
     public class ProjectStatisticViewModel : ViewModelBase
     {
-        #region Fields
-        private readonly IServiceLocator _serviceLocator;
         private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
-        
-        private ICsvTextEditorInstance _csvTextEditorInstance;
+        private readonly ICsvTextEditorInstanceManager _csvTextEditorInstanceManager;
+
+        private ICsvTextEditorInstance? _csvTextEditorInstance;
         private int _textChangesSubscribed = 0;
-        #endregion
 
-        #region Constructors
-        public ProjectStatisticViewModel(IServiceLocator serviceLocator, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
+        public ProjectStatisticViewModel(ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider, 
+            IServiceProvider serviceProvider, ICsvTextEditorInstanceManager csvTextEditorInstanceManager)
+            : base(serviceProvider)
         {
-            ArgumentNullException.ThrowIfNull(serviceLocator);
-            ArgumentNullException.ThrowIfNull(csvTextEditorInstanceProvider);
-
-            _serviceLocator = serviceLocator;
             _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
-
-            _serviceLocator.TypeRegistered += OnTypeRegistered;
+            _csvTextEditorInstanceManager = csvTextEditorInstanceManager;
         }
-        #endregion
 
-        #region Properties
         public int ColumnsCount { get; private set; }
         public int RowsCount { get; private set; }
-        #endregion
 
-        #region Methods        
-        private void OnTypeRegistered(object sender, TypeRegisteredEventArgs e)
+        protected override async Task InitializeAsync()
         {
-            if (e.ServiceType != typeof(ICsvTextEditorInstance))
-            {
-                return;
-            }
+            await base.InitializeAsync();
 
+            _csvTextEditorInstanceManager.InstanceRegistered += OnInstanceRegistered;
+
+            var instance = _csvTextEditorInstanceManager.GetInstances().FirstOrDefault();
+            if (instance is not null)
+            {
+                UpdateToNewInstance(instance);
+            }
+        }
+
+        protected override async Task CloseAsync()
+        {
+            _csvTextEditorInstanceManager.InstanceRegistered -= OnInstanceRegistered;
+
+            await base.CloseAsync();
+        }
+
+        private void OnInstanceRegistered(object? sender, CsvTextEditorEventArgs e)
+        {
+            UpdateToNewInstance(e.Instance);
+        }
+
+        private void UpdateToNewInstance(ICsvTextEditorInstance instance)
+        {
             if (_csvTextEditorInstance is not null && _textChangesSubscribed > 0)
             {
                 _csvTextEditorInstance.TextChanged -= OnTextChanged;
                 _textChangesSubscribed--;
             }
 
-            _csvTextEditorInstance = _csvTextEditorInstanceProvider.GetInstance((Project)e.Tag);
+            _csvTextEditorInstance = instance;
             _csvTextEditorInstance.TextChanged += OnTextChanged;
             _textChangesSubscribed++;
 
@@ -66,6 +75,5 @@
         {
             UpdateStatistic();
         }
-        #endregion
     }
 }

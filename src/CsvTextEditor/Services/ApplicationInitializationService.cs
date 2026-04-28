@@ -1,50 +1,43 @@
 ﻿namespace CsvTextEditor.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Windows.Media;
     using Catel;
-    using Catel.IoC;
     using Catel.Logging;
     using Catel.MVVM;
     using Catel.Services;
     using Catel.Windows.Controls;
-    using Orc.ProjectManagement;
-    using Orchestra.Services;
-    using ProjectManagement;
-    using Orc.Squirrel;
-    using MethodTimer;
-    using Settings = CsvTextEditor.Settings;
-    using Fluent;
     using CsvTextEditor.Views;
-    using Orc.Automation.Controls;
-    using System.Collections.Generic;
+    using Fluent;
+    using MethodTimer;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+    using Orc.ProjectManagement;
+    using Orc.Squirrel;
+    using Orchestra;
+    using Settings = CsvTextEditor.Settings;
 
     public class ApplicationInitializationService : ApplicationInitializationServiceBase
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Logger = LogManager.GetLogger(typeof(ApplicationInitializationService));
+
         private readonly ICommandManager _commandManager;
         private readonly IBusyIndicatorService _busyIndicatorService;
 
-        private readonly IServiceLocator _serviceLocator;
-
-        public ApplicationInitializationService(IServiceLocator serviceLocator, ICommandManager commandManager, IBusyIndicatorService busyIndicatorService)
+        public ApplicationInitializationService(IServiceProvider serviceProvider, ICommandManager commandManager, 
+            IBusyIndicatorService busyIndicatorService)
+            : base(serviceProvider)
         {
-            ArgumentNullException.ThrowIfNull(serviceLocator);
-            ArgumentNullException.ThrowIfNull(commandManager);
-            ArgumentNullException.ThrowIfNull(busyIndicatorService);
-
-            _serviceLocator = serviceLocator;
             _commandManager = commandManager;
             _busyIndicatorService = busyIndicatorService;
         }
    
         public override async Task InitializeBeforeCreatingShellAsync()
         {
-            RegisterTypes();
             InitializeFonts();
             InitializeCommands();
-            InitializeWatchers();
 
             var tasks = new List<Task>() 
             {
@@ -63,7 +56,7 @@
             windowCommands.Items.Add(new WindowCommandsView());
             shellWindow.WindowCommands = windowCommands;
 
-            var mainWindowTitleService = _serviceLocator.ResolveType<IMainWindowTitleService>();
+            var mainWindowTitleService = ServiceProvider.GetRequiredService<IMainWindowTitleService>();
             mainWindowTitleService.UpdateTitle();
 
             await base.InitializeAfterCreatingShellAsync();
@@ -76,21 +69,6 @@
             await LoadProjectAsync();
         }
 
-        private void RegisterTypes()
-        {
-            _serviceLocator.RegisterType<IProjectSerializerSelector, ProjectSerializerSelector>();
-            _serviceLocator.RegisterType<IMainWindowTitleService, MainWindowTitleService>();
-            _serviceLocator.RegisterType<ISaveProjectChangesService, SaveProjectChangesService>();
-            _serviceLocator.RegisterType<IFileExtensionService, FileExtensionService>();
-            _serviceLocator.RegisterType<IInitialProjectLocationService, InitialProjectLocationService>();
-
-            _serviceLocator.RegisterType<IProjectInitializer, FileProjectInitializer>();
-            
-            _serviceLocator.RegisterType<ICsvTextEditorInstanceProvider, CsvTextEditorInstanceProvider>();
-
-            _serviceLocator.RegisterTypeAndInstantiate<ProjectManagementCloseApplicationWatcher>();
-        }
-
         private void InitializeFonts()
         {
             Orc.Theming.FontImage.RegisterFont("FontAwesome", new FontFamily(new Uri("pack://application:,,,/CsvTextEditor;component/Resources/Fonts/", UriKind.RelativeOrAbsolute), "./#FontAwesome"));
@@ -101,7 +79,7 @@
         [Time]
         private async Task ImprovePerformanceAsync()
         {
-            Log.Info("Improving performance");
+            Logger.LogInformation("Improving performance");
 
             UserControl.DefaultCreateWarningAndErrorValidatorForViewModelValue = false;
             UserControl.DefaultSkipSearchingForInfoBarMessageControlValue = true;
@@ -109,45 +87,37 @@
 
         private void InitializeCommands()
         {
-            _commandManager.CreateCommandWithGesture(typeof(Commands.File), "Close");
-            _commandManager.CreateCommandWithGesture(typeof(Commands.File), "Open");
-            _commandManager.CreateCommandWithGesture(typeof(Commands.File), "Save");
-            _commandManager.CreateCommandWithGesture(typeof(Commands.File), "SaveAs");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.File), "Close");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.File), "Open");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.File), "Save");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.File), "SaveAs");
 
-            _commandManager.CreateCommandWithGesture(typeof(Commands.File), "OpenInTextEditor");
-            _commandManager.CreateCommandWithGesture(typeof(Commands.File), "OpenInExcel");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.File), "OpenInTextEditor");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.File), "OpenInExcel");
 
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Undo");
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Redo");
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Copy");
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Paste");
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Cut");
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "DeleteLine");
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "DuplicateLine");
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "FindReplace");
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "RemoveBlankLines");
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "RemoveDuplicateLines");
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "TrimWhitespaces");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.Edit), "Undo");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.Edit), "Redo");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.Edit), "Copy");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.Edit), "Paste");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.Edit), "Cut");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.Edit), "DeleteLine");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.Edit), "DuplicateLine");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.Edit), "FindReplace");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.Edit), "RemoveBlankLines");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.Edit), "RemoveDuplicateLines");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.Edit), "TrimWhitespaces");
 
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Settings), "General");
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.Settings), "General");
 
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Help), "About");
-        }
-
-        private void InitializeWatchers()
-        {
-            _serviceLocator.RegisterTypeAndInstantiate<CsvTextEditorAutoCompleteProjectWatcher>();
-            _serviceLocator.RegisterTypeAndInstantiate<RecentlyUsedItemsProjectWatcher>();
-            _serviceLocator.RegisterTypeAndInstantiate<MainWindowTitleProjectWatcher>();
-            _serviceLocator.RegisterTypeAndInstantiate<CsvTextEditorIsDirtyProjectWatcher>();
+            _commandManager.CreateCommandWithGesture(ServiceProvider, typeof(Commands.Help), "About");
         }
 
         [Time]
         private async Task CheckForUpdatesAsync()
         {
-            Log.Info("Checking for updates");
+            Logger.LogInformation("Checking for updates");
 
-            var updateService = _serviceLocator.ResolveRequiredType<IUpdateService>();
+            var updateService = ServiceProvider.GetRequiredService<IUpdateService>();
             await updateService.InitializeAsync(Settings.Application.AutomaticUpdates.AvailableChannels, Settings.Application.AutomaticUpdates.DefaultChannel,
                 Settings.Application.AutomaticUpdates.CheckForUpdatesDefaultValue);
 
@@ -161,10 +131,10 @@
         {
             using (_busyIndicatorService.PushInScope())
             {
-                var projectManager = _serviceLocator.ResolveType<IProjectManager>();
+                var projectManager = ServiceProvider.GetRequiredService<IProjectManager>();
                 if (projectManager is null)
                 {
-                    throw Log.ErrorAndCreateException<Exception>("Failed to resolve project manager");
+                    throw Logger.LogErrorAndCreateException<Exception>("Failed to resolve project manager");
                 }
 
                 await projectManager.InitializeAsync();

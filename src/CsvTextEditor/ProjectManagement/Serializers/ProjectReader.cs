@@ -1,11 +1,6 @@
 ﻿namespace CsvTextEditor.ProjectManagement
 {
-    using System;
-    using System.Diagnostics;
     using System.Threading.Tasks;
-    using Catel;
-    using Catel.IoC;
-    using Catel.Services;
     using Models;
     using Orc.FileSystem;
     using Orc.Notifications;
@@ -18,9 +13,6 @@
 
         public ProjectReader(IFileService fileService, INotificationService notificationService)
         {
-            ArgumentNullException.ThrowIfNull(fileService);
-            ArgumentNullException.ThrowIfNull(notificationService);
-
             _fileService = fileService;
             _notificationService = notificationService;
         }

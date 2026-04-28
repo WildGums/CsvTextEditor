@@ -2,11 +2,6 @@
 {
     public partial class RecentlyUsedItemsView
     {
-        #region Constructors
-        public RecentlyUsedItemsView()
-        {
-            InitializeComponent();
-        }
-        #endregion
+
     }
 }

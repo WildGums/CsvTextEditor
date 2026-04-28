@@ -1,14 +1,16 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-namespace CsvTextEditor
+﻿namespace CsvTextEditor
 {
+    using System;
     using Catel.IoC;
     using Catel.MVVM;
+    using Catel.Services;
     using Orc.ProjectManagement;
 
     public class EditUndoCommandContainer : EditProjectCommandContainerBase
     {
-        public EditUndoCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
-            : base(Commands.Edit.Undo, commandManager, projectManager, csvTextEditorInstanceProvider)
+        public EditUndoCommandContainer(ICommandManager commandManager, IProjectManager projectManager, 
+            ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider, IServiceProvider serviceProvider, IDispatcherService dispatcherService)
+            : base(Commands.Edit.Undo, commandManager, projectManager, csvTextEditorInstanceProvider, serviceProvider, dispatcherService)
         {
         }
 

@@ -1,14 +1,13 @@
 ﻿namespace CsvTextEditor
 {
+    using System;
     using Catel.MVVM;
 
     public class HelpAboutCommandContainer : CommandContainerBase
     {
-        #region Constructors
-        public HelpAboutCommandContainer(ICommandManager commandManager)
-            : base(Commands.Help.About, commandManager)
+        public HelpAboutCommandContainer(ICommandManager commandManager, IServiceProvider serviceProvider)
+            : base(Commands.Help.About, commandManager, serviceProvider)
         {
         }
-        #endregion
     }
 }

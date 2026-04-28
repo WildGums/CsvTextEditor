@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
     using Orc.ProjectManagement;
     using Orchestra;
-    using Orchestra.Services;
 
     public class RecentlyUsedItemsProjectWatcher : ProjectWatcherBase
     {

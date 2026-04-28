@@ -5,7 +5,6 @@
 
     public sealed class Project : ProjectBase, IProject, IEquatable<Project>
     {
-        #region Constructors
         public Project(string location)
             : base(location)
         {
@@ -15,13 +14,11 @@
             : base(location, title)
         {
         }
-        #endregion
 
-        #region Properties
+        public string EditorId { get; set; }
+
         public string Text { get; set; }
-        #endregion
 
-        #region Methods
         public bool Equals(Project other)
         {
             if (ReferenceEquals(null, other))
@@ -56,7 +53,6 @@
         {
             return (Location is not null ? Location.GetHashCode() : 0);
         }
-        #endregion
 
         public void SetIsDirty(bool isDirty)
         {

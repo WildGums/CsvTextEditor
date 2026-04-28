@@ -2,30 +2,31 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.Fody;
-    using Catel.IoC;
     using Catel.MVVM;
     using Models;
     using Orc.CsvTextEditor;
     using Orc.ProjectManagement;
 
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : FeaturedViewModelBase
     {
         private readonly IProjectManager _projectManager;
+        private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
+        private readonly ICsvTextEditorInstanceManager _csvTextEditorInstanceManager;
 
-        public MainViewModel(IProjectManager projectManager)
+        public MainViewModel(IProjectManager projectManager, IServiceProvider serviceProvider,
+            ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider, 
+            ICsvTextEditorInstanceManager csvTextEditorInstanceManager)
+            : base(serviceProvider)
         {
-            ArgumentNullException.ThrowIfNull(projectManager);
-
             _projectManager = projectManager;
+            _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
+            _csvTextEditorInstanceManager = csvTextEditorInstanceManager;
         }
        
         [Model]
         [Expose(nameof(Models.Project.Text))]
         public Project Project { get; set; }
-
-        public ICsvTextEditorInstance CsvTextEditorInstance { get; set; }
 
         protected override Task InitializeAsync()
         {
@@ -46,15 +47,12 @@
             var newProject = (Project)e.NewProject;
             Project = newProject;
 
-#pragma warning disable IDISP001 // Dispose created
-            var serviceLocator = this.GetServiceLocator();
-#pragma warning restore IDISP001 // Dispose created
-            var csvTextEditorInstanceProvider = serviceLocator.ResolveType<ICsvTextEditorInstanceProvider>();
-
-            CsvTextEditorInstance = csvTextEditorInstanceProvider.GetInstance(Project);
-            if (CsvTextEditorInstance.GetEditor() is not null)
+#pragma warning disable IDISP001 //: Dispose created
+            var instance = _csvTextEditorInstanceManager.GetInstance(Project.EditorId);
+#pragma warning restore IDISP001 //: Dispose created
+            if (instance?.GetEditor() is not null)
             {
-                CsvTextEditorInstance.SetInitialText(Project?.Text ?? string.Empty);
+                instance.SetInitialText(Project?.Text ?? string.Empty);
             }
         }
 

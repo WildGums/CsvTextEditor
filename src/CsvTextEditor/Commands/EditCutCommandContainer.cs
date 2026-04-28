@@ -1,18 +1,18 @@
 ﻿namespace CsvTextEditor
 {
+    using System;
     using Catel.MVVM;
+    using Catel.Services;
     using Orc.ProjectManagement;
 
     public class EditCutCommandContainer : EditProjectCommandContainerBase
     {
-        #region Constructors
-        public EditCutCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider)
-            : base(Commands.Edit.Cut, commandManager, projectManager, csvTextEditorInstanceProvider)
+        public EditCutCommandContainer(ICommandManager commandManager, IProjectManager projectManager, 
+            ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider, IServiceProvider serviceProvider, IDispatcherService dispatcherService)
+            : base(Commands.Edit.Cut, commandManager, projectManager, csvTextEditorInstanceProvider, serviceProvider, dispatcherService)
         {
         }
-        #endregion
 
-        #region Methods
         public override bool CanExecute(object parameter)
         {
             if (!base.CanExecute(parameter))
@@ -29,6 +29,5 @@
 
             base.Execute(parameter);
         }
-        #endregion
     }
 }

@@ -1,25 +1,24 @@
 ﻿namespace CsvTextEditor.Services
 {
-    using System;
-    using Catel;
     using Catel.Reflection;
+    using Catel.Services;
     using Orc.ProjectManagement;
+    using Orchestra;
 
     public class MainWindowTitleService : IMainWindowTitleService
     {
-        private readonly string _defaulTitle;
+        private readonly string _defaultTitle;
         private readonly IProjectManager _projectManager;
         private readonly ShellActivatedActionQueue _shellActivatedActionQueue;
 
-        public MainWindowTitleService(IProjectManager projectManager)
+        public MainWindowTitleService(IProjectManager projectManager, 
+            IDispatcherService dispatcherService, IMainWindowService mainWindowService)
         {
-            ArgumentNullException.ThrowIfNull(projectManager);
-
             _projectManager = projectManager;
 
-            _shellActivatedActionQueue = new ShellActivatedActionQueue();
+            _shellActivatedActionQueue = new ShellActivatedActionQueue(dispatcherService, mainWindowService);
 
-            _defaulTitle = AssemblyHelper.GetEntryAssembly().Title();
+            _defaultTitle = AssemblyHelper.GetEntryAssembly().Title();
         }
 
         public void UpdateTitle()
@@ -28,7 +27,7 @@
             {
                 var project = _projectManager.ActiveProject;
                 var app = System.Windows.Application.Current;
-                var title = _defaulTitle;
+                var title = _defaultTitle;
 
                 if (project is not null)
                 {

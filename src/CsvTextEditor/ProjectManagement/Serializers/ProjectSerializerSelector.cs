@@ -1,35 +1,28 @@
 ﻿namespace CsvTextEditor.ProjectManagement
 {
-    using System;
-    using Catel;
-    using Catel.IoC;
     using Orc.ProjectManagement;
 
     internal class ProjectSerializerSelector : IProjectSerializerSelector
     {
-        #region Fields
-        private readonly ITypeFactory _typeFactory;
-        #endregion
+        private readonly IProjectReader _projectReader;
+        private readonly IProjectWriter _projectWriter;
 
-        #region Constructors
-        public ProjectSerializerSelector(ITypeFactory typeFactory)
+        public ProjectSerializerSelector(IProjectReader projectReader, IProjectWriter projectWriter)
         {
-            ArgumentNullException.ThrowIfNull(typeFactory);
-
-            _typeFactory = typeFactory;
+            _projectReader = projectReader;
+            _projectWriter = projectWriter;
         }
-        #endregion
 
-        #region Methods
         public IProjectReader GetReader(string location)
         {
-            return _typeFactory.CreateInstance<ProjectReader>();
+            //return _typeFactory.CreateInstance<ProjectReader>();
+            return _projectReader;
         }
 
         public IProjectWriter GetWriter(string location)
         {
-            return _typeFactory.CreateInstance<ProjectWriter>();
+            //return _typeFactory.CreateInstance<ProjectWriter>();
+            return _projectWriter;
         }
-        #endregion
     }
 }

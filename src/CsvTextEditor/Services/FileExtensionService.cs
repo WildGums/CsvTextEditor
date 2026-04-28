@@ -5,27 +5,25 @@
     using Catel;
     using Catel.Logging;
     using Catel.Reflection;
+    using Microsoft.Extensions.Logging;
     using Orc.FileSystem;
 
     public class FileExtensionService : IFileExtensionService
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Logger = LogManager.GetLogger(typeof(FileExtensionService));
 
         private readonly IFileService _fileService;
         private readonly IDirectoryService _directoryService;
 
         public FileExtensionService(IFileService fileService, IDirectoryService directoryService)
         {
-            ArgumentNullException.ThrowIfNull(fileService);
-            ArgumentNullException.ThrowIfNull(directoryService);
-
             _fileService = fileService;
             _directoryService = directoryService;
         }
 
         public string GetRegisteredTool(string extension)
         {
-            Log.Debug($"Searching for external tool for '{extension}' files");
+            Logger.LogDebug($"Searching for external tool for '{extension}' files");
 
             var tool = string.Empty;
             var tempDirectory = string.Empty;
@@ -47,7 +45,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Failed to find external editor for '{extension}' files");
+                Logger.LogError(ex, $"Failed to find external editor for '{extension}' files");
             }
             finally
             {
@@ -65,7 +63,7 @@
         {
             Argument.IsNotNullOrWhitespace(() => fullName);
 
-            Log.Debug($"Deleting directory '{fullName}'");
+            Logger.LogDebug($"Deleting directory '{fullName}'");
 
             try
             {
@@ -76,7 +74,7 @@
             }
             catch (Exception ex)
             {
-                Log.Warning(ex, $"Failed to delete directory '{fullName}'");
+                Logger.LogWarning(ex, $"Failed to delete directory '{fullName}'");
             }
 
             return !_directoryService.Exists(fullName);
@@ -84,7 +82,7 @@
 
         private string CreateDummyFile(string directory, string extension)
         {
-            Log.Debug($"Creating dummy file at '{directory}'");
+            Logger.LogDebug($"Creating dummy file at '{directory}'");
 
             var fullPath = string.Empty;
 
@@ -97,7 +95,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Failed to create dummy file at '{directory}'");
+                Logger.LogError(ex, $"Failed to create dummy file at '{directory}'");
             }
 
             return fullPath;
@@ -105,7 +103,7 @@
 
         private string CreateTemporaryDirectory()
         {
-            Log.Debug("Creating temporary directory");
+            Logger.LogDebug("Creating temporary directory");
 
             var tempDirectory = string.Empty;
 
@@ -120,7 +118,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Failed to create temporary directory");
+                Logger.LogError(ex, "Failed to create temporary directory");
             }
 
             return tempDirectory;

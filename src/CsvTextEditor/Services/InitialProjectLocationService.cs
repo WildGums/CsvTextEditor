@@ -1,33 +1,24 @@
 ﻿namespace CsvTextEditor.Services
 {
-    using System;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.Logging;
-    using Orc.CommandLine;
+    using CsvTextEditor.CommandLine;
+    using Microsoft.Extensions.Logging;
 
     public class InitialProjectLocationService : Orc.ProjectManagement.IInitialProjectLocationService
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private readonly IRootCommand _rootCommand;
 
-        private readonly ICommandLineParser _commandLineParser;
-        private readonly ICommandLineService _commandLineService;
-
-        public InitialProjectLocationService(ICommandLineService commandLineService, ICommandLineParser commandLineParser)
+        public InitialProjectLocationService(IRootCommand rootCommand)
         {
-            ArgumentNullException.ThrowIfNull(commandLineService);
-            ArgumentNullException.ThrowIfNull(commandLineParser);
-
-            _commandLineService = commandLineService;
-            _commandLineParser = commandLineParser;
+            _rootCommand = rootCommand;
         }
 
-        public async Task<string> GetInitialProjectLocationAsync()
+        public async Task<string?> GetInitialProjectLocationAsync()
         {
-            var commandLineContext = new CommandLineContext();
-            _commandLineParser.Parse(_commandLineService.GetCommandLine(), commandLineContext);
+            var context = _rootCommand.GetProjectCommandContext();
 
-            return commandLineContext.InitialFile;
+            return context.Project;
         }
     }
 }

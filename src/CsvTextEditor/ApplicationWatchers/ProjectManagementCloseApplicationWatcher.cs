@@ -1,9 +1,7 @@
 ﻿namespace CsvTextEditor
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.Services;
     using Models;
     using Orc.ProjectManagement;
@@ -17,12 +15,10 @@
         private readonly ISaveProjectChangesService _saveProjectChangesService;
 
         public ProjectManagementCloseApplicationWatcher(IProjectManager projectManager, IBusyIndicatorService busyIndicatorService,
-            ISaveProjectChangesService saveProjectChangesService)
+            ISaveProjectChangesService saveProjectChangesService, IMessageService messageService, IDispatcherService dispatcherService,
+            IMainWindowService mainWindowService)
+            : base(messageService, dispatcherService, mainWindowService)
         {
-            ArgumentNullException.ThrowIfNull(projectManager);
-            ArgumentNullException.ThrowIfNull(busyIndicatorService);
-            ArgumentNullException.ThrowIfNull(saveProjectChangesService);
-
             _projectManager = projectManager;
             _busyIndicatorService = busyIndicatorService;
             _saveProjectChangesService = saveProjectChangesService;

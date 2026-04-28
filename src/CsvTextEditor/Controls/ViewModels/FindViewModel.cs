@@ -5,8 +5,6 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Threading.Tasks;
-    using Catel;
-    using Catel.Data;
     using Catel.MVVM;
     using Models;
     using Orc.CsvTextEditor;
@@ -14,25 +12,19 @@
 
     public class FindViewModel : ViewModelBase
     {
-        #region Fields
         private readonly ICsvTextEditorInstanceProvider _csvTextEditorInstanceProvider;
         private readonly IProjectManager _projectManager;
 
         private ICsvTextEditorInstance _csvTextEditorInstance;
-        #endregion
 
-        #region Constructors
-        public FindViewModel(ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider, IProjectManager projectManager)
+        public FindViewModel(ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider, 
+            IProjectManager projectManager, IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
-            ArgumentNullException.ThrowIfNull(csvTextEditorInstanceProvider);
-            ArgumentNullException.ThrowIfNull(projectManager);
-
             _csvTextEditorInstanceProvider = csvTextEditorInstanceProvider;
             _projectManager = projectManager;
         }
-        #endregion
 
-        #region Properties
         public int ColumnsCount { get; private set; }
         public int RowsCount { get; private set; }
 
@@ -40,9 +32,7 @@
         public string SelectedColumnHeader { get; set; }
 
         public string SearchTerm { get; set; }
-        #endregion
 
-        #region Methods
         protected override Task InitializeAsync()
         {
             _projectManager.ProjectActivationAsync += OnProjectActivationAsync;
@@ -126,6 +116,5 @@
             UpdateColumnHeaders();
             UpdateStatistic();
         }
-        #endregion
     }
 }

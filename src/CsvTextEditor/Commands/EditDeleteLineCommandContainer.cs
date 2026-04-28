@@ -1,22 +1,21 @@
 ﻿namespace CsvTextEditor
 {
+    using System;
     using Catel.MVVM;
+    using Catel.Services;
     using Orc.CsvTextEditor.Operations;
     using Orc.Notifications;
     using Orc.ProjectManagement;
 
     public class EditDeleteLineCommandContainer : QuickFormatCommandContainerBase
     {
-        #region Constructors
-        public EditDeleteLineCommandContainer(ICommandManager commandManager, IProjectManager projectManager, ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider,
-            INotificationService notificationService)
-            : base(Commands.Edit.DeleteLine, commandManager, projectManager, notificationService, csvTextEditorInstanceProvider)
+        public EditDeleteLineCommandContainer(ICommandManager commandManager, IProjectManager projectManager,
+            ICsvTextEditorInstanceProvider csvTextEditorInstanceProvider, INotificationService notificationService,
+            IServiceProvider serviceProvider, IDispatcherService dispatcherService)
+            : base(Commands.Edit.DeleteLine, commandManager, projectManager, notificationService, csvTextEditorInstanceProvider, serviceProvider, dispatcherService)
         {
         }
 
-        #endregion
-
-        #region Methods
         protected override void ExecuteOperation()
         {
             CsvTextEditorInstance.ExecuteOperation<RemoveLineOperation>();
@@ -26,6 +25,5 @@
         {
             return "removing line";
         }
-        #endregion
     }
 }
