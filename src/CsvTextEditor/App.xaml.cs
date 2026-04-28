@@ -2,8 +2,10 @@
 {
     using System;
     using System.Globalization;
+    using System.Threading.Tasks;
     using System.Windows;
     using Catel;
+    using Catel.Configuration;
     using Catel.IoC;
     using Catel.Services;
     using CsvTextEditor.CommandLine;
@@ -91,11 +93,14 @@
             IoCContainer.ServiceProvider = _host.Services;
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
             var serviceProvider = IoCContainer.ServiceProvider;
+
+            var configurationService = serviceProvider.GetRequiredService<IConfigurationService>();
+            await configurationService.LoadAsync();
 
             serviceProvider.CreateTypesThatMustBeConstructedAtStartup();
 
@@ -108,7 +113,7 @@
             languageService.FallbackCulture = new CultureInfo("en-US");
 
             var shellService = serviceProvider.GetRequiredService<IShellService>();
-            shellService.CreateAsync<ShellWindow>();
+            await shellService.CreateAsync<ShellWindow>();
         }
 
         protected override async void OnExit(ExitEventArgs e)

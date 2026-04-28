@@ -29,11 +29,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Catel.Fody" Version="4.12.0-alpha0121" PrivateAssets="all">
+    <PackageReference Include="Catel.Fody" Version="7.0.0" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Catel.SourceGenerators" Version="1.0.0-alpha0037" PrivateAssets="all" />
+    <PackageReference Include="Catel.SourceGenerators" Version="7.0.1" PrivateAssets="all" />
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="Fody" Version="6.9.3" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -43,27 +43,17 @@
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MethodTimer.Fody" Version="3.2.3" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.1" />
-    <!--<PackageReference Include="Orc.CsvTextEditor" Version="5.1.0" />
-    <PackageReference Include="Orc.FilterBuilder.Xaml" Version="5.2.0" />
-    <PackageReference Include="Orc.Notifications" Version="5.2.0" />
-    <PackageReference Include="Orc.ProjectManagement" Version="5.2.0" />
-    <PackageReference Include="Orc.Squirrel.Xaml" Version="5.2.0" />
-    <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="5.2.0" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.3.0" />-->
-    <PackageReference Include="System.CommandLine" Version="2.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Orc.CsvTextEditor\src\Orc.CsvTextEditor\Orc.CsvTextEditor.csproj" />
-    <ProjectReference Include="..\..\..\Orc.FilterBuilder\src\Orc.FilterBuilder.Xaml\Orc.FilterBuilder.Xaml.csproj" />
-    <ProjectReference Include="..\..\..\Orc.Notifications\src\Orc.Notifications\Orc.Notifications.csproj" />
-    <ProjectReference Include="..\..\..\Orc.ProjectManagement\src\Orc.ProjectManagement\Orc.ProjectManagement.csproj" />
-    <ProjectReference Include="..\..\..\Orc.Squirrel\src\Orc.Squirrel.Xaml\Orc.Squirrel.Xaml.csproj" />
-    <ProjectReference Include="..\..\..\Orc.WorkspaceManagement\src\Orc.WorkspaceManagement.Xaml\Orc.WorkspaceManagement.Xaml.csproj" />
-    <ProjectReference Include="..\..\..\Orchestra\src\Orchestra.Shell.Ribbon.Fluent\Orchestra.Shell.Ribbon.Fluent.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.7" />
+    <PackageReference Include="Orc.CsvTextEditor" Version="6.0.0-alpha0094" />
+    <PackageReference Include="Orc.FilterBuilder.Xaml" Version="6.0.0-alpha0099" />
+    <PackageReference Include="Orc.Notifications" Version="6.0.0-alpha0103" />
+    <PackageReference Include="Orc.ProjectManagement" Version="5.3.0-alpha0548" />
+    <PackageReference Include="Orc.Squirrel.Xaml" Version="6.0.0-alpha0091" />
+    <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="6.0.0-alpha0090" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="8.0.0-alpha0115" />
+    <PackageReference Include="System.CommandLine" Version="2.0.7" />
   </ItemGroup>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props')" />
