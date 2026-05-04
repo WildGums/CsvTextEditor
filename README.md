@@ -43,9 +43,9 @@ We would welcome any efforts to improve the performance if someone was willing t
 
 ### Csv format
 
-**We only support _simple_ comma separated files**. (i.e. we expect the csv files to be fairly clean and **do not** support quotes, imbedded commas or new lines within the text.)
+**We only support _simple_ comma separated files**. We do not support embedded new lines within quoted fields.
 
-We would also welcome a PR that allowed CsvTextEditor to handle more cases.
+Quoted values (RFC 4180) are supported: values containing commas can be wrapped in double quotes (e.g. `"Andrew Stanton, Esq"`). Use **Ctrl+Q** or the **Quote column** ribbon button to toggle quotes on the current column value.
 
 ## Features
 
@@ -65,6 +65,7 @@ We would also welcome a PR that allowed CsvTextEditor to handle more cases.
   - Duplicate lines ("CTRL + D")
   - Add columns (",")
   - Delete columns ("CTL + ,")
+  - Quote/unquote column value ("CTRL + Q")
   - Search and replace ("CTRL + F") (Search will also highlight all occurrences in the file)
 
 - **Commands**:

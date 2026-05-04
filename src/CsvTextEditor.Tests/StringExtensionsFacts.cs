@@ -37,6 +37,25 @@
             Assert.That(result, Is.EqualTo(expectedResult));
         }
 
+        [TestCase("\"Andrew Stanton, Esq\",Jane Doe", 0, 3, 2, "\n", ",\"Andrew Stanton, Esq\",Jane Doe")]
+        [TestCase("\"Andrew Stanton, Esq\",Jane Doe", 2, 1, 2, "\n", "\"Andrew Stanton, Esq\",Jane Doe,")]
+        [TestCase("\"Andrew Stanton, Esq\",Jane Doe", 1, 1, 2, "\n", "\"Andrew Stanton, Esq\",,Jane Doe")]
+        public void InsertCommaSeparatedColumnHandlesQuotedValuesCorrectly(string text, int column, int lineCount, int columnCount, string newLine, string expectedResult)
+        {
+            var result = text.InsertCommaSeparatedColumn(column, lineCount, columnCount, newLine);
+
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
+        [TestCase("\"Andrew Stanton, Esq\",Jane Doe\n\"John Smith, Jr\",Jane Doe", 0, 2, 2, "\n", "Jane Doe\nJane Doe")]
+        [TestCase("\"Andrew Stanton, Esq\",Jane Doe\n\"John Smith, Jr\",Jane Doe", 1, 2, 2, "\n", "\"Andrew Stanton, Esq\"\n\"John Smith, Jr\"")]
+        public void RemoveColumnHandlesQuotedValuesCorrectly(string text, int column, int linesCount, int columnsCount, string newLine, string expectedResult)
+        {
+            var result = text.RemoveCommaSeparatedColumn(column, linesCount, columnsCount, newLine);
+
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
         [TestCase("01,34,67,9\n12,34,56,78\n123,456,789,900", 0, 3, 4, "\n", ",01,34,67,9\n,12,34,56,78\n,123,456,789,900")]
         [TestCase("01,34,67,9\n12,34,56,78\n123,456,789,900", 4, 3, 4, "\n", "01,34,67,9,\n12,34,56,78,\n123,456,789,900,")]
         [TestCase("01,34,67,9\n12,34,56,78\n123,456,789,900", 2, 3, 4, "\n", "01,34,,67,9\n12,34,,56,78\n123,456,,789,900")]

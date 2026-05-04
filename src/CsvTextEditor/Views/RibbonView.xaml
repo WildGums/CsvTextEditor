@@ -80,6 +80,10 @@
                                    LargeIcon="{orctheming:FontImage {x:Static csvTextEditor:FontAwesome.Search}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding Edit.FindReplace}" />
 
+                    <fluent:Button Header="Quote column"
+                                   LargeIcon="{orctheming:FontImage {x:Static csvTextEditor:FontAwesome.QuoteLeft}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.QuoteColumn}" />
+
                     <fluent:SplitButton Header="Quick Format" LargeIcon="{orctheming:FontImage {x:Static csvTextEditor:FontAwesome.AlignJustify}, FontFamily=FontAwesome}" IsEnabled="{Binding ElementName=FindAndReplaceButton, Path=IsEnabled}">
                         <fluent:MenuItem Header="Remove blank lines" Icon="{orctheming:FontImage {x:Static csvTextEditor:FontAwesome.Remove}}" Command="{catel:CommandManagerBinding Edit.RemoveBlankLines}" />
                         <fluent:MenuItem Header="Remove duplicate lines" Icon="{orctheming:FontImage {x:Static csvTextEditor:FontAwesome.Remove}}" Command="{catel:CommandManagerBinding Edit.RemoveDuplicateLines}" />
