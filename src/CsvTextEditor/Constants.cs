@@ -109,6 +109,9 @@
             public const string TrimWhitespaces = "Edit.TrimWhitespaces";
             public static readonly InputGesture TrimWhitespacesInputGesture = null;
 
+            public const string QuoteColumn = "Edit.QuoteColumn";
+            public static readonly InputGesture QuoteColumnInputGesture = new(Key.Q, ModifierKeys.Control);
+
         }
 
         public static class Settings
