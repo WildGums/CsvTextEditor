@@ -17,7 +17,7 @@
         {
         }
 
-        public override void Execute(object parameter)
+        public override void Execute(object? parameter)
         {
             var editor = CsvTextEditorInstance?.GetEditor() as DependencyObject;
             if (editor is null)
@@ -25,7 +25,7 @@
                 return;
             }
 
-            DependencyObject current = editor;
+            DependencyObject? current = editor;
             while (current is not null)
             {
                 if (current is CsvTextEditorControl csvControl)
