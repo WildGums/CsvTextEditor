@@ -3,7 +3,7 @@
 
     public partial class SettingsWindow
     {
-        partial void OnInitializedComponent()
+        partial void OnInitializingComponent()
         {
             Mode = Catel.Windows.DataWindowMode.OkCancel;
         }
