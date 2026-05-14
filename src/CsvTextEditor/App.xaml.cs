@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.IO;
     using System.Threading.Tasks;
     using System.Windows;
     using Catel;
@@ -17,7 +18,10 @@
     using Orc;
     using Orc.ProjectManagement;
     using Orchestra;
+    using Orchestra.Logging;
     using Orchestra.Views;
+    using Serilog;
+    using Serilog.Core;
     using Velopack;
 
     public partial class App : Application
@@ -34,7 +38,37 @@
 
             var hostBuilder = new HostBuilder()
                 .ConfigureServices((hostContext, services) =>
-                {
+                { 
+                    // Logging
+                    services.AddLogging(x =>
+                    {
+                        x.AddSerilog();
+                    });
+
+                    services.AddKeyedSingleton("logging", (sp, k) => new InitializeAtStartup(() =>
+                    {
+                        var logDirectoryProvider = sp.GetRequiredService<LogDirectoryProvider>();
+
+#pragma warning disable IDISP003 // Dispose previous before re-assigning
+                        Log.Logger = new LoggerConfiguration()
+                            .Enrich.FromLogContext()
+                            .MinimumLevel.Debug()
+                            .WriteTo.File(Path.Combine(logDirectoryProvider.ProvideDirectory(), "Application-.log"),
+                                fileSizeLimitBytes: 25 * 1000 * 1024, // 25 MB
+                                rollingInterval: RollingInterval.Hour,
+                                rollOnFileSizeLimit: true,
+                                levelSwitch: new LoggingLevelSwitch(Serilog.Events.LogEventLevel.Debug))
+#if DEBUG
+                            .WriteTo.Debug()
+#endif
+                            .CreateLogger();
+#pragma warning restore IDISP003 // Dispose previous before re-assigning
+
+                        var logger = sp.GetRequiredService<ILogger<App>>();
+                        logger.LogApplicationInfo<App>();
+                    }));
+
+                    // Services
                     services.AddCatelCore();
                     services.AddCatelMvvm();
                     services.AddOrcAutomation();
@@ -80,12 +114,6 @@
                     services.AddSingleton<CsvTextEditorIsDirtyProjectWatcher>();
                     services.AddSingleton<RecentlyUsedItemsProjectWatcher>();
                     services.AddSingleton<MainWindowTitleProjectWatcher>();
-
-                    services.AddLogging(x =>
-                    {
-                        x.AddConsole();
-                        x.AddDebug();
-                    });
                 });
 
             _host = hostBuilder.Build();
