@@ -44,7 +44,7 @@
     <PackageReference Include="Orc.ProjectManagement" Version="5.3.0-alpha0548" />
     <PackageReference Include="Orc.Squirrel.Xaml" Version="6.0.0-alpha0131" />
     <PackageReference Include="Orc.WorkspaceManagement.Xaml" Version="6.0.0-alpha0090" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="8.0.0-alpha0199" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="8.0.0-alpha0218" />
     <PackageReference Include="Serilog" Version="4.3.1" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="10.0.0" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
