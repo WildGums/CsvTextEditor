@@ -37,7 +37,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MethodTimer.Fody" Version="3.2.3" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.*" />
     <PackageReference Include="Orc.CsvTextEditor" Version="6.0.0-alpha0099" />
     <PackageReference Include="Orc.FilterBuilder.Xaml" Version="6.0.0-alpha0196" />
     <PackageReference Include="Orc.Notifications" Version="6.0.0-alpha0139" />
