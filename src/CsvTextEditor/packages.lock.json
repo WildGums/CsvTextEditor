@@ -19,9 +19,9 @@
       },
       "Catel.SourceGenerators": {
         "type": "Direct",
-        "requested": "[7.1.0, )",
-        "resolved": "7.1.0",
-        "contentHash": "cwXvu4BLifmJpHHKPn0ZVfiy5oGJwrZ4Xwdv6zki4fK/Mr+sMN67Oj2LHC2j4ylOjwhTS7djiQy6oI58DY1CFw=="
+        "requested": "[7.2.0, )",
+        "resolved": "7.2.0",
+        "contentHash": "0UnIVF04JvrlNkSf+3+a8TruzmAf5WSuDcJgo/m9OdLRgsjVA9UO0g9kAxphZ3Nf0sODPp2kMTVY6h3WDQ975A=="
       },
       "CatenaLogic.Analyzers": {
         "type": "Direct",
@@ -206,7 +206,7 @@
       },
       "System.CommandLine": {
         "type": "Direct",
-        "requested": "[2.0.14, )",
+        "requested": "[2.0.*, )",
         "resolved": "2.0.14",
         "contentHash": "15fyVO4aG6poR6IKmhM74zf7PUzaU6FZAGm2d3SQSO9yIyGAeo44e6t9qeKjjaqyMEqYdqcb2G1B0gpLoDU2cA=="
       },
